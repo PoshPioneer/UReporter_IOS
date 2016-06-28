@@ -11,6 +11,8 @@
 #import "UIAlertController+Window.h"
 #import "UploadView.h"
 #import "DBController.h"
+#import "PHCachingURLProtocol.h"
+
 
 @implementation AppDelegate
 @synthesize id_CategoryArray,categoryNameArray;
@@ -47,6 +49,8 @@
     [DBController copyDatabaseIfNeeded]; // TODO: //>     Initialize DBController
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
+    [NSURLProtocol registerClass:[PHCachingURLProtocol class]];
+    
     sync = [[SyncManager alloc] init];
     sync.delegate = self;
 
@@ -196,12 +200,12 @@
 //            
 //        }
         
-        if ([Utility connected] == NO)
-        {
+        //if ([Utility connected] == NO)
+        //{
             // Internet connection is not available !! so show alert
             
-            [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
-        }
+         //   [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
+        //}
         
     }
     else
@@ -210,7 +214,7 @@
         NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
         NSLog(@"URL===%@",urlString);
         
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
             NSLog(@"JSON: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];

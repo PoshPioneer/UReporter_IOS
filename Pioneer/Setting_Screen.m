@@ -174,7 +174,7 @@
        
        // NSString *server = [[NSUserDefaults standardUserDefaults]stringForKey:@"connection_Internet"];
        
-       if ([Utility connected] == YES) {
+       //if ([Utility connected] == YES) {
 
                     NSLog(   @"this is edit profile");
                     CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -189,14 +189,14 @@
                         [self.navigationController pushViewController:edit animated:YES];
                     }
        
-       }
+       /*}
        else
        {
                      UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil,nil];
                      [alert show];
 
            
-       }
+       }*/
        
        
    }

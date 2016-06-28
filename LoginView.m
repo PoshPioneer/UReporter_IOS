@@ -111,7 +111,7 @@
             
             
             
-            AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+            PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
             manager.requestSerializer = [AFJSONRequestSerializer serializer];
             
             [manager.requestSerializer setValue:authValue forHTTPHeaderField:@"Authorization"];

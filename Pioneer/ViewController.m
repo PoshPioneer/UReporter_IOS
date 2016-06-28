@@ -114,12 +114,10 @@
 //            
 //        }
 
-        if ([Utility connected] == NO)
+       /* if ([Utility connected] == NO)
         {
-            // Internet connection is not available !! so show alert
-            
-            [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
-        }
+                        [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
+        }*/
         
     }
     else

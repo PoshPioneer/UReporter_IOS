@@ -132,7 +132,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         
-        if ([Utility connected] == YES) {
+        //if ([Utility connected] == YES) {
             
             for (int i = 0; i< kNumberOfPages; i++) {
                 
@@ -165,14 +165,14 @@
             }
 
             
-        }else{
+        /*}else{
             
             
-//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//            [alert show];
+           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
             
 
-        }
+        }*/
         [self loadScrollViewWithPage:0];
         [self loadScrollViewWithPage:1];
         
@@ -188,7 +188,7 @@
     if (page >= kNumberOfPages) return;
     
     
-    if ([Utility connected] == YES) {
+   // if ([Utility connected] == YES) {
         
         
         
@@ -205,12 +205,10 @@
         
         imageView.image = getImage_Array[page];
         
-        
+        /*
     }else{
         
-        /* UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Message!" message:@"Internet connection is not available. Please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-         [alert show];
-         */
+        
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert!" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
             
@@ -219,7 +217,7 @@
         [alert addAction:doNothingAction];
         [self presentViewController:alert  animated:YES completion:nil];
     }
-
+*/
     
     
     [self.view setUserInteractionEnabled:YES];

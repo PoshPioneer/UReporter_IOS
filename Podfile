@@ -3,6 +3,8 @@
 # Uncomment this line if you're using Swift
 # use_frameworks!
 
+xcodeproj 'Pioneer.xcodeproj'
+
 target 'Pioneer' do
 
 pod 'SDWebImage', '~>3.7'

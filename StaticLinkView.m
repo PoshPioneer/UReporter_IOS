@@ -34,14 +34,14 @@
     
     checklodeView=NO;
     NSLog(@"static link --%@",staticlink);
-    if ([Utility connected] == YES) {
+    //if ([Utility connected] == YES) {
         
         NSURL *url = [NSURL URLWithString:staticlink];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [webViewStatic loadRequest:request];
 
         
-    }
+    /*}
     else{
         
         UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
@@ -53,7 +53,7 @@
         [errorAlert addAction:errorAction];
         [self presentViewController:errorAlert animated:YES completion:nil];
 
-    }
+    }*/
     
     
     
