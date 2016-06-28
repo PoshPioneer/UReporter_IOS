@@ -17,6 +17,9 @@
 		28E576501C6358EC00FDAB88 /* mic.png in Resources */ = {isa = PBXBuildFile; fileRef = 28E5764D1C6358EC00FDAB88 /* mic.png */; };
 		28E576511C6358EC00FDAB88 /* video.png in Resources */ = {isa = PBXBuildFile; fileRef = 28E5764E1C6358EC00FDAB88 /* video.png */; };
 		28E576571C63699000FDAB88 /* del.png in Resources */ = {isa = PBXBuildFile; fileRef = 28E576561C63699000FDAB88 /* del.png */; };
+		37AA38751D1B72CB00A0375F /* PHHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AA38741D1B72CB00A0375F /* PHHTTPSessionManager.m */; };
+		37AA38781D1B7BC500A0375F /* PHCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AA38771D1B7BC500A0375F /* PHCachingURLProtocol.m */; };
+		3EA83570E25C12C84598EE6F /* libPods-Pioneer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74310D76BA360F5A86338308 /* libPods-Pioneer.a */; };
 		410A37761B79B37000A96DF0 /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 410A37751B79B37000A96DF0 /* IQDropDownTextField.m */; };
 		414B737A1B8EFBD7007640B7 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 414B73771B8EFBD7007640B7 /* Main_iPad.storyboard */; };
 		414B737B1B8EFBD7007640B7 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 414B73781B8EFBD7007640B7 /* Main_iPhone.storyboard */; };
@@ -307,7 +310,6 @@
 		DB69CD6419826463006DE6A9 /* SpinnerView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB69CD6319826463006DE6A9 /* SpinnerView.m */; };
 		DB69CD6619826ED0006DE6A9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB69CD6519826ED0006DE6A9 /* CoreMedia.framework */; };
 		E4DAD50B1CD76B4100437D0D /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DAD50A1CD76B4100437D0D /* CustomTextField.m */; };
-		EEEDF22442C6C8AF991242FE /* libPods-Pioneer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B2BEC15D052B0154CF97FED /* libPods-Pioneer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -323,6 +325,10 @@
 		28E5764D1C6358EC00FDAB88 /* mic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mic.png; sourceTree = "<group>"; };
 		28E5764E1C6358EC00FDAB88 /* video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video.png; sourceTree = "<group>"; };
 		28E576561C63699000FDAB88 /* del.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = del.png; sourceTree = "<group>"; };
+		37AA38731D1B72CB00A0375F /* PHHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHHTTPSessionManager.h; sourceTree = "<group>"; };
+		37AA38741D1B72CB00A0375F /* PHHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHHTTPSessionManager.m; sourceTree = "<group>"; };
+		37AA38761D1B7BC500A0375F /* PHCachingURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCachingURLProtocol.h; sourceTree = "<group>"; };
+		37AA38771D1B7BC500A0375F /* PHCachingURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHCachingURLProtocol.m; sourceTree = "<group>"; };
 		410A37741B79B37000A96DF0 /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
 		410A37751B79B37000A96DF0 /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
 		414B73771B8EFBD7007640B7 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
@@ -549,9 +555,9 @@
 		4FF7CC281CB77814005326F1 /* SubmitForReviewDetails.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitForReviewDetails.xib; sourceTree = "<group>"; };
 		4FF7CC2B1CB7785A005326F1 /* SubmitForReviewDetails3.5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitForReviewDetails3.5.xib; sourceTree = "<group>"; };
 		4FF7CC2D1CB7CD3F005326F1 /* Arrow45x45.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Arrow45x45.png; sourceTree = "<group>"; };
-		5D8C913F37176DBF98FDFB29 /* Pods-Pioneer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.release.xcconfig"; sourceTree = "<group>"; };
-		6B2BEC15D052B0154CF97FED /* libPods-Pioneer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pioneer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EFD227AEE70CA4A83C8FE48 /* Pods-Pioneer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.debug.xcconfig"; sourceTree = "<group>"; };
+		5520983AC112DA47A4D00199 /* Pods-Pioneer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.debug.xcconfig"; sourceTree = "<group>"; };
+		6380316C5005D6456EE0A6FA /* Pods-Pioneer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.release.xcconfig"; sourceTree = "<group>"; };
+		74310D76BA360F5A86338308 /* libPods-Pioneer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pioneer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD17B0611C05B1E1003A9709 /* Submission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Submission.h; sourceTree = "<group>"; };
 		AD17B0621C05B1E1003A9709 /* Submission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Submission.m; sourceTree = "<group>"; };
 		AD17B0631C05B1E1003A9709 /* Submission.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Submission.xib; sourceTree = "<group>"; };
@@ -710,7 +716,7 @@
 				DB69CD13198250C2006DE6A9 /* CoreGraphics.framework in Frameworks */,
 				DB69CD15198250C2006DE6A9 /* UIKit.framework in Frameworks */,
 				DB69CD11198250C2006DE6A9 /* Foundation.framework in Frameworks */,
-				EEEDF22442C6C8AF991242FE /* libPods-Pioneer.a in Frameworks */,
+				3EA83570E25C12C84598EE6F /* libPods-Pioneer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +797,10 @@
 			children = (
 				4F1502051CD3AD0A00D5B35B /* SyncManager.h */,
 				4F1502061CD3AD0A00D5B35B /* SyncManager.m */,
+				37AA38731D1B72CB00A0375F /* PHHTTPSessionManager.h */,
+				37AA38741D1B72CB00A0375F /* PHHTTPSessionManager.m */,
+				37AA38761D1B7BC500A0375F /* PHCachingURLProtocol.h */,
+				37AA38771D1B7BC500A0375F /* PHCachingURLProtocol.m */,
 			);
 			name = WSManager;
 			sourceTree = "<group>";
@@ -977,15 +987,6 @@
 				4FED64F41CE44852006EAA9B /* DBController.m */,
 			);
 			name = DBController;
-			sourceTree = "<group>";
-		};
-		62CD3C441E3A58AE6E0F66A0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				9EFD227AEE70CA4A83C8FE48 /* Pods-Pioneer.debug.xcconfig */,
-				5D8C913F37176DBF98FDFB29 /* Pods-Pioneer.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		C074EF181C1ADB31004D03DB /* AudioPlayer */ = {
@@ -1302,7 +1303,7 @@
 				DB69CD38198250C3006DE6A9 /* PioneerTests */,
 				DB69CD0F198250C2006DE6A9 /* Frameworks */,
 				DB69CD0E198250C2006DE6A9 /* Products */,
-				62CD3C441E3A58AE6E0F66A0 /* Pods */,
+				E4B1A6501B6665CC7146D18E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1334,7 +1335,7 @@
 				DB69CD12198250C2006DE6A9 /* CoreGraphics.framework */,
 				DB69CD14198250C2006DE6A9 /* UIKit.framework */,
 				DB69CD32198250C2006DE6A9 /* XCTest.framework */,
-				6B2BEC15D052B0154CF97FED /* libPods-Pioneer.a */,
+				74310D76BA360F5A86338308 /* libPods-Pioneer.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1483,6 +1484,15 @@
 			name = Spinner;
 			sourceTree = "<group>";
 		};
+		E4B1A6501B6665CC7146D18E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5520983AC112DA47A4D00199 /* Pods-Pioneer.debug.xcconfig */,
+				6380316C5005D6456EE0A6FA /* Pods-Pioneer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		E4DAD5081CD76B2D00437D0D /* CustomTextField */ = {
 			isa = PBXGroup;
 			children = (
@@ -1499,12 +1509,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DB69CD42198250C3006DE6A9 /* Build configuration list for PBXNativeTarget "Pioneer" */;
 			buildPhases = (
-				8FCBA83EE90C677D62623BDD /* Check Pods Manifest.lock */,
+				2FDC44F3862DEA229B981CC2 /* 📦 Check Pods Manifest.lock */,
 				DB69CD09198250C2006DE6A9 /* Sources */,
 				DB69CD0A198250C2006DE6A9 /* Frameworks */,
 				DB69CD0B198250C2006DE6A9 /* Resources */,
-				27AFD129490C31B93EB1BAD5 /* Embed Pods Frameworks */,
-				5C23515D54F25015413510A2 /* Copy Pods Resources */,
+				ABD2584FFDF8300FD224D1D4 /* 📦 Embed Pods Frameworks */,
+				F04CC355DDCDC72D92BED413 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1525,7 +1535,7 @@
 				ORGANIZATIONNAME = CYNOTECK;
 				TargetAttributes = {
 					DB69CD0C198250C2006DE6A9 = {
-						DevelopmentTeam = FYDZRDCX2E;
+						DevelopmentTeam = 9RKM9AJXPT;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1780,14 +1790,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		27AFD129490C31B93EB1BAD5 /* Embed Pods Frameworks */ = {
+		2FDC44F3862DEA229B981CC2 /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		ABD2584FFDF8300FD224D1D4 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1795,34 +1820,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5C23515D54F25015413510A2 /* Copy Pods Resources */ = {
+		F04CC355DDCDC72D92BED413 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8FCBA83EE90C677D62623BDD /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1851,6 +1861,7 @@
 				D2A048E2199A533D006242FA /* Info.m in Sources */,
 				4F16193A1C7339DD00E040A1 /* DetailsViewController.m in Sources */,
 				ADDBDE261C0DD79700C1A67D /* PlayRecordedAudio.m in Sources */,
+				37AA38781D1B7BC500A0375F /* PHCachingURLProtocol.m in Sources */,
 				D23938D9198A1EE500361134 /* Reachability.m in Sources */,
 				4F35FCCD1CC8AA3300659DB4 /* LoginView.m in Sources */,
 				4F0B27021CBB6D970092691E /* TPKeyboardAvoidingScrollView.m in Sources */,
@@ -1877,6 +1888,7 @@
 				410A37761B79B37000A96DF0 /* IQDropDownTextField.m in Sources */,
 				4F4878321CD2063C00BA1A27 /* Utility.m in Sources */,
 				4FB95FA51C6C6B7B00E87F15 /* CustomCellForSlider.m in Sources */,
+				37AA38751D1B72CB00A0375F /* PHHTTPSessionManager.m in Sources */,
 				DB69CD6419826463006DE6A9 /* SpinnerView.m in Sources */,
 				4FF4C00D1C92877700CE4E36 /* SubmitForReview.m in Sources */,
 				4F1502071CD3AD0A00D5B35B /* SyncManager.m in Sources */,
@@ -2004,12 +2016,12 @@
 		};
 		DB69CD43198250C3006DE6A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9EFD227AEE70CA4A83C8FE48 /* Pods-Pioneer.debug.xcconfig */;
+			baseConfigurationReference = 5520983AC112DA47A4D00199 /* Pods-Pioneer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Udit Handa (ZJA4H7C457)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Udit Handa (ZJA4H7C457)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2018,9 +2030,9 @@
 				GCC_PREFIX_HEADER = "Pioneer/Pioneer-Prefix.pch";
 				INFOPLIST_FILE = "Pioneer/Pioneer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Part217August.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry.com;
 				PRODUCT_NAME = Pioneer;
-				PROVISIONING_PROFILE = "e9275c21-9467-4f7e-b4ed-0a95507a6e59";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2028,12 +2040,12 @@
 		};
 		DB69CD44198250C3006DE6A9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5D8C913F37176DBF98FDFB29 /* Pods-Pioneer.release.xcconfig */;
+			baseConfigurationReference = 6380316C5005D6456EE0A6FA /* Pods-Pioneer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Udit Handa (ZJA4H7C457)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Udit Handa (ZJA4H7C457)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2042,9 +2054,9 @@
 				GCC_PREFIX_HEADER = "Pioneer/Pioneer-Prefix.pch";
 				INFOPLIST_FILE = "Pioneer/Pioneer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Part217August.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry.com;
 				PRODUCT_NAME = Pioneer;
-				PROVISIONING_PROFILE = "e9275c21-9467-4f7e-b4ed-0a95507a6e59";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

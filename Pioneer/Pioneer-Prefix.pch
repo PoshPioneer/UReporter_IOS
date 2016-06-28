@@ -17,6 +17,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import "Utility.h"
+    #import "PHHTTPSessionManager.h"
     #import "SyncManager.h"
     #import "DataClass.h"
     #import "GlobalStuff.h"

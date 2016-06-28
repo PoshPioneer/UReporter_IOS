@@ -23,7 +23,7 @@
 -(void) serviceCall:(NSString*)url withParams:(NSDictionary*) params {
     
    
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager POST:url parameters:params progress:nil success:^(NSURLSessionTask *task, id responseObject) {
@@ -44,7 +44,7 @@
 -(void) putServiceCall:(NSString*)url withParams:(NSDictionary*) params {
     
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager PUT:url parameters:params success:^(NSURLSessionTask *task, id responseObject){
@@ -67,7 +67,7 @@
 -(void) getServiceCall:(NSString*)url withParams:(NSDictionary*) params {
     
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     

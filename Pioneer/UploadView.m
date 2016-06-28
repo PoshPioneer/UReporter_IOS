@@ -127,8 +127,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)callServicesInQueue
 {
     
-    if ([Utility connected] == YES)
-    {
+    //if ([Utility connected] == YES)
+    //{
         
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -142,7 +142,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
          [self loadWeather];
          [self loadHomeFeed];
         
-    }
+    //}
 
 }
 
@@ -198,19 +198,21 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadApiAndCheckInternet{
     
-    if ([Utility connected] == YES) {
+    //if ([Utility connected] == YES) {
         //do nothing.
         
         [self loadCategoryAPI];
         //----------------XMLParser--------------------------------------------------------//
         
-    } else {
+    /*} else {
         
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"userName"] == nil && [[[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] isEqualToString:@"1"]) {
             
             LoginView *loginView=[[LoginView alloc]initWithNibName:@"LoginView" bundle:nil];
             [self presentViewController:loginView animated:YES completion:nil];
         }
+     */
+        /*
         else
         {
             UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
@@ -224,8 +226,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             [errorAlert addAction:errorAction];
             [self presentViewController:errorAlert animated:YES completion:nil];
-        }
-    }
+        }*/
+    //}
 
     
 }
@@ -237,12 +239,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     loadWeatherServiceCallComplete = YES;
     [self handleServiceCallCompletion];
     
-    if ([Utility connected] == YES) {
+   // if ([Utility connected] == YES) {
         //do nothing.
   
         // weather api url...
         
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager POST:@"http://api.openweathermap.org/data/2.5/weather?zip=98274,us&appid=025fd416c44e35caa638609d50f6c056&units=metric" parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
             NSLog(@"JSON: %@", responseObject);
@@ -273,7 +275,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
  
         
-    } else {
+    /* } else {
         
         UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -283,7 +285,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         [self presentViewController:errorAlert animated:YES completion:nil];
 
         
-    }
+    }*/
 
 }
 
@@ -345,7 +347,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
     NSLog(@"URL===%@",urlString);
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
@@ -872,8 +874,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             DataClass *obj = [DataClass getInstance];
             
-            if([Utility connected] == YES)
-            {
+            //if([Utility connected] == YES)
+            //{
                 
                 
                 [self.view setUserInteractionEnabled:NO];
@@ -902,7 +904,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     
                 }
                 
-                AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+                PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
                 [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
                     
                     NSLog(@"JSON: %@", responseObject);
@@ -942,8 +944,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     }
                     
                 } failure:^(NSURLSessionTask *operation, NSError *error) {
-                    NSLog(@"Error: %@", error);
                     
+                    NSLog(@"Error: %@", error);
+                    /*
                     UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"No data received from the server" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
                         
@@ -952,14 +955,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     
                     [errorAlert addAction:errorAction];
                     [self presentViewController:errorAlert animated:YES completion:nil];
-
+                     */
                     [self.view setUserInteractionEnabled:YES];
                     [spinner removeSpinner];
                     
                 }];
                 
 
-            }
+            /*}
             else
             {
                 
@@ -972,7 +975,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 [self presentViewController:errorAlert animated:YES completion:nil];
                 
                 
-            }
+            }*/
         }
     }
 }
@@ -1629,7 +1632,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)loadCategoryAPI {
     
     
-    if ([Utility connected] == YES) {
+    //if ([Utility connected] == YES) {
         
         [self.view setUserInteractionEnabled:NO];
         spinner=[SpinnerView loadSpinnerIntoView:self.view];
@@ -1641,7 +1644,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     NSLog(@"url string service otp--%@",urlString);
     
         
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
             NSLog(@"JSON: %@", responseObject);
@@ -1733,7 +1736,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
         
 
-    } else {
+    /*} else {
     
     UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1743,7 +1746,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     [self presentViewController:errorAlert animated:YES completion:nil];
     
     
-}
+}*/
 
 }
 
@@ -1755,7 +1758,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     homeFeedServiceCallComplete = YES;
     
-    if ([Utility connected] == YES) {
+    //if ([Utility connected] == YES) {
         
         NSString* urlString;
         if (objectDataClass.globalFeedID)
@@ -1774,7 +1777,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }
 
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
            
             NSLog(@"JSON: %@", responseObject);
@@ -1836,7 +1839,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }];
         
      
-    } else {
+   /* } else {
         
         
         UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
@@ -1847,7 +1850,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         [self presentViewController:errorAlert animated:YES completion:nil];
         
         
-    }
+    }*/
     
     
 
