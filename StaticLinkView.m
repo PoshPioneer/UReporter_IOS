@@ -37,7 +37,8 @@
     //if ([Utility connected] == YES) {
         
         NSURL *url = [NSURL URLWithString:staticlink];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                         timeoutInterval:300];
         [webViewStatic loadRequest:request];
 
         
