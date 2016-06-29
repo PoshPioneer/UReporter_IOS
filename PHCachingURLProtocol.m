@@ -198,7 +198,7 @@ static NSSet *PHCachingSupportedSchemes;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     [self setResponse:response];
-    [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];  // We cache ourselves.
+    [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageAllowed];  // We cache ourselves.
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection

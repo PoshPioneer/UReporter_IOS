@@ -105,6 +105,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 }
 
 @property (strong, nonatomic) CCKFNavDrawer *rootNav;
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
@@ -175,6 +176,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     [self.show_temperature setHidden:YES];
     [self setNeedsStatusBarAppearanceUpdate];
     
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
     
     
     tabBarController.delegate = self;
@@ -194,6 +198,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     [self loadApiAndCheckInternet];
     
 
+}
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+ 
+    [self loadCategoryAPI];
+    [refreshControl endRefreshing];
 }
 
 -(void)loadApiAndCheckInternet{
@@ -857,7 +867,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }else if ([objectDataClass.globalFeedType isEqualToString:@"Live Streaming"]) {
             //For opening link in external browser.
-            
             UIApplication *mySafari = [UIApplication sharedApplication];
             NSURL *myURL = [[NSURL alloc]initWithString:objectDataClass.globalstaticLink];
             
@@ -876,7 +885,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             //if([Utility connected] == YES)
             //{
-                
                 
                 [self.view setUserInteractionEnabled:NO];
                 spinner=[SpinnerView loadSpinnerIntoView:self.view];
