@@ -1587,7 +1587,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             [self.view setUserInteractionEnabled:YES];
             [self.refreshControl endRefreshing];
 
-            UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
             }];
             
