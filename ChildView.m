@@ -126,20 +126,13 @@
     lblTitle.lineBreakMode = NSLineBreakByWordWrapping;
     [lblTitle setBackgroundColor:[UIColor clearColor]];
     [lblTitle setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
-
-
-    
-    
-
     
     objectDataClass = [DataClass getInstance];
     DLog(@"all data from array--%@",self.testArray);
     DLog(@"%lu",self.testArray.count);
-  
     
     openGallery = [[UIButton alloc] init];
     counterOFPages = [[UILabel alloc] init];
-    
   
 }
 

@@ -130,7 +130,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self.view setUserInteractionEnabled:NO];
+            //[self.view setUserInteractionEnabled:NO];
             [self.refreshControl beginRefreshing];
             
         });
@@ -772,7 +772,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             DataClass *obj = [DataClass getInstance];
             
-                [self.view setUserInteractionEnabled:NO];
+                //[self.view setUserInteractionEnabled:NO];
                 [self.refreshControl beginRefreshing];
                 
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil)
@@ -1503,7 +1503,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadCategoryAPI {
     
-    [self.view setUserInteractionEnabled:NO];
+    //[self.view setUserInteractionEnabled:NO];
     [self.refreshControl beginRefreshing];
     
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/menu/GetMenuCategories?source=%@",@"SkagitTimes"];
