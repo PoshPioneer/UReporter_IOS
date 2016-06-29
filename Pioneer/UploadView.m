@@ -197,7 +197,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 - (void)refresh:(UIRefreshControl *)refreshControl {
  
     [self loadCategoryAPI];
-    [self.refreshControl endRefreshing];
+    //[self.refreshControl endRefreshing];
 }
 
 -(void)loadApiAndCheckInternet{
