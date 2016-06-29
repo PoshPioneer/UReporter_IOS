@@ -104,7 +104,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     
     LocalIndex = objectDataClass.globalIndex;
     
-    NSLog(@"global index --%ld",(long)LocalIndex);
+    DLog(@"global index --%ld",(long)LocalIndex);
        
     
     // ------------ adding pageviewcontroller---------
@@ -205,7 +205,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
         objectDataClass.globalIndex = *(enlarge.pageIndex);
         
-       // NSLog(@"%lu",(unsigned long)indexx);
+       // DLog(@"%lu",(unsigned long)indexx);
      
     }
 }
@@ -238,7 +238,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     
     getImage_Array = [NSMutableArray new];
     
-    // NSLog(@"description after navigating --%@",self.getDescriptionString);
+    // DLog(@"description after navigating --%@",self.getDescriptionString);
     
     NSArray *allKeys =[self.getImageURls_Dict allKeys];
     kNumberOfPages = allKeys.count;
@@ -269,7 +269,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             
     
             NSString *ImageURL = [self.getImageURls_Dict valueForKey:[NSString stringWithFormat:@"url%d",i+1]]; //self.getimageURl;
-            NSLog(@"image url -- %@",ImageURL);
+            DLog(@"image url -- %@",ImageURL);
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
             UIImage *tempImage = [UIImage imageWithData:imageData];
        
@@ -374,9 +374,9 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     
    
 
-    NSLog(@"all image url--%@",self.getImageURls_Dict);
+    DLog(@"all image url--%@",self.getImageURls_Dict);
     
-    NSLog(@"all data  in details view--%@",allDataArray);
+    DLog(@"all data  in details view--%@",allDataArray);
     
     [self removeLikeData];
     for (NSDictionary *obj in allDataArray)
@@ -395,8 +395,8 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 {
     NSArray *arrDB=[DBController getAllLike_Info];
     
-    NSLog(@"%@",arrDB);
-    NSLog(@"%@ arrDB count  = %lu",_id,arrDB.count);
+    DLog(@"%@",arrDB);
+    DLog(@"%@ arrDB count  = %lu",_id,arrDB.count);
     if (arrDB.count==0) {
         
         // insert row in database
@@ -465,7 +465,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         if (flag == NO) {
             
             BOOL deleteStatus = [DBController deleteSingleRecordsof_Like_Info:obj.feedID];
-            NSLog(@"%i",deleteStatus);
+            DLog(@"%i",deleteStatus);
         }
         
     } // outer loop
@@ -484,7 +484,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 - (IBAction)back_tapped:(id)sender {
  
-    NSLog(@"back tapped");
+    DLog(@"back tapped");
     [self.navigationController popViewControllerAnimated:YES];
     
 }
@@ -494,8 +494,8 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 - (IBAction)shareButtonClicked:(id)sender {
 
-   // NSLog(@"global index--%ld",(long)objectDataClass.globalIndex);
-//        NSLog(@"shareButton pressed");
+   // DLog(@"global index--%ld",(long)objectDataClass.globalIndex);
+//        DLog(@"shareButton pressed");
 //        
 //        NSString *texttoshare = @"Hello Testing"; //this is your text string to share
 //    //  UIImage *imagetoshare = @""; //this is your image to share
@@ -505,7 +505,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 //        [self presentViewController:activityVC animated:TRUE completion:nil];
 
    
-    NSLog(@"arr--%@",[allDataArray objectAtIndex:4]);
+    DLog(@"arr--%@",[allDataArray objectAtIndex:4]);
    self.shareLink = [[allDataArray objectAtIndex:LocalIndex] valueForKey:@"Link"];
     
 //    NSArray * activityItems = @[[NSString stringWithFormat:@"Some initial text."], [NSURL URLWithString:@"www.google.com"]];
@@ -527,24 +527,24 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 {
     if(item.tag == 0)
     {
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }else if (item.tag ==1) {
         
-        NSLog(@"Image tab bar tapped");
+        DLog(@"Image tab bar tapped");
         [self checkforNavigationInternetconnection:2];
         
     }else if (item.tag ==2){
         
         
-        NSLog(@"Audio Tab bar tapped");
+        DLog(@"Audio Tab bar tapped");
         
         [self checkforNavigationInternetconnection:3];
         
     }else if (item.tag ==3) {
         
-        NSLog(@"Text Tab bar tapped");
+        DLog(@"Text Tab bar tapped");
         
         [self checkforNavigationInternetconnection:4];
     }
@@ -572,7 +572,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             
             // if ([sender selectedSegmentIndex]==0) {
             [self.view endEditing:YES];
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             //isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -590,7 +590,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             
             //   if ([sender selectedSegmentIndex]==0) {
             
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             //isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -646,7 +646,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -672,7 +672,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -779,8 +779,8 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         
         
@@ -816,10 +816,10 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        NSLog(@"converted data--%@",data);
+        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-        //    NSLog(@"imagepath==================== %@",localUrl);
+        //    DLog(@"imagepath==================== %@",localUrl);
         
         if(isCameraClicked)
         {
@@ -828,9 +828,9 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             
         }
         
-        //NSLog(@"image is ========%@",mainImage);
+        //DLog(@"image is ========%@",mainImage);
         
-        NSLog(@"info==============%@",info);
+        DLog(@"info==============%@",info);
         
         //New chamges
         
@@ -848,7 +848,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
         //Gaurav's logic
         
-        NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+        DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
         
         
         
@@ -880,7 +880,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         //[picker dismissViewControllerAnimated:YES completion:NULL];
-        NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+        DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
         
         captureduniqueName = [self generateUniqueName];
         
@@ -962,7 +962,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     // int randomValue = arc4random() % 1000;
     //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-    NSLog(@"unique name --%@",finalUnique);
+    DLog(@"unique name --%@",finalUnique);
     return finalUnique;
     
 }

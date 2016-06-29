@@ -58,7 +58,7 @@
         [json setObject:body forKey:@"body"];
         [json setObject:header forKey:@"header"];
         
-        NSLog(@"%@",json);
+        DLog(@"%@",json);
         
         [sync putServiceCall:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails/Syncronexuser?token=%@",[GlobalStuff generateToken]] withParams:json]; // call webservice
 
@@ -109,7 +109,7 @@
 
 -(void)syncSuccess:(id) responseObject {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     [[NSUserDefaults standardUserDefaults] setValue:[responseObject valueForKey:@"Status"] forKey:@"subscribeStatus"];
     
 }

@@ -127,15 +127,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)callServicesInQueue
 {
-    
-    //if ([Utility connected] == YES)
-    //{
-        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.view setUserInteractionEnabled:NO];
-            spinner=[SpinnerView loadSpinnerIntoView:self.view];
+            [self.refreshControl beginRefreshing];
             
         });
         
@@ -143,8 +139,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
          [self loadWeather];
          [self loadHomeFeed];
         
-    //}
-
+ 
 }
 
 -(void) handleServiceCallCompletion
@@ -156,7 +151,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.view setUserInteractionEnabled:YES];
-            [spinner removeSpinner];
+            [self.refreshControl endRefreshing];
             
         });
         
@@ -190,7 +185,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     textTabBar.tag  = 3;
     
     //CCFnavDrawer
-    NSLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
     
     self.rootNav = (CCKFNavDrawer *)self.navigationController;
     [self.rootNav setCCKFNavDrawerDelegate:self];
@@ -203,42 +197,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 - (void)refresh:(UIRefreshControl *)refreshControl {
  
     [self loadCategoryAPI];
-    [refreshControl endRefreshing];
+    [self.refreshControl endRefreshing];
 }
 
 -(void)loadApiAndCheckInternet{
     
-    //if ([Utility connected] == YES) {
-        //do nothing.
-        
-        [self loadCategoryAPI];
-        //----------------XMLParser--------------------------------------------------------//
-        
-    /*} else {
-        
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"userName"] == nil && [[[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] isEqualToString:@"1"]) {
-            
-            LoginView *loginView=[[LoginView alloc]initWithNibName:@"LoginView" bundle:nil];
-            [self presentViewController:loginView animated:YES completion:nil];
-        }
-     */
-        /*
-        else
-        {
-            UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction  *errorAction = [UIAlertAction actionWithTitle:@"Try again" style:UIAlertActionStyleDefault handler:^(UIAlertAction  *alert){
-                
-                
-                [self loadApiAndCheckInternet];
-                
-                
-            }];
-            
-            [errorAlert addAction:errorAction];
-            [self presentViewController:errorAlert animated:YES completion:nil];
-        }*/
-    //}
-
+    [self loadCategoryAPI];
     
 }
 
@@ -249,15 +213,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     loadWeatherServiceCallComplete = YES;
     [self handleServiceCallCompletion];
     
-   // if ([Utility connected] == YES) {
-        //do nothing.
-  
-        // weather api url...
-        
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager POST:@"http://api.openweathermap.org/data/2.5/weather?zip=98274,us&appid=025fd416c44e35caa638609d50f6c056&units=metric" parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
-            NSLog(@"JSON: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];
             
             if (json) {
@@ -266,11 +224,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
                 //setting temperature to label.....
                 show_temperature.text = [NSString stringWithFormat:@"%0.0f",[temperature floatValue]];
-                NSLog(@"temperature is --%0.0f",[show_temperature.text floatValue]);
+                DLog(@"temperature is --%0.0f",[show_temperature.text floatValue]);
                 
                 //setting temp to global variable......
                 objectDataClass.temperature = [temperature floatValue];
-                NSLog(@"global temp --%0.0f",objectDataClass.temperature);
+                DLog(@"global temp --%0.0f",objectDataClass.temperature);
 
                 
             } else {
@@ -279,23 +237,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
+            DLog(@"Error: %@", error);
             [self handleServiceCallCompletion];
         }];
     
- 
-        
-    /* } else {
-        
-        UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
-        }];
-        
-        [errorAlert addAction:errorAction];
-        [self presentViewController:errorAlert animated:YES completion:nil];
-
-        
-    }*/
 
 }
 
@@ -303,7 +248,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)gobackToHomeScreen
 {
 
-    NSLog(@"goBackToHomeScreen");
+    DLog(@"goBackToHomeScreen");
     [self.navigationController popViewControllerAnimated:YES];
 
 }
@@ -321,29 +266,16 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     // pending ......
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveNotification:) name:@"RefreshUploadeView" object:nil];
     
-    //[[NSNotificationCenter defaultCenter]removeObserver:self name:@"RefreshUploadeView" object:nil];
-    
-    
-
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
     [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
     
     
-    NSLog(objectDataClass.globalStaticCheck ? @"Yes" : @"No");
+    if (objectDataClass.globalStaticCheck != YES) {
         
-    if (objectDataClass.globalStaticCheck == YES) {
-        
-            
-            
-    }
-    else
-    {
-
         videoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
         audioTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
         textTabBar.imageInsets  = UIEdgeInsetsMake(6, 0, -6, 0);
         photoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
-    
 
     }
     
@@ -355,11 +287,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     checkUserAlreadyAvailableServiceCallComplete = YES;
     
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
-    NSLog(@"URL===%@",urlString);
+    DLog(@"URL===%@",urlString);
     
     PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
+        DLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         
         if (json)
@@ -417,7 +349,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        DLog(@"Error: %@", error);
         
         [self handleServiceCallCompletion];
     }];
@@ -432,24 +364,24 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 {
     if(item.tag == 0)
     {
-                NSLog(@"Video Tab bar tapped");
+                DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }else if (item.tag ==1) {
         
-        NSLog(@"Image tab bar tapped");
+        DLog(@"Image tab bar tapped");
         [self checkforNavigationInternetconnection:2];
         
     }else if (item.tag ==2){
         
       
-        NSLog(@"Audio Tab bar tapped");
+        DLog(@"Audio Tab bar tapped");
 
     [self checkforNavigationInternetconnection:3];
         
     }else if (item.tag ==3) {
         
-               NSLog(@"Text Tab bar tapped");
+               DLog(@"Text Tab bar tapped");
         
         [self checkforNavigationInternetconnection:4];
     }
@@ -506,27 +438,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 }
 
-/*- (IBAction)i_ForContent_Tapped:(id)sender {
-    
-
-    CGSize size = [[UIScreen mainScreen]bounds].size;
-    
-    if (size.height==480) {
-        
-        Info *uploadV = [[Info alloc]initWithNibName:@"info3.5" bundle:nil];
-        [self.navigationController pushViewController:uploadV animated:YES];
-        
-    }else{
-        
-        Info *uploadV = [[Info alloc]initWithNibName:@"Info" bundle:nil];
-        [self.navigationController pushViewController:uploadV animated:YES];
-        
-    }
-    
-    
-}*/
-
-
 -(void)checkforNavigationInternetconnection:(int)type{
     
     
@@ -548,7 +459,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
                 // if ([sender selectedSegmentIndex]==0) {
                 [self.view endEditing:YES];
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -566,7 +477,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
                 //   if ([sender selectedSegmentIndex]==0) {
                 
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -619,25 +530,22 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
-    
+   
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
-//    UIAlertView *errorAlert = [[UIAlertView alloc]
-//                               initWithTitle:@"Alert" message:@"There was an error while getting the location." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//    [errorAlert show];
+
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil) {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
         locationManager = nil;
         [locationManager stopUpdatingLocation];
@@ -648,11 +556,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 
 -(void)getAdrressFromLatLong : (CGFloat)lat lon:(CGFloat)lon{
-    // coding to send data to server .......start
-    ///// we need to fetch location.....
-//    [self.view setUserInteractionEnabled:NO];
-//    spinner=[SpinnerView loadSpinnerIntoView:self.view];
-
+  
     NSString *urlString = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&amp;sensor=false",lat,lon];
     NSURL *url = [NSURL URLWithString:urlString];
     
@@ -667,7 +571,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                                    
                                    for (NSDictionary * dict in array) {
                                        
-                                       NSLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+                                       DLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
                                        [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
                                        [[NSUserDefaults standardUserDefaults]synchronize];
                                        
@@ -682,15 +586,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                                        NSString *address = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
                                        [[NSUserDefaults standardUserDefaults]synchronize];
                                        
-                                       if (!address) {
-                                           
-//                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"There was an error while getting the location." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                                           [alert show];
-                                           
-                                       }else{
-                                           // do nothing!!!!!
-                                       }
-                                       NSLog(@"inside main thread!");
                                    });
                                }
                                else{
@@ -698,7 +593,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                                    [spinner removeSpinner];
                                    
                                    //error while getting location so we need to set bool no here !!!!!!
-                                   NSLog(@"An error occuredasdfadsfadsf: %@", jsonError);
+                                   DLog(@"An error occuredasdfadsfadsf: %@", jsonError);
                                    
                                }
                            }];
@@ -712,12 +607,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 - (void)StaticMenuItems:(NSInteger)indexValue{
     
-    NSLog(@"index value--%lu",(unsigned long)indexValue);
+    DLog(@"index value--%lu",(unsigned long)indexValue);
     
     DataClass *obj = [DataClass getInstance];
     
     if ( [obj.globalcompleteCategory count] ==indexValue) {
-        NSLog(   @"this is edit profile");
+        DLog(   @"this is edit profile");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         
         if (size.height==480) {
@@ -732,7 +627,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
         
     }else if ( [obj.globalcompleteCategory count]+1 == indexValue) {
-        NSLog(@"terms and conditions!!!");
+        DLog(@"terms and conditions!!!");
         
         CGSize size = [[UIScreen mainScreen]bounds].size;
         
@@ -753,7 +648,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     }else if ( [obj.globalcompleteCategory count]+2 == indexValue) {
         
        
-        NSLog(@" privacy policy");
+        DLog(@" privacy policy");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         
         if (size.height==480) {
@@ -771,7 +666,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
     }else if ([obj.globalcompleteCategory count]+3 == indexValue) {
         
-        NSLog(@"About us!!!!");
+        DLog(@"About us!!!!");
 
         
         CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -791,7 +686,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
         
     }else if ([obj.globalcompleteCategory count]+4 == indexValue){
-         NSLog(@"my submission");
+         DLog(@"my submission");
         
          CGSize size = [[UIScreen mainScreen]bounds].size;
         
@@ -820,7 +715,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
        
         
     }else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
-        NSLog(@"save for later");
+        DLog(@"save for later");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         if (480 == size.height) {
             // for iPhone 4.
@@ -845,20 +740,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)CCKFNavDrawerSelection:(NSInteger)selectionIndex{
     
-     NSLog(@"CCKFNavDrawerSelection =================== %li", (long)selectionIndex);
-    //[self.view setUserInteractionEnabled:NO];
-    //spinner=[SpinnerView loadSpinnerIntoView:self.view];
-    
-   // [self.view setUserInteractionEnabled:NO];
-   // spinner=[SpinnerView loadSpinnerIntoView:self.view];
-    
+     DLog(@"CCKFNavDrawerSelection =================== %li", (long)selectionIndex);
     
     if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone){
         
         if ([objectDataClass.globalFeedType isEqualToString:@"Static Link"]) {
             // For this open link in webview..
             
-            NSLog(@"link is static");
+            DLog(@"link is static");
             StaticLinkView * staticObj = [[StaticLinkView alloc] initWithNibName:@"StaticLinkView" bundle:nil];
             staticObj.staticlink = objectDataClass.globalstaticLink;
             [self.navigationController pushViewController:staticObj animated:YES];
@@ -883,11 +772,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             DataClass *obj = [DataClass getInstance];
             
-            //if([Utility connected] == YES)
-            //{
-                
                 [self.view setUserInteractionEnabled:NO];
-                spinner=[SpinnerView loadSpinnerIntoView:self.view];
+                [self.refreshControl beginRefreshing];
                 
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil)
                 {
@@ -899,7 +785,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 if (objectDataClass.globalFeedID)
                 {
                     urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",objectDataClass.globalFeedID,@"SkagitTimes"];
-                    NSLog(@"url with feed id %@",urlString);
+                    DLog(@"url with feed id %@",urlString);
                     
                 }
                 else
@@ -908,21 +794,21 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",firstFeedItemId,@"SkagitTimes"];
                     
                     
-                    NSLog(@"url string home--%@",urlString);
+                    DLog(@"url string home--%@",urlString);
                     
                 }
                 
                 PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
                 [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
                     
-                    NSLog(@"JSON: %@", responseObject);
+                    DLog(@"JSON: %@", responseObject);
                     NSDictionary *json = [Utility cleanJsonToObject:responseObject];
                     [self.view setUserInteractionEnabled:YES];
-                    [spinner removeSpinner];
+                    
                     if (json)
                     {
                         
-                            NSLog(@"storing it first time");
+                        DLog(@"storing it first time");
                         
                         if ([[json valueForKey:@"items"] isKindOfClass:[NSArray class]] && [[json valueForKey:@"items"] count]>0)
                         {
@@ -932,7 +818,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                             [tableView reloadData];
                                 
                             
-                            NSLog(@"new feed are --%@",feeds);
+                            DLog(@"new feed are --%@",feeds);
                             
                         }
                         
@@ -951,40 +837,18 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                         }
                     }
                     
+                    [self.refreshControl endRefreshing];
+                    
                 } failure:^(NSURLSessionTask *operation, NSError *error) {
                     
-                    NSLog(@"Error: %@", error);
-                    /*
-                    UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"No data received from the server" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
-                        
-                        
-                    }];
-                    
-                    [errorAlert addAction:errorAction];
-                    [self presentViewController:errorAlert animated:YES completion:nil];
-                     */
+                    DLog(@"Error: %@", error);
                     [self.view setUserInteractionEnabled:YES];
-                    [spinner removeSpinner];
+                    [self.refreshControl endRefreshing];
                     
                 }];
                 
 
-            /*}
-            else
-            {
-                
-                
-                UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
-                }];
-                
-                [errorAlert addAction:errorAction];
-                [self presentViewController:errorAlert animated:YES completion:nil];
-                
-                
-            }*/
-        }
+            }
     }
 }
 
@@ -1142,7 +1006,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }
     }
     
-    NSLog(@"testing array for media url --%@",testing);
+    DLog(@"testing array for media url --%@",testing);
     //for index 0..
     if (testing) {
         
@@ -1150,7 +1014,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     {
 
         [testArray addObject:testing];
-        NSLog(@"testarray for image -%@",testArray);
+        DLog(@"testarray for image -%@",testArray);
         NSString * imgURl = [NSString stringWithFormat:@"%@",testing];
 
         UIImageView * firstImageView =[[UIImageView alloc] initWithFrame:CGRectMake(2.0, 6.0, 301.0, 190.0)]; //2,6,301,170
@@ -1183,7 +1047,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }//for 1 and further index....
         [testArray addObject:testing];
        // testArray = [testing copy];
-        NSLog(@"test array in 2 --%@",testArray);
+        DLog(@"test array in 2 --%@",testArray);
         
         if ([objectDataClass.globalFeedType isEqualToString:@"Photo Gallery"]) {
             
@@ -1467,7 +1331,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }
     }
         
-    NSLog(@"image url -- %@",testing);
+    DLog(@"image url -- %@",testing);
 
     return cell;
     
@@ -1504,7 +1368,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 //    CGImageRelease(imageRef); // CGImageRef won’t be released by ARC
 //    
 //    
-//    NSLog(@"------------------------------------URL-%@---------------------------------",urlVideo);
+//    DLog(@"------------------------------------URL-%@---------------------------------",urlVideo);
 //    
 //    
 //    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:urlVideo options:nil];
@@ -1513,7 +1377,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 //    NSError *err = NULL;
 //    CMTime time = CMTimeMake(30, 10);
 //    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-//    NSLog(@"err==%@, imageRef==%@", err, imgRef);
+//    DLog(@"err==%@, imageRef==%@", err, imgRef);
 //    return [[UIImage alloc] initWithCGImage:imgRef];
 }
 
@@ -1539,7 +1403,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         obj_photo.gatheredDict = [PhotoUrl copy];
         obj_photo.transferedArray = [PhotoUrl copy];
-        NSLog(@"photo url--%@",obj_photo.transferedArray);
+        DLog(@"photo url--%@",obj_photo.transferedArray);
         
         
      //   detailsView_Object.getimageURl= imageURlForWebView;
@@ -1572,7 +1436,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
    
     objectDataClass.globalIndex = (int)indexPath1.row;
     
-    NSLog(@"selected cell is  --%ld and global index--%ld",(long)indexPath1.row,(long)objectDataClass.globalIndex);
+    DLog(@"selected cell is  --%ld and global index--%ld",(long)indexPath1.row,(long)objectDataClass.globalIndex);
     
     NSString *description_string = [feeds[indexPath.row] objectForKey: @"Description"];
 
@@ -1593,7 +1457,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     
     detailsView_Object.getimageURl= imageURlForWebView;
-    NSLog(@"inage url for webview--%@",detailsView_Object.getimageURl);
+    DLog(@"inage url for webview--%@",detailsView_Object.getimageURl);
     
     
     //detailsView_Object.getImageURls_Dict =[[NSDictionary alloc] init];
@@ -1602,7 +1466,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     detailsView_Object.getImageURls_Dict = mediaDict;  // test_url[indexPath.row];
     //detailsView_Object.getImageURls_Array = [MediaURl copy];
     
-    NSLog(@"all urls --%@",detailsView_Object.getImageURls_Dict);
+    DLog(@"all urls --%@",detailsView_Object.getImageURls_Dict);
     
     
     
@@ -1616,7 +1480,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     
     
-   // NSLog(@"description while navigating is --%@",detailsView_Object.getDescriptionString);
+   // DLog(@"description while navigating is --%@",detailsView_Object.getDescriptionString);
     
     [self.navigationController pushViewController:detailsView_Object animated:YES];
     
@@ -1639,23 +1503,17 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadCategoryAPI {
     
+    [self.view setUserInteractionEnabled:NO];
+    [self.refreshControl beginRefreshing];
     
-    //if ([Utility connected] == YES) {
-        
-        [self.view setUserInteractionEnabled:NO];
-        spinner=[SpinnerView loadSpinnerIntoView:self.view];
-       // spinner.ce
-        
-       
-        
-        NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/menu/GetMenuCategories?source=%@",@"SkagitTimes"];
-    NSLog(@"url string service otp--%@",urlString);
+    NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/menu/GetMenuCategories?source=%@",@"SkagitTimes"];
+    DLog(@"url string service otp--%@",urlString);
     
         
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
-            NSLog(@"JSON: %@", responseObject);
+            DLog(@"JSON: %@", responseObject);
             
             
             NSArray *json = [Utility cleanJsonToObject:responseObject];
@@ -1663,7 +1521,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
             [self.view setUserInteractionEnabled:YES];
-            [spinner removeSpinner];
+            [self.refreshControl endRefreshing];
 
             if (json.count>0)
             {
@@ -1687,13 +1545,13 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     [jsonDict setObject:@"IOS" forKey:@"clientInfo"];
                 }
                 
-                // NSLog(@"complete json --%@",objectDataClass.globalcompleteCategory);
+                // DLog(@"complete json --%@",objectDataClass.globalcompleteCategory);
                 // PAYMETER API
                 
-                NSLog(@"%@",jsonDict);
+                DLog(@"%@",jsonDict);
                 DataClass *obj = [DataClass getInstance];
                 obj.jsonDict = jsonDict;
-                NSLog(@"%@",obj.jsonDict);
+                DLog(@"%@",obj.jsonDict);
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil) {
 
                 [sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
@@ -1724,10 +1582,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
+            DLog(@"Error: %@", error);
             
             [self.view setUserInteractionEnabled:YES];
-            [spinner removeSpinner];
+            [self.refreshControl endRefreshing];
 
             UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1736,25 +1594,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             [errorAlert addAction:errorAction];
             [self presentViewController:errorAlert animated:YES completion:nil];
             
-
-            
         }];
-
-        
-
-        
-
-    /*} else {
-    
-    UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
-    }];
-    
-    [errorAlert addAction:errorAction];
-    [self presentViewController:errorAlert animated:YES completion:nil];
-    
-    
-}*/
 
 }
 
@@ -1772,7 +1612,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         if (objectDataClass.globalFeedID)
         {
             urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",objectDataClass.globalFeedID,@"SkagitTimes"];
-            NSLog(@"url with feed id %@",urlString);
+            DLog(@"url with feed id %@",urlString);
             
         }
         else
@@ -1781,14 +1621,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",firstFeedItemId,@"SkagitTimes"];
             
             
-            NSLog(@"url string home--%@",urlString);
+            DLog(@"url string home--%@",urlString);
             
         }
 
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
            
-            NSLog(@"JSON: %@", responseObject);
+            DLog(@"JSON: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];
             
             if (json)
@@ -1796,7 +1636,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 [self handleServiceCallCompletion];
                 
                 
-                    NSLog(@"storing it first time");
+                    DLog(@"storing it first time");
                 
                 
                 if ([[json valueForKey:@"items"] isKindOfClass:[NSArray class]]) {
@@ -1806,7 +1646,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     
                     [tableView reloadData];
 
-                    NSLog(@"new feed are --%@",feeds);
+                    DLog(@"new feed are --%@",feeds);
                     
                 }
                 else
@@ -1840,7 +1680,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
+            DLog(@"Error: %@", error);
             [self handleServiceCallCompletion];
            
 
@@ -1918,8 +1758,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         if (isBrowserTapped)
         {
@@ -1959,10 +1799,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
     mainImage = chosenImage;
     data = UIImagePNGRepresentation(mainImage);
-    NSLog(@"converted data--%@",data);
+    DLog(@"converted data--%@",data);
     
     //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-    //    NSLog(@"imagepath==================== %@",localUrl);
+    //    DLog(@"imagepath==================== %@",localUrl);
     
     if(isCameraClicked)
     {
@@ -1971,9 +1811,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
     }
     
-    //NSLog(@"image is ========%@",mainImage);
+    //DLog(@"image is ========%@",mainImage);
     
-    NSLog(@"info==============%@",info);
+    DLog(@"info==============%@",info);
     
     //New chamges
     
@@ -1991,7 +1831,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     //Gaurav's logic
     
-    NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+    DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
     
     
     
@@ -2023,7 +1863,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     //[picker dismissViewControllerAnimated:YES completion:NULL];
-    NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+    DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
     
     captureduniqueName = [self generateUniqueName];
     
@@ -2087,7 +1927,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
-    NSLog(@"cancel Tapped!");
+    DLog(@"cancel Tapped!");
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
 
     isPickerTapped = YES;
@@ -2117,7 +1957,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     // int randomValue = arc4random() % 1000;
     //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-    NSLog(@"unique name --%@",finalUnique);
+    DLog(@"unique name --%@",finalUnique);
     return finalUnique;
     
 }
@@ -2127,7 +1967,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
       //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
@@ -2153,7 +1993,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2264,7 +2104,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)syncSuccess:(id) responseObject {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
     
     

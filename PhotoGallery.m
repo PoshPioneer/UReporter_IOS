@@ -71,8 +71,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     
-   // NSLog(@"trnasfer array --%@",transferedArray);
-   // NSLog(@"images url --%@",gatheredDict);
+   // DLog(@"trnasfer array --%@",transferedArray);
+   // DLog(@"images url --%@",gatheredDict);
 //    
 //    UIImageView * photo = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 65.0, 300.0, 400.0)];
 //    photo.contentMode  = UIViewContentModeScaleAspectFit;
@@ -80,7 +80,7 @@
     // [photo sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[gatheredDict valueForKey:@"url2"]]]];
     
    // NSArray * tempArray = [transferedArray valueForKey:@"Mediaitems"];
-  //  NSLog(@"temp array--%lu",(unsigned long)[tempArray count]);
+  //  DLog(@"temp array--%lu",(unsigned long)[tempArray count]);
  
     
     [self loadImages];
@@ -93,10 +93,10 @@
     spinner=[SpinnerView loadSpinnerIntoView:self.view];
     getImage_Array = [NSMutableArray new];
     
-    // NSLog(@"description after navigating --%@",self.getDescriptionString);
+    // DLog(@"description after navigating --%@",self.getDescriptionString);
     
     NSMutableArray *all_Image_urls = [[transferedArray valueForKey:@"Mediaitems"]valueForKey:@"url"];
-    NSLog(@"all urls--%@",all_Image_urls);
+    DLog(@"all urls--%@",all_Image_urls);
     
     if (all_Image_urls.count==0) {
         
@@ -150,7 +150,7 @@
                 }else{
                     
                     NSString *ImageURL = [all_Image_urls objectAtIndex:i];
-                    NSLog(@"image url -- %@",ImageURL);
+                    DLog(@"image url -- %@",ImageURL);
 
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
                     //self.newsImage_ImgView.image = [UIImage imageWithData:imageData];
@@ -259,7 +259,7 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@"Photo gallery from array is :  %@",array);
+    DLog(@"Photo gallery from array is :  %@",array);
     
     [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
     

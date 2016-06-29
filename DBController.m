@@ -29,7 +29,7 @@
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
 	NSString *documentsDir = [paths objectAtIndex:0];
-    NSLog(@"Datapath=%@",documentsDir);
+    DLog(@"Datapath=%@",documentsDir);
 	return [documentsDir stringByAppendingPathComponent:@"PioneerDB"];
 }
 
@@ -48,7 +48,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
             
                 //BEGIN EXCLUSIVE TRANSACTION
@@ -68,7 +68,7 @@
                 }
 			sqlite3_finalize(begin_statement);
             
-            NSLog(@"Exitsing data, Update Please");
+            DLog(@"Exitsing data, Update Please");
                     NSString *updateSQL = [NSString stringWithFormat:@"UPDATE Like set feedID ='%@',status = '%@' WHERE feedID = ?",
                                            key.feedID,
                                            key.status
@@ -94,7 +94,7 @@
 			
 			
 			sqlite3_finalize(upd_client_tooth_statement);
-                //NSLog(@"sqlite3_finalize executed");
+                //DLog(@"sqlite3_finalize executed");
 			
 			
 			
@@ -123,16 +123,16 @@
             }
 		else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }
 	
@@ -157,7 +157,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
 			sqlite3_stmt *statement;
 			
@@ -196,16 +196,16 @@
     }
         else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }
 	return p_info;
@@ -223,7 +223,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
 			sqlite3_stmt *statement;
 			
@@ -326,7 +326,7 @@
                 }
 			
 			sqlite3_finalize(statement);
-                //NSLog(@"sqlite3_finalize executed");
+                //DLog(@"sqlite3_finalize executed");
 			
 			
 			
@@ -334,16 +334,16 @@
             }
 		else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }	
 	return p_info;
@@ -355,7 +355,7 @@
     
     
 	BOOL userSaved=NO;
-	NSLog(@"%@",pro.feedID);
+	DLog(@"%@",pro.feedID);
     
     sqlite3 *database;
     
@@ -365,7 +365,7 @@
         const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
         if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
             
             
             
@@ -440,16 +440,16 @@
             }
         else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
         
         sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
     else
         {
         sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         
         }
     
@@ -471,7 +471,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
 			sqlite3_stmt *statement;
 			
@@ -518,16 +518,16 @@
             }
 		else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }	
 	return p_info;
@@ -546,7 +546,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
             
                 //BEGIN EXCLUSIVE TRANSACTION
@@ -566,7 +566,7 @@
                 }
 			sqlite3_finalize(begin_statement);
             
-            NSLog(@"Exitsing data, Update Please");
+            DLog(@"Exitsing data, Update Please");
             NSString *updateSQL = [NSString stringWithFormat:@"UPDATE EvalutionForm set accessToken ='%@',ansToQuest1 = '%@',ansToQuest2 = '%@',ansToQuest3 = '%@',ansToQuest4 = '%@',ansToQuest5 = '%@',ansToQuest6 = '%@',groupId = '%@',roundTableId = '%@'  WHERE userId = ?",
                                    key.accessToken,
                                    key.ansToQuest1,
@@ -599,7 +599,7 @@
 			
 			
 			sqlite3_finalize(upd_client_tooth_statement);
-                //NSLog(@"sqlite3_finalize executed");
+                //DLog(@"sqlite3_finalize executed");
 			
 			
 			
@@ -628,16 +628,16 @@
             }
 		else
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }
 	
@@ -659,7 +659,7 @@
 		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
 		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
             {
-                //NSLog(@"foreign key enabled");
+                //DLog(@"foreign key enabled");
 			
             
                 //BEGIN EXCLUSIVE TRANSACTION
@@ -680,7 +680,7 @@
 			sqlite3_finalize(begin_statement);
 			
 			
-            NSLog(@"Exitsing data, Update Please");
+            DLog(@"Exitsing data, Update Please");
             NSString *deleteSQL = @"delete from Like WHERE feedID = ?";
                                   
                 //update the 'to be updated' buddies
@@ -706,7 +706,7 @@
 			
 			
 			sqlite3_finalize(upd_client_tooth_statement);
-                //NSLog(@"sqlite3_finalize executed");
+                //DLog(@"sqlite3_finalize executed");
 			
 			
 			
@@ -735,16 +735,16 @@
             }
 		else 
             {
-                //NSLog(@"foreign key not enabled");
+                //DLog(@"foreign key not enabled");
             }
 		
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
         }
 	else 
         {
 		sqlite3_close(database);
-            //NSLog(@"sqlite3_close executed");
+            //DLog(@"sqlite3_close executed");
 		
         }	
 	

@@ -37,8 +37,8 @@ UIPageControl *pageControl;
 
 -(void)viewWillAppear:(BOOL)animated {
     
-    NSLog(@"trnasfer array --%@",transferedArray);
-    NSLog(@"images url --%@",gatheredDict);
+    DLog(@"trnasfer array --%@",transferedArray);
+    DLog(@"images url --%@",gatheredDict);
     
     UIImageView * photo = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 64.0, 300.0, 400.0)];
     photo.contentMode  = UIViewContentModeScaleAspectFit;
@@ -67,10 +67,10 @@ UIPageControl *pageControl;
     
     getImage_Array = [NSMutableArray new];
     
-    // NSLog(@"description after navigating --%@",self.getDescriptionString);
+    // DLog(@"description after navigating --%@",self.getDescriptionString);
     
     NSMutableArray *all_Image_urls = [[[transferedArray objectAtIndex:0] valueForKey:@"Mediaitems"]valueForKey:@"url"];
-    NSLog(@"all urls--%@",all_Image_urls);
+    DLog(@"all urls--%@",all_Image_urls);
     
    // NSArray *allKeys =[gatheredDict allKeys];
     kNumberOfPages = all_Image_urls.count;
@@ -101,7 +101,7 @@ UIPageControl *pageControl;
          // NSString *ImageURL = [all_Image_urls valueForKey:[NSString stringWithFormat:@"url%d",i+1]]; //self.getimageURl;
            
             NSString *ImageURL = [all_Image_urls objectAtIndex:i];
-            NSLog(@"image url -- %@",ImageURL);
+            DLog(@"image url -- %@",ImageURL);
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
             //self.newsImage_ImgView.image = [UIImage imageWithData:imageData];
             //converted_Image =imageData;
@@ -183,7 +183,7 @@ UIPageControl *pageControl;
     
 //    NSArray * viewsList =[self.navigationController viewControllers];
 //    
-//    NSLog(@"views list --%@",viewsList);
+//    DLog(@"views list --%@",viewsList);
 //    [self.navigationController popToViewController:[viewsList objectAtIndex:1] animated:YES];
 
     [self.navigationController popViewControllerAnimated:YES];

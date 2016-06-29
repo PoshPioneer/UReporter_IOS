@@ -29,7 +29,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
 
-    NSLog(@"copied link url --%@",sharingLink);
+    DLog(@"copied link url --%@",sharingLink);
     
 }
 
@@ -107,16 +107,16 @@
     switch (result)
     {
         case MFMailComposeResultCancelled:
-            NSLog(@"Mail cancelled");
+            DLog(@"Mail cancelled");
             break;
         case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
+            DLog(@"Mail saved");
             break;
         case MFMailComposeResultSent:
-            NSLog(@"Mail sent");
+            DLog(@"Mail sent");
             break;
         case MFMailComposeResultFailed:
-            NSLog(@"Mail sent failure: %@", [error localizedDescription]);
+            DLog(@"Mail sent failure: %@", [error localizedDescription]);
             break;
         default:
             break;

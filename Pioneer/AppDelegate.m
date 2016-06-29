@@ -69,7 +69,7 @@
     AppDelegate *app1 = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password"; //"appleDevelopment"
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app1.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"time stamp is ====== %@",idfv_Local);
+    DLog(@"time stamp is ====== %@",idfv_Local);
 
     // end
     
@@ -81,7 +81,7 @@
         timestamp = [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970]];
         timestamp = [timestamp stringByAppendingString:[self  randomStringWithLength:9]];
         timestamp=[timestamp stringByReplacingOccurrencesOfString:@"." withString:@""];
-        NSLog(@"this is our finlal one value ..........%@",timestamp);
+        DLog(@"this is our finlal one value ..........%@",timestamp);
 
         FinalKeyChainValue= [GlobalStuff getDeviceId]; //timestamp;
         randomNumber=@"";
@@ -91,7 +91,7 @@
     {
         NSString *  KEY_PASSWORD = @"com.toi.app.password";
         NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:putValueToKeyChain] valueForKey:KEY_PASSWORD];
-        NSLog(@"this is idfv locatl---%@",idfv_Local);
+        DLog(@"this is idfv locatl---%@",idfv_Local);
         randomNumber = idfv_Local ;
         
       //  [self showMainScreen];
@@ -101,7 +101,7 @@
     
     ///////////////////////////// one time condition !!!!  end !
     
-    NSLog(@"random no is === %@",randomNumber);
+    DLog(@"random no is === %@",randomNumber);
     
     
 #pragma mark ####################################################################
@@ -116,7 +116,7 @@
         
         // use registerUserNotificationSettings
         
-        NSLog(@"for ios 8");
+        DLog(@"for ios 8");
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
         
@@ -126,7 +126,7 @@
     {
         // use registerForRemoteNotifications
         
-        NSLog(@"for ios 7");
+        DLog(@"for ios 7");
 
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -135,7 +135,7 @@
 #else
     // use registerForRemoteNotifications
     
-    NSLog(@"for ios 7");
+    DLog(@"for ios 7");
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -187,36 +187,16 @@
     AppDelegate *app=(AppDelegate*)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password"; //"appleDevelopment"
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"saved key  is =====%@",idfv_Local);
+    DLog(@"saved key  is =====%@",idfv_Local);
     
-    if ([idfv_Local length]==0)
-    {
-//        NSLog(@"keychain is nil for all.");
-//        
-//        if ([[[UIDevice currentDevice] systemVersion] floatValue] > 9.2 )
-//        {
-//            
-//            [self alertMessage:@"Warning"  message:@"This app is not compatible with the OS version on your device."];
-//            
-//        }
-        
-        //if ([Utility connected] == NO)
-        //{
-            // Internet connection is not available !! so show alert
-            
-         //   [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
-        //}
-        
-    }
-    else
-    {
+    if ([idfv_Local length]!=0) {
         
         NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
-        NSLog(@"URL===%@",urlString);
+        DLog(@"URL===%@",urlString);
         
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-            NSLog(@"JSON: %@", responseObject);
+            DLog(@"JSON: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];
             
             if (json)
@@ -227,7 +207,7 @@
                 if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"0"])
                 {
                     
-                    NSLog(@"keychain is not null");
+                    DLog(@"keychain is not null");
                     CGSize size = [[UIScreen mainScreen]bounds].size;
                     
                     if (size.height==480)
@@ -268,7 +248,7 @@
             
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
+            DLog(@"Error: %@", error);
             
             
         }];
@@ -299,13 +279,13 @@
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken{
    
-    NSLog(@"======%@",deviceToken);
+    DLog(@"======%@",deviceToken);
 
     NSString *strWithoutSpaces  = [NSString stringWithFormat:@"%@",deviceToken];
     strWithoutSpaces = [strWithoutSpaces stringByReplacingOccurrencesOfString:@" " withString:@""];
     strWithoutSpaces = [strWithoutSpaces stringByReplacingOccurrencesOfString:@"<" withString:@""];
     device_Token = [strWithoutSpaces stringByReplacingOccurrencesOfString:@">" withString:@""];
-     NSLog(@"Push Token is: %@", device_Token);
+     DLog(@"Push Token is: %@", device_Token);
     
     /*
      NSCharacterSet *angleBrackets = [NSCharacterSet characterSetWithCharactersInString:@"<>"];
@@ -318,7 +298,7 @@
     // for getting ....
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is =====%@",idfv_Local);
+    DLog(@"idfv is =====%@",idfv_Local);
     // for getting .....
 
     /*
@@ -383,7 +363,7 @@
     NSSet *setis = [NSSet setWithObjects:[GlobalStuff getDeviceId], nil];
     [hub registerNativeWithDeviceToken:deviceToken tags:setis completion:^(NSError* error) {
         if (error != nil) {
-            NSLog(@"Error registering for notifications: %@", error);
+            DLog(@"Error registering for notifications: %@", error);
         }
     }];
 
@@ -392,14 +372,14 @@
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error{
     
-	NSLog(@"Failed to get token, error: %@", error);
+	DLog(@"Failed to get token, error: %@", error);
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
 	application.applicationIconBadgeNumber=application.applicationIconBadgeNumber+1;
     
-    // NSLog(@"userInfo is =====%@",userInfo);
+    // DLog(@"userInfo is =====%@",userInfo);
     
     UIApplicationState state = [application applicationState];
     
@@ -422,7 +402,7 @@
 
          
          */
-        NSLog(@"o/p of push notification from azure is -%@", userInfo);
+        DLog(@"o/p of push notification from azure is -%@", userInfo);
         
         
         NSString *message = [[userInfo valueForKey:@"aps"]valueForKey:@"alert"];
@@ -440,7 +420,7 @@
         [[UIApplication sharedApplication] cancelAllLocalNotifications];
         [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
         
-        NSLog(@"o/p of push notification from azure is -%@", userInfo);
+        DLog(@"o/p of push notification from azure is -%@", userInfo);
         /*
          
          aps =     {
@@ -489,10 +469,10 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     
-    NSLog(@"MyArray is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
+    DLog(@"MyArray is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
-   // NSLog(@"active final submitteed array--%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"]);
+   // DLog(@"active final submitteed array--%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"]);
 }
 
 
@@ -531,7 +511,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
  //   [self alertMessage:@"Alert!"  message: @"There was an error while getting the location"];
     
 }
@@ -539,14 +519,14 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil)
     {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         locationManager = nil;
         [locationManager stopUpdatingLocation];
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
@@ -570,9 +550,9 @@
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
-    NSLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+    DLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
     
     _userAddress = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
@@ -605,7 +585,7 @@
     // for getting ....
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"getCategory idfv_Local  is =====%@",idfv_Local);
+    DLog(@"getCategory idfv_Local  is =====%@",idfv_Local);
     // for getting .....
     
 
@@ -616,7 +596,7 @@
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
     
-    NSLog(@"get Category data is = %@",finalDictionary);
+    DLog(@"get Category data is = %@",finalDictionary);
     
     NSError *error = nil;
     
@@ -631,7 +611,7 @@
     
     NSString * urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/Category?token=",[GlobalStuff generateToken]];
     
-    NSLog(@"get category app url --%@",urlString);
+    DLog(@"get category app url --%@",urlString);
 
     NSURL *url= [NSURL URLWithString:urlString]; //@"http://prngapi.cloudapp.net/api/Category"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -646,7 +626,7 @@
                                
                                if (response ==nil || data ==nil) {
                                    
-                                   NSLog(@"error catched!");
+                                   DLog(@"error catched!");
 
                                }
                                
@@ -656,7 +636,7 @@
                                                                           options:kNilOptions
                                                                             error:&jsonError];
                                
-                               NSLog(@"o/p of getCategory  is =   %@",json);
+                               DLog(@"o/p of getCategory  is =   %@",json);
                                
                                if (json) {
                                   
@@ -664,13 +644,13 @@
                                        // The key existed...
                                        
                                        // amit joshi commented  5 august ...
-                                     NSLog(@"go back to main !");
+                                     DLog(@"go back to main !");
 // /*
                                       // getting .....
                                       AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                       NSString *  KEY_PASSWORD = @"com.toi.app.password";
                                       NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-                                      NSLog(@"idfv is =====%@",idfv);
+                                      DLog(@"idfv is =====%@",idfv);
                                       // getting ...
                                      
 
@@ -683,7 +663,7 @@
 //                                     
 //                                     NSString *    idfvAfter = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
 //                                    
-//                                     NSLog(@"idfv is =====%@",idfvAfter);
+//                                     DLog(@"idfv is =====%@",idfvAfter);
 //                                    // [[NSNotificationCenter defaultCenter]postNotificationName:@"goBackToHome" object:nil];
 //                                       // amit joshi commented  5 august ...
 // //*/
@@ -740,62 +720,33 @@
                                    // PickerViewForCategory.delegate=self;
                                    //return to main thread
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                       NSLog(@"inside main thread!");
+                                       DLog(@"inside main thread!");
                                        [self registerPushNotification_Method];
                                    });
                                    
                                }
                                else{
                                    
-                                   NSLog(@"An error occured: %@", jsonError);
+                                   DLog(@"An error occured: %@", jsonError);
                               
                                }
                              
                                }
-                               ///////
+                  
                                if([json valueForKey:@"Message"] != nil) {
-// /*
-                                   // amit joshi commented  5 august ...
-  
-                                  // The key existed...
-                                  
-                               NSLog(@"go back to main !");
+                               DLog(@"go back to main !");
                                  
                                  // getting .....
                                  AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                  NSString *  KEY_PASSWORD = @"com.toi.app.password";
                                  NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-                                 NSLog(@"idfv is =====%@",idfv);
-                                 // getting ...
-                                 
-                                 
-                                 ///// for settting ....
-//                                 NSMutableDictionary *usernamepasswordKVPairs = [NSMutableDictionary dictionary];
-//                                 [usernamepasswordKVPairs setObject:@"Amit_Parameter_argument" forKey:KEY_PASSWORD];
-//                                 [KeyChainValteck keyChainSaveKey:app.putValueToKeyChain data:usernamepasswordKVPairs];
-//                                 
-//                                 /// for setting ......
-//                                 
-//                                 NSString *    idfvAfter = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-//                                 
-//                                 NSLog(@"idfv is =====%@",idfvAfter);
-                                // [[NSNotificationCenter defaultCenter]postNotificationName:@"goBackToHome" object:nil];
-                               
-                                 // amit joshi commented  5 august ...
-// */
-                                   
+                                 DLog(@"idfv is =====%@",idfv);
+
                                }else{
                                    
-                                   
-
-                               ///////
                                
                                }
 
-                               //////
-                               
-                               
-                               
                                
                            }];
     
@@ -809,7 +760,7 @@
 
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is =====%@",idfv_Local);
+    DLog(@"idfv is =====%@",idfv_Local);
     // for getting .....
 
     __block id json;
@@ -822,8 +773,8 @@
     [finalDictionary setValue:idfv_Local forKey:@"deviceId"];
     [finalDictionary setValue:[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"] forKey:@"userId"];
     
-    NSLog(@"final dict is amit====%@",finalDictionary);
-   // NSLog(@"push notification ====%@",finalDictionary);
+    DLog(@"final dict is amit====%@",finalDictionary);
+   // DLog(@"push notification ====%@",finalDictionary);
     NSError *error = nil;
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDictionary
@@ -833,7 +784,7 @@
 //timesgroupcrapi   SkagitTimes
     
     NSString * urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/registerdevice?token=",[GlobalStuff generateToken]];
-    NSLog(@"push url--%@",urlString);
+    DLog(@"push url--%@",urlString);
     
     NSURL *url = [NSURL URLWithString:urlString];       //@"http://prngapi.cloudapp.net/api/registerdevice"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -847,7 +798,7 @@
                                
                                if (response ==nil || data ==nil) {
                                    
-                                   NSLog(@"error catched!");
+                                   DLog(@"error catched!");
 
                                }
                                
@@ -861,7 +812,7 @@
                                    
                                    
                     NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-                                NSLog(@"deep o/p is ==== %@",text);
+                                DLog(@"deep o/p is ==== %@",text);
 
                                    //o/p is ==== "successfully updated" //
                                    /*
@@ -875,7 +826,7 @@
                                        
                                    }else{
                                        
-                                      // NSLog(@"error occured!");
+                                      // DLog(@"error occured!");
                                    }
                                    
                                    

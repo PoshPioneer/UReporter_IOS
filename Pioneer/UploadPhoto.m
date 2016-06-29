@@ -114,10 +114,10 @@ NSMutableData *responseData;
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        NSLog(@"quite empty!!!!");
+        DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
         
         lbl_output_category.userInteractionEnabled=YES ;
@@ -156,8 +156,8 @@ NSMutableData *responseData;
     
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
-    NSLog(@"id's  are =====%@",app.id_CategoryArray);
-    NSLog(@"names are =====%@",app.categoryNameArray);
+    DLog(@"id's  are =====%@",app.id_CategoryArray);
+    DLog(@"names are =====%@",app.categoryNameArray);
     
     tabBarController.delegate = self;
 
@@ -216,7 +216,7 @@ NSMutableData *responseData;
         
     
         
-//NSLog(@"collected data from review view --%@",tempArray);
+//DLog(@"collected data from review view --%@",tempArray);
         [self.view setNeedsLayout];
         
     txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
@@ -228,11 +228,11 @@ NSMutableData *responseData;
        // mainImage = [UIImage initWithData:transferImageData];
         mainImage = [[UIImage alloc] initWithData:transferImageData];
         localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-        NSLog(@"local url--%@",localUrltesting);
+        DLog(@"local url--%@",localUrltesting);
         [capturedImage setImage:[UIImage imageWithData:transferImageData]];
 
         
-    NSLog(@"category value--%@",categoryID);
+    DLog(@"category value--%@",categoryID);
     if ([categoryID isEqualToString: @"1"]) {
         
         lbl_output_category.text = @"Politics";
@@ -269,7 +269,7 @@ NSMutableData *responseData;
     
     
     
-    NSLog(@"viewwillAppear!!!!");
+    DLog(@"viewwillAppear!!!!");
     segment_Outlet.tintColor =[UIColor colorWithRed:132.0/255.0 green:193.0/255.0 blue:185.0/255.0 alpha:1.0];
     
     videoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
@@ -296,7 +296,7 @@ NSMutableData *responseData;
 
 -(void)viewDidLayoutSubviews{
     
-    NSLog(@"viewDidLayoutSubviews called.");
+    DLog(@"viewDidLayoutSubviews called.");
     // 12 August code .
     
     
@@ -304,7 +304,7 @@ NSMutableData *responseData;
     {
         // photo is not taken !!!!!
    
-        NSLog(@"inside !handleView");
+        DLog(@"inside !handleView");
         [self doItResize:@"hide"];
         
 
@@ -315,13 +315,13 @@ NSMutableData *responseData;
                     if (cutboolValue) // when cut_Selected tapped!!!!!!
                     {
                         
-                        NSLog(@"inside cutboolValue");
+                        DLog(@"inside cutboolValue");
                         cutboolValue=NO ;
                         [self doItResize:@"hide"];
                         
                     }else if (mainImage==nil){ // when no image !!!!!!
                         
-                        NSLog(@"inside mainImage==nil");
+                        DLog(@"inside mainImage==nil");
                         
                         if (isPickerTapped) {
                             
@@ -332,7 +332,7 @@ NSMutableData *responseData;
 
                     }else{
                         
-                        NSLog(@"inside else below mainImage==nil");
+                        DLog(@"inside else below mainImage==nil");
 
                         [lbl_selected_File_Outlet setHidden:NO];
                         [img_View_Selected_File_Outlet setHidden:NO];
@@ -378,23 +378,23 @@ NSMutableData *responseData;
     if(item.tag == 0)
     {
         
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }/*else if (item.tag ==2) {
         
-        NSLog(@"Photo tab bar tapped");
+        DLog(@"Photo tab bar tapped");
         [self checkforNavigationInternetconnection:2];
         
     }*/else if (item.tag ==2){
         
-        NSLog(@"Audio Tab bar tapped");
+        DLog(@"Audio Tab bar tapped");
         
         [self checkforNavigationInternetconnection:3];
         
     }else if (item.tag ==3) {
       
-      NSLog(@"Text Tab bar tapped");
+      DLog(@"Text Tab bar tapped");
       
       [self checkforNavigationInternetconnection:4];
       }
@@ -405,7 +405,7 @@ NSMutableData *responseData;
     
    // segment_Outlet.selectedSegmentIndex=-1;
 
-    NSLog(@"doItResize called.");
+    DLog(@"doItResize called.");
     
     int  increment_Decrement = 0;
     
@@ -466,7 +466,7 @@ NSMutableData *responseData;
         
         if ([sender selectedSegmentIndex]==0) {
             [self.view endEditing:YES];
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -483,7 +483,7 @@ NSMutableData *responseData;
         }else if ([sender selectedSegmentIndex]==1){
             
             [self.view endEditing:YES];
-            NSLog(@"Browose Tapped");
+            DLog(@"Browose Tapped");
             
             isCameraClicked=NO;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -504,7 +504,7 @@ NSMutableData *responseData;
     
     if ([sender selectedSegmentIndex]==0) {
         
-        NSLog(@"capture photo tapped");
+        DLog(@"capture photo tapped");
         
         isCameraClicked=YES;
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -517,7 +517,7 @@ NSMutableData *responseData;
         
     }else if ([sender selectedSegmentIndex]==1){
         
-        NSLog(@"Browose Tapped");
+        DLog(@"Browose Tapped");
         
         isCameraClicked=NO;
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -589,8 +589,8 @@ NSMutableData *responseData;
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         if (isBrowserTapped)
         {
@@ -649,10 +649,10 @@ NSMutableData *responseData;
     
     mainImage = chosenImage;
     data = UIImagePNGRepresentation(mainImage);
-    NSLog(@"converted data--%@",data);
+    DLog(@"converted data--%@",data);
     
 //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-//    NSLog(@"imagepath==================== %@",localUrl);
+//    DLog(@"imagepath==================== %@",localUrl);
     
     if(isCameraClicked)
     {
@@ -661,9 +661,9 @@ NSMutableData *responseData;
         
     }
     
-   // NSLog(@"image is ========%@",mainImage);
+   // DLog(@"image is ========%@",mainImage);
     
-   // NSLog(@"info==============%@",info);
+   // DLog(@"info==============%@",info);
     
     //New chamges
     
@@ -680,7 +680,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     }
     
     
-    NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+    DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
     
    
    // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
@@ -710,7 +710,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     //[picker dismissViewControllerAnimated:YES completion:NULL];
-    NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+    DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
     
     handleView = YES ;
     
@@ -765,7 +765,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
-    NSLog(@"cancel Tapped!");
+    DLog(@"cancel Tapped!");
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:1]];
 
@@ -872,7 +872,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@"Photo content from array is :  %@",array);
+    DLog(@"Photo content from array is :  %@",array);
     
     
     
@@ -902,7 +902,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
 
         txt_View.text=nil;
         txt_Title.text=nil;
@@ -1018,12 +1018,12 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
     
     
     if([CLLocationManager locationServicesEnabled]){
         
-        NSLog(@"Location Services Enabled");
+        DLog(@"Location Services Enabled");
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
@@ -1066,14 +1066,14 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil)
     {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         locationManager = nil;
         [locationManager stopUpdatingLocation];
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
@@ -1108,9 +1108,9 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
-    NSLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+    DLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
     
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
     
@@ -1185,14 +1185,14 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         if (buttonIndex == 0)
         {
             //    UITextField *Location = [alertView textFieldAtIndex:0];
-            //    NSLog(@"username: %@", username.text);
+            //    DLog(@"username: %@", username.text);
             
-            NSLog(@"first one ");
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"first one ");
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             if ([[alertView textFieldAtIndex:0].text length]<=0) {
                 
-                NSLog(@" Text content from array is :  %@",array);
+                DLog(@" Text content from array is :  %@",array);
                 [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
                 
             }
@@ -1201,7 +1201,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         else
         {
             [self  sendphoto_ToServer];
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             //  [with_Address dismissWithClickedButtonIndex:2 animated:YES];
             
@@ -1212,7 +1212,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
        // NSArray *array = [self.navigationController viewControllers];
         
-        NSLog(@" Text content from array is :  %@",array);
+        DLog(@" Text content from array is :  %@",array);
 
         
         if (buttonIndex==0) {
@@ -1252,7 +1252,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                 
                 // for first service ....
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                 [self  sendphoto_ToServer];
                 
                 
@@ -1260,7 +1260,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
             }else{
                 // for second service ...
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                 [self  sendRestOfThePhotoDATA:responseDataForRestOfTheDetailService];
                 
             }
@@ -1338,7 +1338,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
    
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
     NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken]];
-    NSLog(@"photo url- --%@",urlstring);
+    DLog(@"photo url- --%@",urlstring);
     
     
     NSURL *url = [NSURL URLWithString:urlstring];//[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
@@ -1399,7 +1399,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-    NSLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    DLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
     
     if (totalBytesExpectedToSend==totalBytesSent) {
         
@@ -1433,7 +1433,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
     
     
-    NSLog(@"%s: error =========+++++ %@; data =========+++++ %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    DLog(@"%s: error =========+++++ %@; data =========+++++ %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -1455,7 +1455,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
             
             //when not successfully submitted!!!!!
             
-            NSLog(@"error available!");
+            DLog(@"error available!");
             
             isItFirstService=1;
             try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:/*@"Internet connection is not available. Please try again."*/error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -1496,7 +1496,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     NSString * urlstring = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
     
-    NSLog(@"photo url --%@",urlstring);
+    DLog(@"photo url --%@",urlstring);
     
     NSURL * url = [NSURL URLWithString:urlstring]; //@"http://prngapi.cloudapp.net/api/CJDetails"];
     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
@@ -1558,12 +1558,12 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
     }
 
-    NSLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
+    DLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
     
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
     
-     NSLog(@"Request ON Photo ===%@",finalDictionary);
+     DLog(@"Request ON Photo ===%@",finalDictionary);
     
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -1586,18 +1586,18 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           NSLog(@"Response:%@ %@\n", response, error);
+                                                           DLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                            {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               NSLog(@"final photo o/p is  ==== %@",text);
+//                                                               DLog(@"final photo o/p is  ==== %@",text);
                                                                
                                                                NSError *jsonError;
                                                                NSArray *array = [NSJSONSerialization JSONObjectWithData:data
                                                                                                                 options:kNilOptions
                                                                                                                   error:&jsonError];
                                                                
-                                                               NSLog(@"array is ====%@",array);
+                                                               DLog(@"array is ====%@",array);
                                                                
                                                                
                                                                /*
@@ -1640,7 +1640,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
                                                                 [dateFormatter setDateFormat:@"dd/MM/yyyy"];
                                                                    NSString *date=[dateFormatter stringFromDate:[NSDate date]];
-//                                                                   NSLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
+//                                                                   DLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
                                                                    
                                                                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                                                                    [formatter setDateFormat:@"hh:mm a"];
@@ -1670,7 +1670,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    [photoDataDictionary setValue:[NSString stringWithFormat:@"%@",localUrl] forKey:@"imagePath"];
                                                                    [photoDataDictionary setValue: date forKey:@"Date"];
                                                                    [photoDataDictionary setValue:time forKey:@"Time"];
-                                                                   NSLog(@"photo url--%@",[photoDataDictionary valueForKey:@"imagePath"]);
+                                                                   DLog(@"photo url--%@",[photoDataDictionary valueForKey:@"imagePath"]);
                                                                    if([app.myFinalArray count]<15){
                                                                    
                                                                    [app.myFinalArray addObject:photoDataDictionary];
@@ -1683,7 +1683,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    [[NSUserDefaults standardUserDefaults]synchronize];
                                                                    
                                                                    
-                                                                   NSLog(@"MyArray is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
+                                                                   DLog(@"MyArray is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
 
                                                                    
                                                                    
@@ -1724,7 +1724,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                }else{
                                                                    
                                                                    
-                                                                   NSLog(@"gaurav kestwal");
+                                                                   DLog(@"gaurav kestwal");
                                                                    isItFirstService=2;
                                                                    try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Error While uploading image" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                                                                    [try_AgainInternet_Check show];
@@ -1740,7 +1740,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                            }else {
                                                                
                                                                // if not successfull............
-                                                               NSLog(@"gaurav kestwal2");
+                                                               DLog(@"gaurav kestwal2");
 
                                                                isItFirstService=2;
                                                                try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -1785,7 +1785,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
    // int randomValue = arc4random() % 1000;
   //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
   finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-    NSLog(@"unique name --%@",finalUnique);
+    DLog(@"unique name --%@",finalUnique);
     return finalUnique;
 
 }
@@ -2060,7 +2060,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2086,7 +2086,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2161,7 +2161,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
        // if ([sender selectedSegmentIndex]==0) {
             [self.view endEditing:YES];
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2180,7 +2180,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
      //   if ([sender selectedSegmentIndex]==0) {
             
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2206,7 +2206,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         // code for ios 8 or above !!!!!!!!!
         
             [self.view endEditing:YES];
-            NSLog(@"Browose Tapped");
+            DLog(@"Browose Tapped");
             
             isCameraClicked=NO;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2220,7 +2220,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     }else{
         
         
-            NSLog(@"Browose Tapped");
+            DLog(@"Browose Tapped");
             
             isCameraClicked=NO;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2379,7 +2379,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 #pragma mark -- Custom Button called...
 -(void)submitButtonTap {
     
-    NSLog(@"submit tapped");
+    DLog(@"submit tapped");
     [visualEffectView removeFromSuperview];
     [customAlertView removeFromSuperview];
     
@@ -2507,12 +2507,12 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         }
         
         // app.submitDict = [collectedDict copy];
-//          NSLog(@"collected data in app--%@",collectedDict);
+//          DLog(@"collected data in app--%@",collectedDict);
 
       /*  if ([objectDataClass.globalSubmitArray count]<15) {
             
             [objectDataClass.globalSubmitArray  addObject:PhotocollectedDict];
-            NSLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
+            DLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
             
         }else{
             

@@ -49,46 +49,46 @@
     [outputFormatter setTimeZone:timeZone];
     [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     
-    NSLog(@"newDateString %f", [now timeIntervalSince1970 ]);
+    DLog(@"newDateString %f", [now timeIntervalSince1970 ]);
     
     
     double  Finaldate = [now timeIntervalSince1970] ;
     
     double milliseconds = Finaldate *1000;
     
-    NSLog(@"final date---%f",milliseconds);
+    DLog(@"final date---%f",milliseconds);
     
     NSString * deviceID = [self getDeviceId];
-    NSLog(@"device id--%@",deviceID);
+    DLog(@"device id--%@",deviceID);
     NSString * salt =  [NSString stringWithFormat:@"%@:rz8LuOtFBXphj9WQfvFh",[[NSUserDefaults standardUserDefaults]valueForKey:@"userID_Default"]];
     
-    NSLog(@"key is view controller --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
+    DLog(@"key is view controller --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
     NSString * IPAddress = [self getIPAddress];
     NSString * sourceParam = @"SkagitTimes";
     //  NSString * userAgent = @"iOS";
     double ticks =  ((milliseconds  * 10000) + 621355968000000000);
-    NSLog(@"ticks--%0.00000f",ticks);
+    DLog(@"ticks--%0.00000f",ticks);
     
     NSString *hashLeft = [NSString stringWithFormat:@"%@:%@:%@:%0.00000f:%@", deviceID,IPAddress ,userAgentBlock,ticks,sourceParam];
-    NSLog(@"final string--%@",hashLeft);
+    DLog(@"final string--%@",hashLeft);
     
-    // NSLog(@"ip address--%@",IPAddress);
+    // DLog(@"ip address--%@",IPAddress);
     NSData *saltData = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData = [hashLeft dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     NSMutableData* hash = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, saltData.bytes, saltData.length, paramData.bytes, paramData.length, hash.mutableBytes);
     NSString *base64LeftHash = [Base64 base64forData:hash];
-    NSLog(@"left hash  base 64--%@",base64LeftHash);
+    DLog(@"left hash  base 64--%@",base64LeftHash);
     
     
     // rightHash...
     
     NSString *hashRight =[NSString stringWithFormat:@"%@:%0.00000f:%@",deviceID,ticks,sourceParam];
-    NSLog(@"right Hash --%@",hashRight);
+    DLog(@"right Hash --%@",hashRight);
     
     NSString *token = [NSString stringWithFormat:@"%@:%@",base64LeftHash,hashRight];
-    NSLog(@"concated hash --%@",token);
+    DLog(@"concated hash --%@",token);
     NSData *tokenData = [token dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     return [Base64 base64forData:tokenData];
     
@@ -139,7 +139,7 @@
     // Free memory
     freeifaddrs(interfaces);
     
-    NSLog(@"IP Address--%@",address);
+    DLog(@"IP Address--%@",address);
     return address;
     
 }

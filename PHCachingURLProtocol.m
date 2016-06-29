@@ -132,7 +132,7 @@ static NSSet *PHCachingSupportedSchemes;
                 
                 NSString* dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 
-                NSLog(@"data: %@", dataString);
+                DLog(@"data: %@", dataString);
                 
                 [[self client] URLProtocol:self didLoadData:data];
                 [[self client] URLProtocolDidFinishLoading:self];

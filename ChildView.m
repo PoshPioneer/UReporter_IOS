@@ -133,8 +133,8 @@
 
     
     objectDataClass = [DataClass getInstance];
-    NSLog(@"all data from array--%@",self.testArray);
-    NSLog(@"%lu",self.testArray.count);
+    DLog(@"all data from array--%@",self.testArray);
+    DLog(@"%lu",self.testArray.count);
   
     
     openGallery = [[UIButton alloc] init];
@@ -152,9 +152,9 @@
 
 -(void)manageDB
 {
-    NSLog(@"global index in child view--%ld",(long)pageIndex);
-    NSLog(@"all urls in childview--%@",completeURLs);
-    NSLog(@"all url in array --%@",self.completeURls_Array);
+    DLog(@"global index in child view--%ld",(long)pageIndex);
+    DLog(@"all urls in childview--%@",completeURLs);
+    DLog(@"all url in array --%@",self.completeURls_Array);
     NSString *feedID = [self.testArray objectAtIndex:(long)pageIndex][@"guid"];
     NSArray * arrDB = [DBController getSingleLike_Info:feedID];
     if(arrDB.count >0)  {
@@ -225,7 +225,7 @@
     
     NSMutableArray * allMediaItemsArray =[[NSMutableArray alloc] init];
     allMediaItemsArray = [[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"Mediaitems"];
-    NSLog(@"all media count--%lu",(unsigned long)[allMediaItemsArray count]);
+    DLog(@"all media count--%lu",(unsigned long)[allMediaItemsArray count]);
     NSString* textOnCounter = [NSString stringWithFormat:@"1/%lu",(unsigned long)allMediaItemsArray.count];
     counterOFPages.text = textOnCounter;
     
@@ -242,7 +242,7 @@
     NSString *trimmedDescription =  [[attributedString string] stringByTrimmingCharactersInSet:
                                      [NSCharacterSet whitespaceCharacterSet]];
 
-    NSLog(@"trimmedDescription == %@",trimmedDescription);
+    DLog(@"trimmedDescription == %@",trimmedDescription);
     
     lblDescription.text = trimmedDescription;
     
@@ -263,12 +263,12 @@
         lblAuthorName.frame = CGRectMake(8,lblTitle.frame.origin.y + lblTitle.frame.size.height + 5,screenSize.width-16,20);
 
         lblDescription.numberOfLines = 0; // allows label to have as many lines as needed
-        NSLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
+        DLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
         
         
         CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -16];
                                     
-        NSLog(@"height = %f",expectedLabelSize);
+        DLog(@"height = %f",expectedLabelSize);
         lblDescription.frame = CGRectMake(8,lblAuthorName.frame.origin.y + lblAuthorName.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
         [lblDescription sizeToFit];
         
@@ -310,12 +310,12 @@
 
         
         lblDescription.numberOfLines = 0; // allows label to have as many lines as needed
-        NSLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
+        DLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
         
         
         CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -16];
         
-        NSLog(@"height = %f",expectedLabelSize);
+        DLog(@"height = %f",expectedLabelSize);
         lblDescription.frame = CGRectMake(8,lblAuthorName.frame.origin.y + lblAuthorName.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
         [lblDescription sizeToFit];
         
@@ -324,7 +324,7 @@
         tempArray = [[NSArray alloc] initWithObjects:[self.testArray objectAtIndex:(long)pageIndex], nil];
         
         
-        NSLog(@"Author name=== %@",[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"author"]);
+        DLog(@"Author name=== %@",[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"author"]);
         
         
         likeButton.frame = CGRectMake((screenSize.width*0.218), lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, (screenSize.width*0.15), (screenSize.height*0.088));
@@ -342,9 +342,9 @@
 
 
 -(void)sharingLink {
-    NSLog(@"testing sharing ");
+    DLog(@"testing sharing ");
      sharedLink = [[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"link"];
-    NSLog(@"shared link --%@",sharedLink);
+    DLog(@"shared link --%@",sharedLink);
     SharingView * shareIt = [[SharingView alloc] initWithNibName:@"SharingView" bundle:nil];
     shareIt.sharingLink = sharedLink;
     [self.navigationController pushViewController:shareIt animated:YES];
@@ -355,7 +355,7 @@
     UITextView *textView = [[UITextView alloc] init];
     [textView setAttributedText:text];
     CGSize size = [textView sizeThatFits:CGSizeMake(width, FLT_MAX)];
-    NSLog(@"Height foe textview =  %f",size.height);
+    DLog(@"Height foe textview =  %f",size.height);
     return size.height;
 }
 
@@ -375,12 +375,12 @@
     
     
     BOOL updateFlag = [DBController updateLike_Info:likeObj];
-    NSLog(@"%i",updateFlag);
+    DLog(@"%i",updateFlag);
     
     
-    NSLog(@"global index in child view--%ld",(long)pageIndex);
+    DLog(@"global index in child view--%ld",(long)pageIndex);
 
-    NSLog(@"like button tapped");
+    DLog(@"like button tapped");
     
   
     [self manageDB];
@@ -390,7 +390,7 @@
     NSMutableDictionary* finalDictionary = [NSMutableDictionary dictionary];
     
     
-    NSLog(@"data and header for otp verify is = %@",finalDictionary);
+    DLog(@"data and header for otp verify is = %@",finalDictionary);
     
     NSString *urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/ThumbsUp?Guid=%@",guid];
     NSString * encodedString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -406,7 +406,7 @@
 -(void)dislikeService{
     
     
-    NSLog(@"dislike button tapped");
+    DLog(@"dislike button tapped");
     
     
     guid =[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"guid"];
@@ -417,7 +417,7 @@
     
     
     BOOL updateFlag = [DBController updateLike_Info:likeObj];
-    NSLog(@"%i",updateFlag);
+    DLog(@"%i",updateFlag);
     
     
     
@@ -426,7 +426,7 @@
     NSMutableDictionary* finalDictionary = [NSMutableDictionary dictionary];
     
     
-    NSLog(@"data and header for otp verify is = %@",finalDictionary);
+    DLog(@"data and header for otp verify is = %@",finalDictionary);
     
     NSString *urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/ThumbsDown?Guid=%@",guid];
     NSString * encodedString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
@@ -442,7 +442,7 @@
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     if (responseObject) {
         
         int checkStatus = [[responseObject valueForKey:@"Status"] intValue];

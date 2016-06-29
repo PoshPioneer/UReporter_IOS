@@ -33,7 +33,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     
     checklodeView=NO;
-    NSLog(@"static link --%@",staticlink);
+    DLog(@"static link --%@",staticlink);
     //if ([Utility connected] == YES) {
         
         NSURL *url = [NSURL URLWithString:staticlink];
@@ -66,7 +66,7 @@
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView {
-    NSLog(@"start");
+    DLog(@"start");
     if (!checklodeView) {
         
         checklodeView=YES;
@@ -84,7 +84,7 @@
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     
-    NSLog(@"finish");
+    DLog(@"finish");
     if (checklodeView) {
         
         [self.view setUserInteractionEnabled:YES];
@@ -107,7 +107,7 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
-    NSLog(@"Error for WEBVIEW: %@", [error description]);
+    DLog(@"Error for WEBVIEW: %@", [error description]);
     
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
@@ -118,10 +118,10 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@"Photo content from array is :  %@",array);
+    DLog(@"Photo content from array is :  %@",array);
     
     objectDataClass.globalStaticCheck =YES;
-    NSLog(objectDataClass.globalStaticCheck ? @"Yes" : @"No");
+    DLog(objectDataClass.globalStaticCheck ? @"Yes" : @"No");
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
 

@@ -127,7 +127,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *outputPath = [documentsDirectory stringByAppendingPathComponent:filename ];
     
-    NSLog(@"outputPath: %@", outputPath);
+    DLog(@"outputPath: %@", outputPath);
     imageFromPath = [UIImage imageWithContentsOfFile:outputPath];
     
 //    if (theImage) {
@@ -246,9 +246,9 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
   //for image path showing image to imageview ,,,
     
     NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"imagePath"];
-    NSLog(@"path%@",path);
+    DLog(@"path%@",path);
   
-    NSLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
+    DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
     
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
        UIImage * myImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:fullPath]];
@@ -265,9 +265,9 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
         
         NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"videoPath"];
-        NSLog(@" video path%@",path);
+        DLog(@" video path%@",path);
         
-        NSLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
+        DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
         
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
 
@@ -279,7 +279,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         NSError *error = NULL;
         CMTime time = CMTimeMake(1, 65);
         CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-        NSLog(@"error==%@, Refimage==%@", error, refImg);
+        DLog(@"error==%@, Refimage==%@", error, refImg);
         
         UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
         [cell.imageView setImage:FrameImage];
@@ -300,7 +300,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
      
      NSURL *videoURL = [NSURL fileURLWithPath:path];
      
-     NSLog(@"video url: %@", videoURL);
+     DLog(@"video url: %@", videoURL);
      
      MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
      
@@ -310,7 +310,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
      
      [cell.contentView addSubview:cellimage];
      NSData *imgData = UIImagePNGRepresentation(thumbnail);
-     NSLog(@"lenght of video thumb: %@", [imgData length]);
+     DLog(@"lenght of video thumb: %@", [imgData length]);
      [self.view addSubview:cellimage];
      [cellimage setImage:thumbnail];*/
     
@@ -553,24 +553,24 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 {
     if(item.tag == 0)
     {
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }else if (item.tag ==1) {
         
-        NSLog(@"Image tab bar tapped");
+        DLog(@"Image tab bar tapped");
         [self checkforNavigationInternetconnection:2];
         
     }else if (item.tag ==2){
         
         
-        NSLog(@"Audio Tab bar tapped");
+        DLog(@"Audio Tab bar tapped");
         
         [self checkforNavigationInternetconnection:3];
         
     }else if (item.tag ==3) {
         
-        NSLog(@"Text Tab bar tapped");
+        DLog(@"Text Tab bar tapped");
         
         [self checkforNavigationInternetconnection:4];
     }
@@ -597,7 +597,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             
             // if ([sender selectedSegmentIndex]==0) {
             [self.view endEditing:YES];
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -615,7 +615,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             
             //   if ([sender selectedSegmentIndex]==0) {
             
-            NSLog(@"capture photo tapped");
+            DLog(@"capture photo tapped");
             
             isCameraClicked=YES;
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -667,7 +667,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
@@ -693,7 +693,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -813,8 +813,8 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         if (isBrowserTapped)
         {
@@ -854,10 +854,10 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        NSLog(@"converted data--%@",data);
+        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-        //    NSLog(@"imagepath==================== %@",localUrl);
+        //    DLog(@"imagepath==================== %@",localUrl);
         
         if(isCameraClicked)
         {
@@ -866,9 +866,9 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             
         }
         
-        //NSLog(@"image is ========%@",mainImage);
+        //DLog(@"image is ========%@",mainImage);
         
-        NSLog(@"info==============%@",info);
+        DLog(@"info==============%@",info);
         
         //New chamges
         
@@ -886,7 +886,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         //Gaurav's logic
         
-        NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+        DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
         
         
         
@@ -918,7 +918,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         //[picker dismissViewControllerAnimated:YES completion:NULL];
-        NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+        DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
         
         captureduniqueName = [self generateUniqueName];
         

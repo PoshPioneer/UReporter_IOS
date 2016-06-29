@@ -115,10 +115,10 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
   //  AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        NSLog(@"quite empty!!!!");
+        DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
         
         lbl_output_category.userInteractionEnabled=YES ;
@@ -225,7 +225,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
         txt_View.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
         id categoryID = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"] ;
-        NSLog(@"category value--%@",categoryID);
+        DLog(@"category value--%@",categoryID);
         
         if ([categoryID isEqualToString: @"1"]) {
             
@@ -247,7 +247,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     }
     
     
-    NSLog(@"it's great !");
+    DLog(@"it's great !");
     segment_Outlet.selectedSegmentIndex=0;
 	// Set a tint color
     
@@ -268,8 +268,8 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 -(void)viewDidLayoutSubviews{
     
     //AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSLog(@"id is =====%@",app.id_CategoryArray);//  app.id_CategoryArray
-    NSLog(@"name is ===%@",app.categoryNameArray);
+    DLog(@"id is =====%@",app.id_CategoryArray);//  app.id_CategoryArray
+    DLog(@"name is ===%@",app.categoryNameArray);
     
 }
 
@@ -284,7 +284,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
 
     
     if ([lbl_output_category.text length]>0 || [txt_Title.text length]>0 || [txt_View.text length]>0) {
@@ -316,17 +316,17 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     if(item.tag == 1)
     {
         
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }else if (item.tag ==2) {
       
-        NSLog(@"Photo tab bar tapped");
+        DLog(@"Photo tab bar tapped");
         [self checkforNavigationInternetconnection:2];
       
       }else if (item.tag ==3){
           
-          NSLog(@"Audio Tab bar tapped");
+          DLog(@"Audio Tab bar tapped");
           
           [self checkforNavigationInternetconnection:3];
           
@@ -337,7 +337,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 - (IBAction)reset_Tapped:(id)sender {
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
     
     txt_View.text=nil;
     txt_Title.text=nil;
@@ -474,7 +474,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
 //        if (buttonIndex==0) {
 //            
-//            NSLog(@"cancel tapped!");
+//            DLog(@"cancel tapped!");
 //            
 //        }else{
         
@@ -491,16 +491,16 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         if (buttonIndex == 0)
         {
             //    UITextField *Location = [alertView textFieldAtIndex:0];
-            //    NSLog(@"username: %@", username.text);
+            //    DLog(@"username: %@", username.text);
             
-            NSLog(@"first one ");
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"first one ");
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             if ([[alertView textFieldAtIndex:0].text length]<=0) {
                 
                 NSArray *array = [self.navigationController viewControllers];
                 
-                NSLog(@" Text content from array is :  %@",array);
+                DLog(@" Text content from array is :  %@",array);
                 [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
                 
                
@@ -510,8 +510,8 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         else{
             [self  sendText_ToServer];
             
-            NSLog(@"seocnd one ");
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"seocnd one ");
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             //  [with_Address dismissWithClickedButtonIndex:2 animated:YES];
             
@@ -522,7 +522,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         NSArray *array = [self.navigationController viewControllers];
         
-        NSLog(@" Text content from array is :  %@",array);
+        DLog(@" Text content from array is :  %@",array);
 
         
         if (buttonIndex==0) {
@@ -635,7 +635,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
     
     NSString * urlstring = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
-    NSLog(@"text url --%@",urlstring);
+    DLog(@"text url --%@",urlstring);
     
     
     NSURL * url = [NSURL URLWithString:urlstring]; //@"http://prngapi.cloudapp.net/api/CJDetails"];
@@ -697,12 +697,12 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
     }
     
-    NSLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
+    DLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
 
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
     
-     NSLog(@"Request ON Text ===%@",finalDictionary);
+     DLog(@"Request ON Text ===%@",finalDictionary);
     
    
     
@@ -730,11 +730,11 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           NSLog(@"Response:%@ %@\n", response, error);
+                                                           DLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                            {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               NSLog(@"o/p is ==== %@",text);
+//                                                               DLog(@"o/p is ==== %@",text);
                                                                
                                                                NSError *jsonError;
                                                                id array = [NSJSONSerialization JSONObjectWithData:data
@@ -743,7 +743,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                
                                                                
 
-                                                               NSLog(@"array is ====%@",array);
+                                                               DLog(@"array is ====%@",array);
                                                                [self.view setUserInteractionEnabled:YES];
                                                                
                                                                /*
@@ -797,7 +797,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                    [formatter setDateFormat:@"hh:mm a"];
                                                                    NSString *time=[formatter stringFromDate:[NSDate date]];
                                                                    
-//                                                                   NSLog(@"Current Date: %@", [formatter stringFromDate:[NSDate date]]);
+//                                                                   DLog(@"Current Date: %@", [formatter stringFromDate:[NSDate date]]);
                                                                    
                                                                    if([app.myFinalArray count]==0){
                                                                        
@@ -818,7 +818,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                    [textDataDictionary setValue:date forKey:@"Date"];
                                                                    [textDataDictionary setValue:time forKey:@"Time"];
                                                                   
-                                                                   NSLog(@"test dict--%@",textDataDictionary);
+                                                                   DLog(@"test dict--%@",textDataDictionary);
                                                                    
 
                                                                    
@@ -832,14 +832,14 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                    
 
                                                                    [[NSUserDefaults standardUserDefaults]setValue:app.myFinalArray forKey:@"MyArray"];
-                                                                   NSLog(@"array length======%lu",[app.myFinalArray count]);
+                                                                   DLog(@"array length======%lu",[app.myFinalArray count]);
                                                                   // [[NSUserDefaults standardUserDefaults]synchronize];
                                                                    
                                                                    
                                                                    
                                                                    
                                                                    
-                                                                   NSLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
+                                                                   DLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
                                                                    
                                                                    
 //                                                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:[NSString stringWithFormat:@"%@",[[array valueForKey:@"data"] valueForKey:@"ErrorMessage"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -855,7 +855,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                        
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
                                                                        //[[NSUserDefaults standardUserDefaults]synchronize];
-                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        
                                                                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
@@ -881,7 +881,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
                                                                       // [[NSUserDefaults standardUserDefaults]synchronize];
-                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        
                                                                        [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
@@ -918,7 +918,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                        UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(126.0, 227.0, 115.0, 38.0)];
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
 //                                                                       [[NSUserDefaults standardUserDefaults]synchronize];
-                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
                                                                        [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -941,7 +941,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                                                                        
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
                                                                       // [[NSUserDefaults standardUserDefaults]synchronize];
-                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        
                                                                        [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
@@ -1313,10 +1313,10 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        // NSLog(@"quite empty!!!!");
+        // DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
     
     IQActionSheetPickerView *picker = [[IQActionSheetPickerView alloc] initWithTitle:@"Choose Category" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
@@ -1367,7 +1367,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         lbl_output_category.text=@"Choose Category";
         
         NSArray * viewhierarchy =[self.navigationController viewControllers];
-        NSLog(@"view hierarchy are as follow--%@",viewhierarchy);
+        DLog(@"view hierarchy are as follow--%@",viewhierarchy);
         
         [self.navigationController popToViewController:[viewhierarchy objectAtIndex:1] animated:YES];
         
@@ -1387,7 +1387,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         
         NSArray * viewhierarchy =[self.navigationController viewControllers];
-        NSLog(@"view hierarchy are as follow--%@",viewhierarchy);
+        DLog(@"view hierarchy are as follow--%@",viewhierarchy);
         
         [self.navigationController popToViewController:[viewhierarchy objectAtIndex:1] animated:YES];
         
@@ -1465,7 +1465,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -1491,7 +1491,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -1604,7 +1604,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                  
                  // if ([sender selectedSegmentIndex]==0) {
                  [self.view endEditing:YES];
-                 NSLog(@"capture photo tapped");
+                 DLog(@"capture photo tapped");
                  
                  isCameraClicked=YES;
                  UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -1622,7 +1622,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
                  
                  //   if ([sender selectedSegmentIndex]==0) {
                  
-                 NSLog(@"capture photo tapped");
+                 DLog(@"capture photo tapped");
                  
                  isCameraClicked=YES;
                  UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -1677,7 +1677,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 #pragma mark -- Custom Button called...
 -(void)submitButtonTap {
-    NSLog(@"submit tapped");
+    DLog(@"submit tapped");
     [visualEffectView removeFromSuperview];
     [customAlertView removeFromSuperview];
     
@@ -1832,7 +1832,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     objectDataClass.globalUserAgent = UserAgent;
     
-    NSLog(@"user-agent in data--%@",objectDataClass.globalUserAgent);
+    DLog(@"user-agent in data--%@",objectDataClass.globalUserAgent);
     
     
     
@@ -1848,69 +1848,69 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     //NSString *newDateString = [outputFormatter stringFromDate:[now timeIntervalSince1970 ]];
     
     
-    NSLog(@"newDateString %f", [now timeIntervalSince1970 ]);
+    DLog(@"newDateString %f", [now timeIntervalSince1970 ]);
     
     
     double Finaldate = [now timeIntervalSince1970] ;
     
     double milliseconds = Finaldate *1000;
     
-    NSLog(@"final date---%f",milliseconds);
+    DLog(@"final date---%f",milliseconds);
     
     //    NSString *myStringValue = @"hello";
     //    NSString *mySecretKey = @"some";
     //    NSString *result1 = [ViewController hashedString:myStringValue withKey:mySecretKey];
-    //    NSLog(@"result-- %@", result1);
+    //    DLog(@"result-- %@", result1);
     
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is =====%@",idfv);
+    DLog(@"idfv is =====%@",idfv);
     
     
     
     
     
     NSString * deviceID =  idfv; //app.FinalKeyChainValue; //@"JYGSyzMsYrfZQA1FSqOY58eIZ9k=";
-    NSLog(@"device id upload--%@",deviceID);
+    DLog(@"device id upload--%@",deviceID);
     NSString * salt =  [NSString stringWithFormat:@"%@:rz8LuOtFBXphj9WQfvFh",[[NSUserDefaults standardUserDefaults]valueForKey:@"userID_Default"]];
-    NSLog(@"key is upload view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
+    DLog(@"key is upload view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
     NSString * IPAddress = [self getIPAddress];
     NSString * sourceParam = @"SkagitTimes";
     //  NSString * userAgent = @"iOS";
     double  ticks =  ((milliseconds * 10000) + 621355968000000000);
-    NSLog(@"ticks--%0.00000f",ticks);
+    DLog(@"ticks--%0.00000f",ticks);
     
     NSString *hashLeft = [NSString stringWithFormat:@"%@:%@:%@:%f:%@", deviceID,IPAddress ,UserAgent,ticks,sourceParam];
-    NSLog(@"final string--%@",hashLeft);
+    DLog(@"final string--%@",hashLeft);
     
     
     
-    // NSLog(@"ip address--%@",IPAddress);
+    // DLog(@"ip address--%@",IPAddress);
     NSData *saltData = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData = [hashLeft dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     NSMutableData* hash = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, saltData.bytes, saltData.length, paramData.bytes, paramData.length, hash.mutableBytes);
     NSString *base64LeftHash = [Base64 base64forData:hash];
-    NSLog(@"left hash  base 64--%@",base64LeftHash);
+    DLog(@"left hash  base 64--%@",base64LeftHash);
     
     
     
     // rightHash...
     
     NSString *hashRight =[NSString stringWithFormat:@"%@:%0.00000f:%@",deviceID,ticks,sourceParam];
-    NSLog(@"right Hash --%@",hashRight);
+    DLog(@"right Hash --%@",hashRight);
     
     NSString *token = [NSString stringWithFormat:@"%@:%@",base64LeftHash,hashRight];
-    NSLog(@"concated hash --%@",token);
+    DLog(@"concated hash --%@",token);
     //   NSData *saltData2 = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData2 = [token dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     //    NSMutableData* hash2 = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     //CCHmac(kCCHmacAlgSHA256, saltData2.bytes, saltData2.length, paramData2.bytes, paramData2.length, hash2.mutableBytes);
     Finaltoken = [Base64 base64forData:paramData2];
-    NSLog(@"final token--%@",Finaltoken);
+    DLog(@"final token--%@",Finaltoken);
     
     
 }
@@ -1960,7 +1960,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     // Free memory
     freeifaddrs(interfaces);
     
-    NSLog(@"IP Address--%@",address);
+    DLog(@"IP Address--%@",address);
     return address;
     
 }
@@ -2199,8 +2199,8 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         
         CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -2229,10 +2229,10 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        NSLog(@"converted data--%@",data);
+        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-        //    NSLog(@"imagepath==================== %@",localUrl);
+        //    DLog(@"imagepath==================== %@",localUrl);
         
         if(isCameraClicked)
         {
@@ -2241,9 +2241,9 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             
         }
         
-        NSLog(@"image is ========%@",mainImage);
+        DLog(@"image is ========%@",mainImage);
         
-        NSLog(@"info==============%@",info);
+        DLog(@"info==============%@",info);
         
         //New chamges
         
@@ -2261,7 +2261,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         //Gaurav's logic
         
-        NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+        DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
         
         
         // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
@@ -2291,7 +2291,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         //[picker dismissViewControllerAnimated:YES completion:NULL];
-        NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+        DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
         
         captureduniqueName = [self generateUniqueName];
         
@@ -2327,7 +2327,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:3]];
 
-    NSLog(@"cancel Tapped!");
+    DLog(@"cancel Tapped!");
     
     isPickerTapped = YES;
     //   segment_Outlet.selectedSegmentIndex=-1;
@@ -2361,7 +2361,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     // int randomValue = arc4random() % 1000;
     //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-    NSLog(@"unique name --%@",finalUnique);
+    DLog(@"unique name --%@",finalUnique);
     return finalUnique;
     
 }
@@ -2381,12 +2381,12 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
     
     
     if([CLLocationManager locationServicesEnabled]){
         
-        NSLog(@"Location Services Enabled");
+        DLog(@"Location Services Enabled");
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
@@ -2429,14 +2429,14 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil)
     {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         locationManager = nil;
         [locationManager stopUpdatingLocation];
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
@@ -2471,9 +2471,9 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
-    NSLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+    DLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
     
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
     

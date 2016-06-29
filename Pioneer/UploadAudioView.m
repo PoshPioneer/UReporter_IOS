@@ -113,10 +113,10 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        NSLog(@"quite empty!!!!");
+        DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
         
         lbl_output_category.userInteractionEnabled=YES ;
@@ -220,7 +220,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
        // handleView =YES;
         
-       // NSLog(@"collected data from review view --%@",tempArray);
+       // DLog(@"collected data from review view --%@",tempArray);
         [self.view setNeedsLayout];
         
         txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
@@ -232,15 +232,15 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         app.recordedData =audiotransferData;
         app.uniqueNameForLableAudio= [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
        // NSString * localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-       // NSLog(@"local url--%@",localUrltesting);
+       // DLog(@"local url--%@",localUrltesting);
         
         
         //    NSData *datatest = [NSData dataWithContentsOfFile:localUrltesting];
-        //        NSLog(@"converted data--%@",datatest);
+        //        DLog(@"converted data--%@",datatest);
         
         
         
-        NSLog(@"category value--%@",categoryID);
+        DLog(@"category value--%@",categoryID);
         if ([categoryID isEqualToString: @"1"]) {
             lbl_output_category.text = @"Politics";
             categoryId_String=categoryID;
@@ -267,7 +267,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 -(void)changeFieldName:(NSNotificationCenter*)notification{
     
     
-    NSLog(@"notification center-%@",notification);
+    DLog(@"notification center-%@",notification);
     lbl_finalPicker_Selected.text = [[notification valueForKey:@"object"] valueForKey:@"Labelname"];
 }
 
@@ -297,7 +297,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         if (app.recordedData==nil) {
             [self doItResize:@"hide"];
-            NSLog(@"audio file  is yet to be  taken!");
+            DLog(@"audio file  is yet to be  taken!");
             
         }
     }else{
@@ -305,7 +305,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
          NSString *audioCheck = [[NSUserDefaults standardUserDefaults]stringForKey:@"Audio_Check"];
         if (!audioCheck) {
             [self doItResize:@"hide"];
-            NSLog(@"audio  is yet to be  taken!");
+            DLog(@"audio  is yet to be  taken!");
             
         }else{
             
@@ -319,7 +319,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             //  when audio has been taken.....
                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Audio_Check"];
                 [[NSUserDefaults standardUserDefaults]synchronize];
-            NSLog(@"audio has been taken!");
+            DLog(@"audio has been taken!");
             // [self doItResize:@"show"];
             [lbl_selected_File_Outlet setHidden:NO];
             [img_View_Selected_File_Outlet setHidden:NO];
@@ -341,23 +341,23 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     if(item.tag == 1)
     {
         
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
         
     }else if (item.tag ==2) {
         
-        NSLog(@"Photo tab bar tapped");
+        DLog(@"Photo tab bar tapped");
         [self checkforNavigationInternetconnection:2];
         
     }/*else if (item.tag ==3){
         
-        NSLog(@"Audio Tab bar tapped");
+        DLog(@"Audio Tab bar tapped");
         
         [self checkforNavigationInternetconnection:3];
         
     }*/else if (item.tag ==4) {
         
-        NSLog(@"Text Tab bar tapped");
+        DLog(@"Text Tab bar tapped");
         
         [self checkforNavigationInternetconnection:4];
     }
@@ -377,7 +377,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     if ([hide_Show isEqualToString:@"show"]) {
         
         increment_Decrement=+56;
-        NSLog(@"it is second time ....");
+        DLog(@"it is second time ....");
         [lbl_selected_File_Outlet setHidden:NO];
         [img_View_Selected_File_Outlet setHidden:NO];
         [lbl_finalPicker_Selected setHidden:NO];
@@ -385,7 +385,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
     }else{
         increment_Decrement=+56;
-        NSLog(@"it is second time ....");
+        DLog(@"it is second time ....");
         [lbl_selected_File_Outlet setHidden:NO];
         [img_View_Selected_File_Outlet setHidden:NO];
         [lbl_finalPicker_Selected setHidden:NO];
@@ -457,7 +457,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@"Audio content from array is :  %@",array);
+    DLog(@"Audio content from array is :  %@",array);
 
     
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -497,7 +497,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     */
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
 
     [self.navigationController popToViewController:[array objectAtIndex:2] animated:YES];
     
@@ -507,7 +507,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 - (IBAction)reset_Tapped:(id)sender {
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
     
     
     
@@ -647,7 +647,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
 //        if (buttonIndex==0) {
 //            
-//            NSLog(@"cancel tapped!");
+//            DLog(@"cancel tapped!");
 //            
 //        }else{
         with_Address_Optional_Written=[alertView textFieldAtIndex:0].text;
@@ -662,17 +662,17 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         if (buttonIndex == 0)
         {
             //    UITextField *Location = [alertView textFieldAtIndex:0];
-            //    NSLog(@"username: %@", username.text);
+            //    DLog(@"username: %@", username.text);
             
-            NSLog(@"first one ");
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"first one ");
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             if ([[alertView textFieldAtIndex:0].text length]<=0) {
              
                 
                 NSArray *array = [self.navigationController viewControllers];
                 
-                NSLog(@" Text content from array is :  %@",array);
+                DLog(@" Text content from array is :  %@",array);
                 [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
             }
             
@@ -680,8 +680,8 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         else{
             [self  sendAudio_ToServer];
 
-            NSLog(@"seocnd one ");
-            NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+            DLog(@"seocnd one ");
+            DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
             
             //  [with_Address dismissWithClickedButtonIndex:2 animated:YES];
             
@@ -692,7 +692,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         NSArray *array = [self.navigationController viewControllers];
         
-        NSLog(@" Text content from array is :  %@",array);
+        DLog(@" Text content from array is :  %@",array);
 
         
         if (buttonIndex==0) {
@@ -735,7 +735,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             
             // for first send service....
             // cancel tapped.......
-            NSLog(@"cancel_Tapped");
+            DLog(@"cancel_Tapped");
             
             ok_For_Success_Outlet.tag=2;
             CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -774,7 +774,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                 
                 // for first service ....
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                 
                 [self  sendAudio_ToServer];
                 
@@ -783,7 +783,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             }else{
                 // for second service ...
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                 [self  sendRestOfTheTextDATA:responseDataForRestOfTheDetailService];
                 
             }
@@ -854,7 +854,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
    
     NSString * urlString = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"], @"&token=",[GlobalStuff generateToken]];
-    NSLog(@"url fro audio--%@",urlString);
+    DLog(@"url fro audio--%@",urlString);
     
     NSURL * url =[NSURL URLWithString:urlString];
  //   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
@@ -920,7 +920,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-    NSLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    DLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
     
     [lbl_selected_File_Outlet setHidden:YES];
     [img_View_Selected_File_Outlet setHidden:YES];
@@ -956,7 +956,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    NSLog(@"%s: error = %@; data = %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    DLog(@"%s: error = %@; data = %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -968,7 +968,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         if (error==nil) {
             
-            NSLog(@"successfully submitted");
+            DLog(@"successfully submitted");
             
             
             
@@ -978,7 +978,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
         }else{
             
-            NSLog(@"error available!");
+            DLog(@"error available!");
             // [self   sendVideo_ToServer];
             isItFirstService=1;
             
@@ -1051,7 +1051,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     //NSURL * url = [NSURL URLWithString:@"http://prngapi.cloudapp.net/api/CJDetails?token=%@",Finaltoken];
     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     
-    NSLog(@"url foraudio rest --%@",urlStringTest);
+    DLog(@"url foraudio rest --%@",urlStringTest);
     
     NSURL *url =[ NSURL URLWithString:urlStringTest];
     
@@ -1112,13 +1112,13 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
     }
     
-    NSLog(@" value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
+    DLog(@" value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
     
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
     
     
-    NSLog(@"Request ON Audio ===%@",finalDictionary);
+    DLog(@"Request ON Audio ===%@",finalDictionary);
     
     
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -1139,11 +1139,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           NSLog(@"Response:%@ %@\n", response, error);
+                                                           DLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                            {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               NSLog(@"final audio o/p is  ==== %@",text);
+//                                                               DLog(@"final audio o/p is  ==== %@",text);
                                                                
                                                                NSError *jsonError;
                                                                NSArray *array = [NSJSONSerialization JSONObjectWithData:data
@@ -1151,7 +1151,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                                                                   error:&jsonError];
                                                                
                                                                
-                                                               NSLog(@"array is ====%@",array);
+                                                               DLog(@"array is ====%@",array);
                                                                
                                                                
                                                                /*
@@ -1198,7 +1198,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                                                                    [formatter setDateFormat:@"hh:mm a"];
                                                                    NSString *time=[formatter stringFromDate:[NSDate date]];
-                                                                   NSLog(@"Time is ======%@",time);
+                                                                   DLog(@"Time is ======%@",time);
                                                                    
                                                                    
                                                                    
@@ -1222,11 +1222,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    [audioDataDictionary setValue:date forKey:@"Date"];
                                                                    [audioDataDictionary setValue:time forKey:@"Time"];
                                                                    [audioDataDictionary setValue:app.soundFilePathData forKey:@"AudioPath"];
-                                                                   NSLog(@"audioDataDictionary=====%@",audioDataDictionary);
-                                                                   NSLog(@"audioUrl is=========%@",app.soundFilePathData);
+                                                                   DLog(@"audioDataDictionary=====%@",audioDataDictionary);
+                                                                   DLog(@"audioUrl is=========%@",app.soundFilePathData);
                                                                    
                                                                    
-                                                                   NSLog(@"AudiodataDictionary======%@",audioDataDictionary);
+                                                                   DLog(@"AudiodataDictionary======%@",audioDataDictionary);
                                                                 
                                                                    if([app.myFinalArray count]<15){
                                                                        
@@ -1248,7 +1248,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    
                                                                    
                                                                    
-//                                                                   NSLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
+//                                                                   DLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
                                                                    
                                                                    ok_For_Success_Outlet.tag=1;
                                                                    
@@ -1262,7 +1262,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                        UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(126.0, 227.0, 115.0, 38.0)];
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
 //                                                                       [[NSUserDefaults standardUserDefaults]synchronize];
-//                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+//                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
                                                                        [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -1291,7 +1291,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                        UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(86.0, 241.0, 115.0, 38.0)];
 //                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
 //                                                                       [[NSUserDefaults standardUserDefaults]synchronize];
-//                                                                       NSLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+//                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
                                                                        
                                                                        
                                                                        [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
@@ -1698,10 +1698,10 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
         if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
     
-           // NSLog(@"quite empty!!!!");
+           // DLog(@"quite empty!!!!");
             // [app getCategory];
             
-            NSLog(@"coming!");
+            DLog(@"coming!");
         }else{
     
     
@@ -1775,7 +1775,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         //[self.navigationController popViewControllerAnimated:YES];
         
         NSArray * viewhierarchy =[self.navigationController viewControllers];
-        NSLog(@"view hierarchy are as follow--%@",viewhierarchy);
+        DLog(@"view hierarchy are as follow--%@",viewhierarchy);
         
         [self.navigationController popToViewController:[viewhierarchy objectAtIndex:1] animated:YES];
         
@@ -1796,7 +1796,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
        // [self.navigationController popViewControllerAnimated:YES];
         
         NSArray * viewhierarchy =[self.navigationController viewControllers];
-        NSLog(@"view hierarchy are as follow--%@",viewhierarchy);
+        DLog(@"view hierarchy are as follow--%@",viewhierarchy);
         
         [self.navigationController popToViewController:[viewhierarchy objectAtIndex:1] animated:YES];
     }
@@ -1906,7 +1906,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                 
                 // if ([sender selectedSegmentIndex]==0) {
                 [self.view endEditing:YES];
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -1924,7 +1924,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                 
                 //   if ([sender selectedSegmentIndex]==0) {
                 
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2095,7 +2095,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 #pragma mark -- Custom Button called...
 -(void)submitButtonTap {
-    NSLog(@"submit tapped");
+    DLog(@"submit tapped");
     
     [visualEffectView removeFromSuperview];
     [customAlertView removeFromSuperview];
@@ -2136,7 +2136,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     
     
-    NSLog(@"user-agent in data--%@",objectDataClass.globalUserAgent);
+    DLog(@"user-agent in data--%@",objectDataClass.globalUserAgent);
     
     
     
@@ -2152,69 +2152,69 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     //NSString *newDateString = [outputFormatter stringFromDate:[now timeIntervalSince1970 ]];
     
     
-    NSLog(@"newDateString %f", [now timeIntervalSince1970 ]);
+    DLog(@"newDateString %f", [now timeIntervalSince1970 ]);
     
     
     double Finaldate = [now timeIntervalSince1970] ;
     
     double milliseconds = Finaldate *1000;
     
-    NSLog(@"final date---%f",milliseconds);
+    DLog(@"final date---%f",milliseconds);
     
     //    NSString *myStringValue = @"hello";
     //    NSString *mySecretKey = @"some";
     //    NSString *result1 = [ViewController hashedString:myStringValue withKey:mySecretKey];
-    //    NSLog(@"result-- %@", result1);
+    //    DLog(@"result-- %@", result1);
     
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is audio view  =====%@",idfv);
+    DLog(@"idfv is audio view  =====%@",idfv);
     
     
     
     
     
     NSString * deviceID =  idfv; //app.FinalKeyChainValue; //@"JYGSyzMsYrfZQA1FSqOY58eIZ9k=";
-    NSLog(@"device id upload audio --%@",deviceID);
+    DLog(@"device id upload audio --%@",deviceID);
     NSString * salt =  [NSString stringWithFormat:@"%@:rz8LuOtFBXphj9WQfvFh",[[NSUserDefaults standardUserDefaults]valueForKey:@"userID_Default"]];
-    NSLog(@"key is upload audio view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
+    DLog(@"key is upload audio view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
     NSString * IPAddress = [self getIPAddress];
     NSString * sourceParam = @"SkagitTimes";
     //  NSString * userAgent = @"iOS";
     double  ticks =  ((milliseconds * 10000) + 621355968000000000);
-    NSLog(@"ticks--%0.00000f",ticks);
+    DLog(@"ticks--%0.00000f",ticks);
     
     NSString *hashLeft = [NSString stringWithFormat:@"%@:%@:%@:%f:%@", deviceID,IPAddress ,UserAgent,ticks,sourceParam];
-    NSLog(@"final string--%@",hashLeft);
+    DLog(@"final string--%@",hashLeft);
     
     
     
-    // NSLog(@"ip address--%@",IPAddress);
+    // DLog(@"ip address--%@",IPAddress);
     NSData *saltData = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData = [hashLeft dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     NSMutableData* hash = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, saltData.bytes, saltData.length, paramData.bytes, paramData.length, hash.mutableBytes);
     NSString *base64LeftHash = [Base64 base64forData:hash];
-    NSLog(@"left hash  base 64--%@",base64LeftHash);
+    DLog(@"left hash  base 64--%@",base64LeftHash);
     
     
     
     // rightHash...
     
     NSString *hashRight =[NSString stringWithFormat:@"%@:%0.00000f:%@",deviceID,ticks,sourceParam];
-    NSLog(@"right Hash --%@",hashRight);
+    DLog(@"right Hash --%@",hashRight);
     
     NSString *token = [NSString stringWithFormat:@"%@:%@",base64LeftHash,hashRight];
-    NSLog(@"concated hash --%@",token);
+    DLog(@"concated hash --%@",token);
     //   NSData *saltData2 = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData2 = [token dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     //    NSMutableData* hash2 = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     //CCHmac(kCCHmacAlgSHA256, saltData2.bytes, saltData2.length, paramData2.bytes, paramData2.length, hash2.mutableBytes);
     Finaltoken = [Base64 base64forData:paramData2];
-    NSLog(@"final token--%@",Finaltoken);
+    DLog(@"final token--%@",Finaltoken);
     
     
 }
@@ -2264,7 +2264,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     // Free memory
     freeifaddrs(interfaces);
     
-    NSLog(@"IP Address--%@",address);
+    DLog(@"IP Address--%@",address);
     return address;
     
 }
@@ -2394,13 +2394,13 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         [AudiocollectedDict setValue:lbl_output_category.text forKey:@"localCategoryName"];
         
         // app.submitDict = [collectedDict copy];
-    //    NSLog(@"collected data in app--%@",AudiocollectedDict);
+    //    DLog(@"collected data in app--%@",AudiocollectedDict);
       
         /*
         if ([objectDataClass.globalSubmitArray count]<15) {
             
             [objectDataClass.globalSubmitArray  addObject:AudiocollectedDict];
-            NSLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
+            DLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
             
         }else{
             
@@ -2412,7 +2412,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         [[NSUserDefaults standardUserDefaults]setValue:objectDataClass.globalSubmitArray forKey:@"SubmitArray"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        NSLog(@"array length======%lu",[objectDataClass.globalSubmitArray count]);
+        DLog(@"array length======%lu",[objectDataClass.globalSubmitArray count]);
         // [[NSUserDefaults standardUserDefaults]synchronize];
         
         */
@@ -2452,7 +2452,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             
             NSArray *array = [self.navigationController viewControllers];
             
-            NSLog(@" Text content from array is :  %@",array);
+            DLog(@" Text content from array is :  %@",array);
             [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
         }];
         
@@ -2502,8 +2502,8 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         
         CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -2531,10 +2531,10 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
     mainImage = chosenImage;
     data = UIImagePNGRepresentation(mainImage);
-    NSLog(@"converted data--%@",data);
+    DLog(@"converted data--%@",data);
     
     //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-    //    NSLog(@"imagepath==================== %@",localUrl);
+    //    DLog(@"imagepath==================== %@",localUrl);
     
     if(isCameraClicked)
     {
@@ -2543,9 +2543,9 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
     }
     
-    NSLog(@"image is ========%@",mainImage);
+    DLog(@"image is ========%@",mainImage);
     
-    NSLog(@"info==============%@",info);
+    DLog(@"info==============%@",info);
     
     //New chamges
     
@@ -2563,7 +2563,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     //Gaurav's logic
     
-    NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+    DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
     
     
     // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
@@ -2593,7 +2593,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     //[picker dismissViewControllerAnimated:YES completion:NULL];
-    NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+    DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
     
     captureduniqueName = [self generateUniqueName];
     
@@ -2637,7 +2637,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
-    NSLog(@"cancel Tapped!");
+    DLog(@"cancel Tapped!");
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:2]];
 
@@ -2675,7 +2675,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     // int randomValue = arc4random() % 1000;
     //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-    NSLog(@"unique name --%@",finalUnique);
+    DLog(@"unique name --%@",finalUnique);
     return finalUnique;
     
 }
@@ -2688,7 +2688,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //  isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2714,7 +2714,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         //isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2821,12 +2821,12 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
     
     
     if([CLLocationManager locationServicesEnabled]){
         
-        NSLog(@"Location Services Enabled");
+        DLog(@"Location Services Enabled");
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
@@ -2869,14 +2869,14 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil)
     {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         locationManager = nil;
         [locationManager stopUpdatingLocation];
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
@@ -2911,9 +2911,9 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
-    NSLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+    DLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
     
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
     

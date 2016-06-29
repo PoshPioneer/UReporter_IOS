@@ -61,7 +61,7 @@
     
     
    // collectedDict = [objectDataClass.globaltextDict copy];
-    //NSLog(@"copyed data in array--%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"]);
+    //DLog(@"copyed data in array--%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"]);
    
 
     
@@ -83,7 +83,7 @@
 
     
     
-  //  NSLog(@"collection array from submitforreview--%@",collectionArray);
+  //  DLog(@"collection array from submitforreview--%@",collectionArray);
     [tableview reloadData];
     
     
@@ -184,7 +184,7 @@
     
     
      NSString*  typeCheck =[[collectionArray objectAtIndex:indexPath.row] valueForKey:@"Type"];
-    NSLog(@"Type cHECKKKKKK--%@",typeCheck);
+    DLog(@"Type cHECKKKKKK--%@",typeCheck);
     
     
     
@@ -243,7 +243,7 @@
             NSError *error = NULL;
             CMTime time = CMTimeMake(1, 65);
             CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-            NSLog(@"error==%@, Refimage==%@", error, refImg);
+            DLog(@"error==%@, Refimage==%@", error, refImg);
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 
@@ -429,7 +429,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     objectDataClass.globalIndexSelection = indexPath.row;
-    NSLog(@"cell index is %lu",(unsigned long)objectDataClass.globalIndexSelection);
+    DLog(@"cell index is %lu",(unsigned long)objectDataClass.globalIndexSelection);
     
     if ([[[collectionArray objectAtIndex:indexPath.row]valueForKey:@"Type"]isEqualToString:@"TEXT"]) {
         
@@ -440,14 +440,14 @@
         if (size.height==480) {
             UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
             text.tempArray = [collectionArray copy];
-        //    NSLog(@"while nav --%@",text.tempArray);
+        //    DLog(@"while nav --%@",text.tempArray);
             
             [self.navigationController pushViewController:text animated:NO];
             
         }else{
             UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
             text.tempArray = [collectionArray copy];
-          //  NSLog(@"while nav --%@",text.tempArray);
+          //  DLog(@"while nav --%@",text.tempArray);
             [self.navigationController pushViewController:text animated:NO];
         
     }
@@ -460,14 +460,14 @@
             
             UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
             uploadP.tempArray = [collectionArray copy];
-          //  NSLog(@"photo nav data--%@",uploadP.tempArray);
+          //  DLog(@"photo nav data--%@",uploadP.tempArray);
             [self.navigationController pushViewController:uploadP animated:NO];
             
         }else{
             
             UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
             uploadP.tempArray = [collectionArray copy];
-           // NSLog(@"photo nav data--%@",uploadP.tempArray);
+           // DLog(@"photo nav data--%@",uploadP.tempArray);
             [self.navigationController pushViewController:uploadP animated:NO];
             
         }
@@ -485,7 +485,7 @@
             uploadV.tempArray = [collectionArray copy];
             
             uploadV.thumbImageForView=FrameImage;
-           // NSLog(@"video nav array--%@",uploadV.tempArray);
+           // DLog(@"video nav array--%@",uploadV.tempArray);
             [self.navigationController pushViewController:uploadV animated:NO];
             
         }else{
@@ -494,7 +494,7 @@
             uploadV.tempArray = [collectionArray copy];
             uploadV.thumbImageForView=FrameImage;
 
-          //  NSLog(@"video nav array--%@",uploadV.tempArray);
+          //  DLog(@"video nav array--%@",uploadV.tempArray);
             [self.navigationController pushViewController:uploadV animated:NO];
             
         }
@@ -510,14 +510,12 @@
             
             UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView3.5" bundle:nil];
             uploadP.tempArray = [collectionArray copy];
-           // NSLog(@"while nav to audio view--%@",uploadP.tempArray);
             [self.navigationController pushViewController:uploadP animated:NO];
             
         }else{
             
             UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView" bundle:nil];
             uploadP.tempArray = [collectionArray copy];
-            //NSLog(@"while nav to audio view--%@",uploadP.tempArray);
             [self.navigationController pushViewController:uploadP animated:NO];
             
         }

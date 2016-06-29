@@ -38,9 +38,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    NSLog(@"get Data===%@",getData);
-    NSLog(@"get OTP=== %@",getOTP);
-    NSLog(@"set time===%f",getTime);
+    DLog(@"get Data===%@",getData);
+    DLog(@"get OTP=== %@",getOTP);
+    DLog(@"set time===%f",getTime);
     
     
 }
@@ -79,7 +79,7 @@
     //get current time....
     NSDate *myDate = [NSDate date];
     NSTimeInterval getcurrentTime = [myDate timeIntervalSince1970];
-    NSLog(@"this is current time now===%f",getcurrentTime);
+    DLog(@"this is current time now===%f",getcurrentTime);
 
     // check time < 15 min..
     if(getcurrentTime - getTime >=900)
@@ -209,7 +209,7 @@
      //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
      NSURL *url = [NSURL URLWithString:@"http://prngapi.cloudapp.net/api/UserDetails"];
      
-     NSLog(@"DICT IS===%@",getData);
+     DLog(@"DICT IS===%@",getData);
      
      NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
      [request setHTTPMethod:@"POST"];
@@ -221,15 +221,15 @@
                             completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                 NSError *jsonError;
                                 
-                                NSLog(@"data = %@",data);
-                                NSLog(@"response = %@",response);
-                                NSLog(@"error = %@",error);
+                                DLog(@"data = %@",data);
+                                DLog(@"response = %@",response);
+                                DLog(@"error = %@",error);
                                 
                                 if (data==nil || response==nil) {
                                     
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        NSLog(@"inside main thread!");
-                                        NSLog(@"An error occured: %@", jsonError);
+                                        DLog(@"inside main thread!");
+                                        DLog(@"An error occured: %@", jsonError);
                                         [self.view setUserInteractionEnabled:YES];
                                         [spinner removeSpinner];
                                     });
@@ -241,7 +241,7 @@
                                 id  json = [NSJSONSerialization JSONObjectWithData:data
                                                                            options:kNilOptions
                                                                              error:&jsonError];
-                                NSLog(@"json is for UserDetails== %@",json);
+                                DLog(@"json is for UserDetails== %@",json);
                                 
                                 
                                 if ( error ==nil) {
@@ -249,7 +249,7 @@
                                 if (json) {
                                     
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        NSLog(@"inside main thread!");
+                                        DLog(@"inside main thread!");
                                         
                                         [self.view setUserInteractionEnabled:YES];
                                         [spinner removeSpinner];
@@ -273,7 +273,7 @@
                                             
                                             
                                             
-                                            NSLog(@"id is = %@",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"]);
+                                            DLog(@"id is = %@",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"]);
 
                                             
                                             //////////////////////////////////////////////////
@@ -290,7 +290,7 @@
                                             
                                             // for getting ....
                                             NSString *  valueIs = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-                                            NSLog(@"idfv is =====%@",valueIs);
+                                            DLog(@"idfv is =====%@",valueIs);
                                             // for getting .....
 
                                              /////////////////////////////////////////////////
@@ -325,8 +325,8 @@
                                 } // error == nil check !!!end
                                 else{
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        NSLog(@"inside main thread!");
-                                        NSLog(@"An error occured: %@", jsonError);
+                                        DLog(@"inside main thread!");
+                                        DLog(@"An error occured: %@", jsonError);
                                         [self.view setUserInteractionEnabled:YES];
                                         [spinner removeSpinner];
                                     });
@@ -364,7 +364,7 @@
 #pragma marks NSURLConnection delegate methods
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    NSLog(@"error is %@",[error localizedDescription]);
+    DLog(@"error is %@",[error localizedDescription]);
     
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
@@ -393,7 +393,7 @@
     id json = [NSJSONSerialization JSONObjectWithData:responseData
                                               options:kNilOptions
                                                 error:&error];
-    NSLog(@"json O/p of OTP===%@",json);
+    DLog(@"json O/p of OTP===%@",json);
     
     getOTP =[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"] valueForKey:@"ErrorMessage"]];
     
@@ -409,9 +409,9 @@
     // for current time
     NSDate *myDate = [NSDate date];
     NSTimeInterval getcurrentTime = [myDate timeIntervalSince1970];
-    NSLog(@"this is current time now===%f",getcurrentTime);
+    DLog(@"this is current time now===%f",getcurrentTime);
     getTime = getcurrentTime;
-    NSLog(@"get time=====%f",getTime);
+    DLog(@"get time=====%f",getTime);
     
 }
 
@@ -436,7 +436,7 @@
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            //   NSLog(@"inside not reachable!");
+            //   DLog(@"inside not reachable!");
             [[NSUserDefaults standardUserDefaults]setValue:@"not_reachable" forKeyPath:@"connection_Internet"];
             [[NSUserDefaults standardUserDefaults]synchronize];
             
