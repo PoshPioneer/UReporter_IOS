@@ -34,10 +34,7 @@
     UIView *statusBarView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 20)];
     statusBarView.backgroundColor  =  [UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
     [self.view addSubview:statusBarView];
-    
-    //UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    //[vc.view addSubview:statusBarView];
-
+   
 }
 
 
@@ -72,10 +69,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-
-
 
 - (IBAction)loginButtonTapped:(id)sender {
     
