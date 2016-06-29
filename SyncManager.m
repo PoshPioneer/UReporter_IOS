@@ -27,12 +27,12 @@
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager POST:url parameters:params progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
+        DLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
          [self.delegate syncSuccess:json];
       
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        DLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
     
@@ -49,12 +49,12 @@
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager PUT:url parameters:params success:^(NSURLSessionTask *task, id responseObject){
         
-        NSLog(@"JSON: %@", responseObject);
+        DLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         [self.delegate syncSuccess:json];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        DLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
 
@@ -73,12 +73,12 @@
     
     [manager GET:url parameters:params progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
-        NSLog(@"JSON: %@", responseObject);
+        DLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         [self.delegate syncSuccess:json];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        DLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
     

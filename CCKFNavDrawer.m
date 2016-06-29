@@ -77,8 +77,8 @@
     
     
     
-    NSLog(@"nibNameOrNil = %@",nibNameOrNil);
-    NSLog(@"bundle is = %@",nibBundleOrNil);
+    DLog(@"nibNameOrNil = %@",nibNameOrNil);
+    DLog(@"bundle is = %@",nibBundleOrNil);
     
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -201,7 +201,7 @@
     [self.view bringSubviewToFront:self.navigationBar];
     
 //    for (id x in self.view.subviews){
-//        NSLog(@"%@",NSStringFromClass([x class]));
+//        DLog(@"%@",NSStringFromClass([x class]));
 //    }
 }
 
@@ -210,14 +210,14 @@
 
   //  [self.drawerView.drawerTableView reloadData];
     DoCheck=myCheck;
-    NSLog(@"---mycheck is ====%i",DoCheck);
-    NSLog(@"drawerToggle called!");
+    DLog(@"---mycheck is ====%i",DoCheck);
+    DLog(@"drawerToggle called!");
     
     self.menuItems = [NSMutableArray new];
     self.temporaryInnerFeeds = [NSMutableArray new];
     
     if (DoCheck==1) {
-        NSLog(@"collected data in slider class --%@",objectDataClass.globalcompleteCategory);
+        DLog(@"collected data in slider class --%@",objectDataClass.globalcompleteCategory);
        
         arrayForBool=[[NSMutableArray alloc]init];
 
@@ -253,7 +253,7 @@
             
              [arrayForBool addObject:[NSNumber numberWithBool:NO]];
             
-            NSLog(@"counter --%d",count);
+            DLog(@"counter --%d",count);
             
             
         }
@@ -287,7 +287,7 @@
 - (void)openNavigationDrawer{
     
     
-//    NSLog(@"open x=%f",self.menuView.center.x);
+//    DLog(@"open x=%f",self.menuView.center.x);
     float duration = MENU_DURATION/self.menuWidth*fabs(self.drawerView.center.x)+MENU_DURATION/2; // y=mx+c
     
 
@@ -359,10 +359,10 @@
 {
     CGPoint translation = [recognizer translationInView:self.view];
     CGPoint velocity = [(UIPanGestureRecognizer*)recognizer velocityInView:self.view];
-//    NSLog(@"velocity x=%f",velocity.x);
+//    DLog(@"velocity x=%f",velocity.x);
     
     if([(UIPanGestureRecognizer*)recognizer state] == UIGestureRecognizerStateBegan) {
-//        NSLog(@"start");
+//        DLog(@"start");
         if ( velocity.x > MENU_TRIGGER_VELOCITY && !self.isOpen) {
             [self openNavigationDrawer];
         }else if (velocity.x < -MENU_TRIGGER_VELOCITY && self.isOpen) {
@@ -371,7 +371,7 @@
     }
     
     if([(UIPanGestureRecognizer*)recognizer state] == UIGestureRecognizerStateChanged) {
-//        NSLog(@"changing");
+//        DLog(@"changing");
         float movingx = self.drawerView.center.x + translation.x;
         if ( movingx > -self.menuWidth/2 && movingx < self.menuWidth/2){
             
@@ -386,7 +386,7 @@
     
     if([(UIPanGestureRecognizer*)recognizer state] == UIGestureRecognizerStateEnded) {
         
-//        NSLog(@"end");
+//        DLog(@"end");
         if (self.drawerView.center.x>0){
             [self openNavigationDrawer];
         }else if (self.drawerView.center.x<0){
@@ -506,21 +506,21 @@
     /*************** Close the section, once the data is selected ***********************************/
     //[arrayForBool replaceObjectAtIndex:indexPath.section withObject:[NSNumber numberWithBool:NO]];
     
-    NSLog(@"selected sub sub menu");
+    DLog(@"selected sub sub menu");
     
     objectDataClass.rowIndex = indexPath.row;
 
     feedType = [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Type"];
-    NSLog(@"feed type--%@",feedType);
+    DLog(@"feed type--%@",feedType);
     feedID= [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Id_Feed"];
-    NSLog(@"feed id--%@",feedID);
+    DLog(@"feed id--%@",feedID);
     objectDataClass.globalstaticLink = [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"URL"];
-    NSLog(@"static link --%@",objectDataClass.globalstaticLink);
+    DLog(@"static link --%@",objectDataClass.globalstaticLink);
     
     
     objectDataClass.globalFeedID = feedID;
     objectDataClass.globalFeedType = feedType;
-    NSLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
+    DLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
     
     // PAYMETER API
     
@@ -530,18 +530,14 @@
     [json setObject:@"" forKey:@"referrer"];
     [json setObject:@"IOS" forKey:@"clientInfo"];
     
-    NSLog(@"%@",json);
+    DLog(@"%@",json);
     DataClass *obj = [DataClass getInstance];
     obj.jsonDict = json;
-    NSLog(@"%@",obj.jsonDict);
+    DLog(@"%@",obj.jsonDict);
 
     [self.CCKFNavDrawerDelegate CCKFNavDrawerSelection:[indexPath section]];
     [self closeNavigationDrawer];
 
-   // [self.drawerView.drawerTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
-    
-    // [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
 }
 
 
@@ -592,7 +588,7 @@
              label.text = String(format: "%C", myChar)
              self.view.addSubview(label)*/
            
-        NSLog(@"image url--%@",iconImageUrl);
+        DLog(@"image url--%@",iconImageUrl);
             
         if ([sideIconType isEqualToString:@"Image"]) {
             
@@ -604,7 +600,7 @@
         }//else if ([sideFAType isEqualToString:@"fa-archive"]){
             
             UIImage *icon = [UIImage imageWithIcon:sideFAType backgroundColor:[UIColor clearColor] iconColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:255] fontSize:20];
-            NSLog(@"imageis......%@",icon);
+            DLog(@"imageis......%@",icon);
 
             [iconImage setImage:icon];
             [sectionView addSubview:iconImage];
@@ -698,17 +694,17 @@
 
 - (void)sectionHeaderTapped:(UITapGestureRecognizer *)gestureRecognizer{
     
-    NSLog(@"sub menu  tapped");
+    DLog(@"sub menu  tapped");
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:gestureRecognizer.view.tag];
     if (indexPath.section >= sectionTitleArray.count) {
         
-        NSLog(@"static data cell");
+        DLog(@"static data cell");
         if (indexPath.section == sectionTitleArray.count) {
             //NSString* index= [NSString stringWithFormat:@"%lu",(unsigned long)indexPath.section];
            // NSDictionary *sendingDict= [[NSDictionary alloc] initWithObjectsAndKeys:@{index: @"indexKey"}, nil];
             
-            NSLog(@"nothing -- %lu",(unsigned long)indexPath.section);
-            NSLog(@"Edit profile slider--%lu",(unsigned long)indexPath.section);
+            DLog(@"nothing -- %lu",(unsigned long)indexPath.section);
+            DLog(@"Edit profile slider--%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
             
@@ -716,7 +712,7 @@
         }
         else if (indexPath.section == sectionTitleArray.count+1) {
             
-            NSLog(@"Edit profile slider--%lu",(unsigned long)indexPath.section);
+            DLog(@"Edit profile slider--%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
             
@@ -724,7 +720,7 @@
         }
         else if (indexPath.section == sectionTitleArray.count+2) {
             
-            NSLog(@"About us slider--%lu",(unsigned long)indexPath.section);
+            DLog(@"About us slider--%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
             
@@ -733,7 +729,7 @@
         
         else if (indexPath.section == sectionTitleArray.count+3) {
             
-            NSLog(@"terms and conition--%lu",(unsigned long)indexPath.section);
+            DLog(@"terms and conition--%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
             
@@ -741,7 +737,7 @@
         }
         else if (indexPath.section == sectionTitleArray.count+4) {
             
-            NSLog(@"privacy policy-%lu",(unsigned long)indexPath.section);
+            DLog(@"privacy policy-%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
             
@@ -749,7 +745,7 @@
             
         }else if (indexPath.section == sectionTitleArray.count+5) {
             
-            NSLog(@"my submission --%lu",(unsigned long)indexPath.section);
+            DLog(@"my submission --%lu",(unsigned long)indexPath.section);
             [self.CCKFNavDrawerDelegate StaticMenuItems:indexPath.section];
             [self closeNavigationDrawer];
         }
@@ -761,7 +757,7 @@
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *firstAction = [UIAlertAction actionWithTitle:@"Yes Sure"
                                                                   style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                      NSLog(@"You pressed button one");
+                                                                      DLog(@"You pressed button one");
                                                                       
                                                                       [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"userName"];
                                                                       LoginView *loginView=[[LoginView alloc]initWithNibName:@"LoginView" bundle:nil];
@@ -770,7 +766,7 @@
                                                                   }];
             UIAlertAction *secondAction = [UIAlertAction actionWithTitle:@"Not Yet"
                                                                    style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                       NSLog(@"You pressed button two");
+                                                                       DLog(@"You pressed button two");
                                                                    }];
             
             [alert addAction:firstAction];
@@ -806,7 +802,7 @@
         for (int i=0; i<[sectionTitleArray count]; i++) {
             
             if (indexPath.section==i) {
-                NSLog(collapsed ? @"Yes" : @"No");
+                DLog(@"%@", collapsed ? @"Yes" : @"No");
                
                 [arrayForBool replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:!collapsed]];
             }
@@ -818,20 +814,20 @@
         }
         if ([[[sectionTitleArray objectAtIndex:indexPath.section] valueForKey:@"FeedsItem"] count] == 1) {
             
-            NSLog(@"selected sub sub menu");
+            DLog(@"selected sub sub menu");
             objectDataClass.rowIndex = 0;
             feedType = [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][0][@"Type"];
-            NSLog(@"feed type--%@",feedType);
+            DLog(@"feed type--%@",feedType);
             feedID= [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][0][@"Id_Feed"];
-            NSLog(@"feed id--%@",feedID);
+            DLog(@"feed id--%@",feedID);
             objectDataClass.globalstaticLink = [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][0][@"URL"];
-            NSLog(@"static link --%@",objectDataClass.globalstaticLink);
+            DLog(@"static link --%@",objectDataClass.globalstaticLink);
             
             
             
             objectDataClass.globalFeedID = feedID;
             objectDataClass.globalFeedType = feedType;
-            NSLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
+            DLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
             
             // PAYMETER API
             
@@ -841,10 +837,10 @@
             [json setObject:@"" forKey:@"referrer"];
             [json setObject:@"IOS" forKey:@"clientInfo"];
             
-            NSLog(@"%@",json);
+            DLog(@"%@",json);
             DataClass *obj = [DataClass getInstance];
             obj.jsonDict = json;
-            NSLog(@"%@",obj.jsonDict);
+            DLog(@"%@",obj.jsonDict);
             
             [self.CCKFNavDrawerDelegate CCKFNavDrawerSelection:[indexPath section]];
             [self closeNavigationDrawer];
@@ -904,14 +900,8 @@
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
-    NSLog(@"%ld",(long)indexPath.row);
-       // subCategoryLabel.textColor = [UIColor whiteColor];
-       // subCategoryLabel.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
-        
-    //objectDataClass.rowIndex = indexPath.row;
-    
+    DLog(@"%ld",(long)indexPath.row);
     return YES;
 }
 

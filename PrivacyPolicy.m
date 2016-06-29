@@ -40,10 +40,10 @@
     
     
     NSString *htmlFile = [[NSBundle mainBundle] pathForResource:@"Privacy" ofType:@"html"] ;
-    NSLog(@"htmlFile = %@",htmlFile);
+    DLog(@"htmlFile = %@",htmlFile);
     NSString* htmlString = [[NSString stringWithContentsOfFile:htmlFile encoding:NSUTF8StringEncoding error:nil] copy];
     
-    NSLog(@"htmlString = %@",htmlString);
+    DLog(@"htmlString = %@",htmlString);
 
     [web_View loadHTMLString:htmlString baseURL:nil];
     web_View.layer.cornerRadius=2.0;

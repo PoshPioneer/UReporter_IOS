@@ -60,7 +60,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     
     if (size.height==480) {
         
-        NSLog(@"i am being called!");
+        DLog(@"i am being called!");
         disable_EnableBack_Outlet.frame=CGRectMake(16, 27, 54, 21);
         uploadupppar_Lbl_outlet.frame = CGRectMake(101, 27, 118, 21);
         setting_Outlet.frame          = CGRectMake(279, 27, 21, 21);
@@ -128,10 +128,10 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     NSURL *soundFileURL = [NSURL fileURLWithPath:app.soundFilePathData];
     //AppDelegate * app1=(AppDelegate*)[UIApplication sharedApplication].delegate;
     app.soundFilePathData=[NSMutableString stringWithString:app.soundFilePathData];
-    NSLog(@"the sound file data is %@",app.soundFilePathData);
+    DLog(@"the sound file data is %@",app.soundFilePathData);
     
     
-    NSLog(@"audioFileURL==%@",soundFileURL);
+    DLog(@"audioFileURL==%@",soundFileURL);
     
     NSDictionary *recordSettings = [NSDictionary
                                     dictionaryWithObjectsAndKeys:
@@ -158,7 +158,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     
     if (error)
     {
-        NSLog(@"error: %@", [error localizedDescription]);
+        DLog(@"error: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }*/
@@ -210,10 +210,10 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     NSURL *soundFileURL = [NSURL fileURLWithPath:app.soundFilePathData];
     //AppDelegate * app1=(AppDelegate*)[UIApplication sharedApplication].delegate;
     app.soundFilePathData=[NSMutableString stringWithString:app.soundFilePathData];
-    NSLog(@"the sound file data is %@",app.soundFilePathData);
+    DLog(@"the sound file data is %@",app.soundFilePathData);
     
     
-    NSLog(@"audioFileURL==%@",soundFileURL);
+    DLog(@"audioFileURL==%@",soundFileURL);
     
     NSDictionary *recordSettings = [NSDictionary
                                     dictionaryWithObjectsAndKeys:
@@ -240,7 +240,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     
     if (error)
     {
-        NSLog(@"error: %@", [error localizedDescription]);
+        DLog(@"error: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }
@@ -290,7 +290,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 - (IBAction)back_Tapped:(id)sender {
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
 
     [audioPlayer stop];
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -470,7 +470,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 - (IBAction)play_audio_btn:(id)sender {
 //    [self stopRecording_Method];
     //[play_Audio_Outlet setUserInteractionEnabled:NO];
-    NSLog(@"Play clicked");
+    DLog(@"Play clicked");
     if([audioPlayer isPlaying]){
         
         
@@ -511,7 +511,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
             audioPlayer.delegate = self;
             
             if (error)
-                NSLog(@"Error: %@",
+                DLog(@"Error: %@",
                       [error localizedDescription]);
             else{
                 [audioPlayer play];
@@ -628,21 +628,21 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 (AVAudioPlayer *)player
                                 error:(NSError *)error
 {
-    NSLog(@"Decode Error occurred");
+    DLog(@"Decode Error occurred");
 }
 
 -(void)audioRecorderDidFinishRecording:
 (AVAudioRecorder *)recorder
                           successfully:(BOOL)flag
 {
-    NSLog(@"Stopped");
+    DLog(@"Stopped");
 }
 
 -(void)audioRecorderEncodeErrorDidOccur:
 (AVAudioRecorder *)recorder
                                   error:(NSError *)error
 {
-    NSLog(@"Encode Error occurred");
+    DLog(@"Encode Error occurred");
 }
 
 

@@ -22,7 +22,7 @@
 
 - (IBAction)btn_switchSwitching:(id)sender {
     
-    NSLog(@"subodh switching the switch button");
+    DLog(@"subodh switching the switch button");
     
 }
 

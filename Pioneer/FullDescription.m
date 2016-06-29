@@ -37,7 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"receieved array--%@",receivedArray);
+    DLog(@"receieved array--%@",receivedArray);
     
     objectDataClass = [DataClass getInstance];
     // Do any additional setup after loading the view from its nib.
@@ -66,9 +66,9 @@
         lbl_CategoryType.text = [receivedArray valueForKey:@"CategoryName"];
     NSString * path = [receivedArray valueForKey:@"imagePath"];
     
-    NSLog(@"path%@",path);
+    DLog(@"path%@",path);
     
-    NSLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
+    DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
     UIImage * myImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:fullPath]];
    
@@ -105,7 +105,7 @@
         NSString *videoPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],fullpath.lastPathComponent];
         
         
-               NSLog(@" video path%@",videoPath);
+               DLog(@" video path%@",videoPath);
         
       
         
@@ -117,7 +117,7 @@
         NSError *error = NULL;
         CMTime time = CMTimeMake(1, 65);
         CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-        NSLog(@"error==%@, Refimage==%@", error, refImg);
+        DLog(@"error==%@, Refimage==%@", error, refImg);
         UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
        
         [testing_Imageview setImage:FrameImage];
@@ -199,7 +199,7 @@
     
    // self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
     
-   // NSLog(@"received array --%@",receivedArray);
+   // DLog(@"received array --%@",receivedArray);
     
 }
 

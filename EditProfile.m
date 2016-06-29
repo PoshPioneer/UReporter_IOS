@@ -351,8 +351,8 @@
 
         
         
-        NSLog(@"text Phone === %@",txt_Phone);
-        NSLog(@"rest number ==%@",reset_Phone);
+        DLog(@"text Phone === %@",txt_Phone);
+        DLog(@"rest number ==%@",reset_Phone);
         
     // NSString *server = [[NSUserDefaults standardUserDefaults]stringForKey:@"connection_Internet"];
     
@@ -405,7 +405,7 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is =====%@",idfv);
+    DLog(@"idfv is =====%@",idfv);
     // getting ...
     
    // NSString *toi = @"TOI";
@@ -416,7 +416,7 @@
     
     NSString* urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/userdetails?deviceId=&Source=&token=",[GlobalStuff generateToken]];
    
-    NSLog(@"get alldetails url --%@",urlString);
+    DLog(@"get alldetails url --%@",urlString);
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -431,7 +431,7 @@
 #pragma marks NSURLConnection delegate methods
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    NSLog(@"error is %@",[error localizedDescription]);
+    DLog(@"error is %@",[error localizedDescription]);
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     [self.addViewOnScrollView setUserInteractionEnabled:YES];
@@ -468,7 +468,7 @@
     {
         checkServiceType=0;
         
-        NSLog(@"Edit profile view o/p is ====%@",json);
+        DLog(@"Edit profile view o/p is ====%@",json);
         /*
          
          data =     {
@@ -594,7 +594,7 @@
         
         checkServiceType=0;
         
-        NSLog(@"o/p of data is =======%@",json);
+        DLog(@"o/p of data is =======%@",json);
         
         NSString *error_Id = [NSString stringWithFormat:@"%@",[[json valueForKey:@"data"] valueForKey:@"ErrorId"]];
         NSString *error_Message = [NSString stringWithFormat:@"%@",[[json valueForKey:@"data"] valueForKey:@"ErrorMessage"]];
@@ -888,7 +888,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
   
-        // NSLog(@"range is =====%i",range.length);
+        // DLog(@"range is =====%i",range.length);
     
     if (range.length==1) {
         return YES;
@@ -1004,7 +1004,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
     
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
@@ -1017,13 +1017,13 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
 
     if (currentLocation != nil) {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
         locationManager = nil;
         [locationManager stopUpdatingLocation];
@@ -1049,10 +1049,10 @@
                                    
                                    for (NSDictionary * dict in array) {
                                        
-                                       NSLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+                                       DLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
                                        [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
                                        [[NSUserDefaults standardUserDefaults]synchronize];
-                                       NSLog(@"Dictionary is %@",dict);
+                                       DLog(@"Dictionary is %@",dict);
 
                                        
                                    }
@@ -1075,7 +1075,7 @@
                                            check_Uncheck_Bool=YES;
                                            // do nothing!!!!!
                                        }
-                                       NSLog(@"inside main thread!");
+                                       DLog(@"inside main thread!");
                                    });
                                }
                                else{
@@ -1084,7 +1084,7 @@
                                    
                                    //error while getting location so we need to set bool no here !!!!!!
                                    check_Uncheck_Bool=NO;
-                                   NSLog(@"An error occured: %@", jsonError);
+                                   DLog(@"An error occured: %@", jsonError);
                                    
                                }
                            }];
@@ -1106,7 +1106,7 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is =====%@",idfv);
+    DLog(@"idfv is =====%@",idfv);
     // getting ...
 
    finalDictionary = [NSMutableDictionary dictionary];
@@ -1178,7 +1178,7 @@
     
     
     
-    NSLog(@"final Dictionary output ========= %@",finalDictionary);
+    DLog(@"final Dictionary output ========= %@",finalDictionary);
     
     NSError *error = nil;
     
@@ -1192,7 +1192,7 @@
     
     NSString * urlString= [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/UserDetails?token=",[GlobalStuff generateToken]];
     
-    NSLog(@"method for submission url--%@",urlString);
+    DLog(@"method for submission url--%@",urlString);
     NSURL *url = [NSURL URLWithString: urlString]; //@"http://prngapi.cloudapp.net/api/UserDetails"];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -1224,7 +1224,7 @@
     
     
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/OTP/GetOTP?MobileNo=%@&Source=&token=%@",MobNo,[GlobalStuff generateToken]];
-    NSLog(@"url string service otp--%@",urlString);
+    DLog(@"url string service otp--%@",urlString);
 
     //NSString* urlString = [NSString stringWithFormat:@"http://toicj.cloudapp.net/api/OTP/GetOTP?MobileNo=%@",MobNo];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -1239,13 +1239,13 @@
                                id  json = [NSJSONSerialization JSONObjectWithData:data
                                                                           options:kNilOptions
                                                                             error:&jsonError];
-                               NSLog(@"json is for ServiceOTP== %@",json);
+                               DLog(@"json is for ServiceOTP== %@",json);
                                
                                
                                if (json) {
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                       NSLog(@"inside main thread!");
+                                       DLog(@"inside main thread!");
                                        
                                        [self.view setUserInteractionEnabled:YES];
                                        [spinner removeSpinner];
@@ -1265,7 +1265,7 @@
                                                // for current time
                                                NSDate *myDate = [NSDate date];
                                                NSTimeInterval getcurrentTime = [myDate timeIntervalSince1970];
-                                               NSLog(@"this is current time now===%f",getcurrentTime);
+                                               DLog(@"this is current time now===%f",getcurrentTime);
                                                mobile.getTime = getcurrentTime;
                                                
                                                [self.navigationController pushViewController:mobile animated:YES];
@@ -1280,9 +1280,9 @@
                                                // for current time
                                                NSDate *myDate = [NSDate date];
                                                NSTimeInterval getcurrentTime = [myDate timeIntervalSince1970];
-                                               NSLog(@"this is current time now===%f",getcurrentTime);
+                                               DLog(@"this is current time now===%f",getcurrentTime);
                                                mobile.getTime = getcurrentTime;
-                                               NSLog(@"check time==%f",mobile.getTime);
+                                               DLog(@"check time==%f",mobile.getTime);
                                                
                                                [self.navigationController pushViewController:mobile animated:YES];
                                            }
@@ -1301,8 +1301,8 @@
                                }
                                else{
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                       NSLog(@"inside main thread!");
-                                       NSLog(@"An error occured: %@", jsonError);
+                                       DLog(@"inside main thread!");
+                                       DLog(@"An error occured: %@", jsonError);
                                        [self.view setUserInteractionEnabled:YES];
                                        [spinner removeSpinner];
                                    });

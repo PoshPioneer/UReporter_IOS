@@ -101,13 +101,13 @@
             
             
             NSString *authStr = [NSString stringWithFormat:@"%@:%@", trimmedUsername, trimmedPassword];
-            NSLog(@"authStr is %@",authStr);
+            DLog(@"authStr is %@",authStr);
             NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
             NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Base64 base64forData:authData]];
-            NSLog(@"auth value--%@",authValue);
+            DLog(@"auth value--%@",authValue);
             NSString* urlString = [NSString stringWithFormat:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/subscribers/%@?format=JSON",trimmedUsername];
             
-            NSLog(@" url for login  --%@",urlString);
+            DLog(@" url for login  --%@",urlString);
             
             
             
@@ -118,7 +118,7 @@
             
             [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
              {
-                 NSLog(@"JSON: %@", responseObject);
+                 DLog(@"JSON: %@", responseObject);
                  NSDictionary *json = [Utility cleanJsonToObject:responseObject];
                  
                  
@@ -154,7 +154,7 @@
                  
                  
              } failure:^(NSURLSessionTask *operation, NSError *error) {
-                 NSLog(@"Error: %@", error);
+                 DLog(@"Error: %@", error);
                  
                  [self.view setUserInteractionEnabled:YES];
                  [spinner removeSpinner];

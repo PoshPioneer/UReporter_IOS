@@ -366,7 +366,7 @@
             }
             else if ([selectedItem length])
             {
-                NSLog(@"Invalid date or date format:%@",selectedItem);
+                DLog(@"Invalid date or date format:%@",selectedItem);
             }
             break;
         }
@@ -384,7 +384,7 @@
             }
             else if([selectedItem length])
             {
-                NSLog(@"Invalid time or time format:%@",selectedItem);
+                DLog(@"Invalid time or time format:%@",selectedItem);
             }
             break;
         }

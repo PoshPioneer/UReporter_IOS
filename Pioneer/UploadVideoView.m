@@ -126,10 +126,10 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        NSLog(@"quite empty!!!!");
+        DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
         
         lbl_output_category.userInteractionEnabled=YES ;
@@ -212,11 +212,11 @@
     
    
     videoData = [NSData dataWithContentsOfFile:ReceivedURl];
-    NSLog(@"received data from uploadview --%@",receivedPath);
+    DLog(@"received data from uploadview --%@",receivedPath);
     tempPath = receivedPath;
     [self generateThumbnailFrompath];
-    NSLog(@"received url --%@",ReceivedURl);
-   // NSLog(@"converted path --%@", [NSData dataWithContentsOfFile:ReceivedURl]);
+    DLog(@"received url --%@",ReceivedURl);
+   // DLog(@"converted path --%@", [NSData dataWithContentsOfFile:ReceivedURl]);
     
     segment_Outlet.tintColor =[UIColor colorWithRed:180.0/255.0 green:32.0/255.0 blue:33.0/255.0 alpha:1.0];
     
@@ -231,7 +231,7 @@
     
     else{
         
-        //NSLog(@"collected data from review view --%@",tempArray);
+        //DLog(@"collected data from review view --%@",tempArray);
         [self.view setNeedsLayout];
         
         txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
@@ -242,7 +242,7 @@
         videoData = transferedVideoData;
         
         NSString * localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-        NSLog(@"local url--%@",localUrltesting);
+        DLog(@"local url--%@",localUrltesting);
         
         
         /// start.....
@@ -251,7 +251,7 @@
         
         // end......
         
-        NSLog(@"category value--%@",categoryID);
+        DLog(@"category value--%@",categoryID);
         if ([categoryID isEqualToString: @"1"]) {
             lbl_output_category.text = @"Politics";
             categoryId_String =categoryID;
@@ -291,9 +291,9 @@
 -(void)generateThumbnailFrompath {
     
    // NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"videoPath"];
-    NSLog(@" video path%@",tempPath);
+    DLog(@" video path%@",tempPath);
     
-    NSLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],tempPath.lastPathComponent]);
+    DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],tempPath.lastPathComponent]);
     
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],tempPath.lastPathComponent];
     
@@ -310,7 +310,7 @@
     NSError *error = NULL;
     CMTime time = CMTimeMake(1, 65);
     CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-    NSLog(@"error==%@, Refimage==%@", error, refImg);
+    DLog(@"error==%@, Refimage==%@", error, refImg);
     
     UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
     [videoDataImage setImage:FrameImage];
@@ -331,7 +331,7 @@
 
 -(void)viewDidLayoutSubviews {
     
-    NSLog(@"viewDidLayoutSubview");
+    DLog(@"viewDidLayoutSubview");
     
     // 12 August code .
     
@@ -339,7 +339,7 @@
     {
         // photo is not taken !!!!!
         
-        NSLog(@"inside !handleView");
+        DLog(@"inside !handleView");
       //  [self doItResize:@"show"];
         
     }else
@@ -349,13 +349,13 @@
         if (cutboolValue) // when cut_Selected tapped!!!!!!
         {
             
-            NSLog(@"inside cutboolValue");
+            DLog(@"inside cutboolValue");
             cutboolValue=NO ;
            // [self doItResize:@"hide"];
             
         }else if (videoData==nil){ // when no image !!!!!!
             
-            NSLog(@"inside mainImage==nil");
+            DLog(@"inside mainImage==nil");
             
             if (isPickerTapped) {
                 
@@ -365,7 +365,7 @@
             
         }else{
             
-            NSLog(@"inside else below mainImage==nil");
+            DLog(@"inside else below mainImage==nil");
             
             [lbl_selected_File_Outlet setHidden:NO];
             [img_View_Selected_File_Outlet setHidden:NO];
@@ -411,7 +411,7 @@
     
         if (videoData==nil) {
             [self doItResize:@"hide"];
-            NSLog(@"photo is yet to be  taken!");
+            DLog(@"photo is yet to be  taken!");
             segment_Outlet.selectedSegmentIndex=-1;
 
         }
@@ -424,7 +424,7 @@
 
             [self doItResize:@"hide"];
 
-            NSLog(@"video  is yet to be  taken!");
+            DLog(@"video  is yet to be  taken!");
            // segment_Outlet.selectedSegmentIndex=-1;
             
         }else{
@@ -433,7 +433,7 @@
             [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Video_Check"];
             [[NSUserDefaults standardUserDefaults]synchronize];
             
-            NSLog(@"video has been taken!");
+            DLog(@"video has been taken!");
             // [self doItResize:@"show"];
             [lbl_selected_File_Outlet setHidden:NO];
             [img_View_Selected_File_Outlet setHidden:NO];
@@ -464,7 +464,7 @@
     
    /* if(item.tag == 1)
     {
-        NSLog(@"Video Tab bar tapped");
+        DLog(@"Video Tab bar tapped");
         [self checkforNavigationInternetconnection:1];
 
         
@@ -472,18 +472,18 @@
     
     if (item.tag ==2) {
         
-              NSLog(@"Photo tab bar tapped");
+              DLog(@"Photo tab bar tapped");
       [self checkforNavigationInternetconnection:2];
       
     }else if (item.tag ==3){
       
-      NSLog(@"Audio Tab bar tapped");
+      DLog(@"Audio Tab bar tapped");
       
       [self checkforNavigationInternetconnection:3];
       
       }else if (item.tag ==4) {
           
-          NSLog(@"Text Tab bar tapped");
+          DLog(@"Text Tab bar tapped");
           
           [self checkforNavigationInternetconnection:4];
       }
@@ -605,7 +605,7 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@"Video content from array is :  %@",array);
+    DLog(@"Video content from array is :  %@",array);
     
     
     if ([lbl_output_category.text length]>0 || videoData !=nil  || [txt_Title.text length]>0 || [txt_View.text length]>0) {
@@ -631,7 +631,7 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    NSLog(@" Text content from array is :  %@",array);
+    DLog(@" Text content from array is :  %@",array);
     
     
     
@@ -783,7 +783,7 @@
         
 //        if (buttonIndex==0) {
 //            
-//            NSLog(@"cancel tapped!");
+//            DLog(@"cancel tapped!");
 //            
 //        }else{
         
@@ -800,18 +800,18 @@
     if (buttonIndex == 0)
     {
         //    UITextField *Location = [alertView textFieldAtIndex:0];
-        //    NSLog(@"username: %@", username.text);
+        //    DLog(@"username: %@", username.text);
         
-        NSLog(@"first one ");
+        DLog(@"first one ");
         
-        NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+        DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
         
         if ([[alertView textFieldAtIndex:0].text length]<=0) {
          
             
             NSArray *array = [self.navigationController viewControllers];
             
-            NSLog(@" Text content from array is :  %@",array);
+            DLog(@" Text content from array is :  %@",array);
             [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
             
             
@@ -822,8 +822,8 @@
         
         [self  sendVideo_ToServer];
         
-        NSLog(@"seocnd one ");
-        NSLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
+        DLog(@"seocnd one ");
+        DLog(@"Entered: %@",[[alertView textFieldAtIndex:0] text]);
         
         //  [with_Address dismissWithClickedButtonIndex:2 animated:YES];
         
@@ -834,7 +834,7 @@
         
         NSArray *array = [self.navigationController viewControllers];
         
-        NSLog(@" Text content from array is :  %@",array);
+        DLog(@" Text content from array is :  %@",array);
         
         if (buttonIndex==0) {
             
@@ -866,7 +866,7 @@
 
             // for first send service....
                 // cancel tapped.......
-                NSLog(@"cancel_Tapped");
+                DLog(@"cancel_Tapped");
                 
                 ok_For_Success_Outlet.tag=2;
                 CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -905,7 +905,7 @@
                 
                 // for first service ....
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                 
                  //responseData = [NSMutableData data];
                 //[task resume];
@@ -916,7 +916,7 @@
             }else if(isItFirstService ==2){
                 // for second service ...
                 // ok tapped Try Again....
-                NSLog(@"OK_Tapped");
+                DLog(@"OK_Tapped");
                         [self uploadThumbnail:responseDataForRestOfTheDetailService];
 
             }else{
@@ -997,7 +997,7 @@
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
     NSString * urlString = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken]];
     
-    NSLog(@"video url--%@",urlString);
+    DLog(@"video url--%@",urlString);
     
     
     NSURL *url =[ NSURL URLWithString:urlString];//= [NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
@@ -1113,7 +1113,7 @@
     //timesgroupcrapi   http://timesgroupcrapi.cloudapp.net/api/UserDet
     
     NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken] ];
-    NSLog(@"url video 2--%@",urlstring);
+    DLog(@"url video 2--%@",urlstring);
     
     
     NSURL *url = [NSURL URLWithString:urlstring]; //[NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
@@ -1176,7 +1176,7 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-    NSLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    DLog(@"%lld %lld %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
     
     
     
@@ -1209,12 +1209,12 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     
-    NSLog(@"%s: error =========+++++ %@; data ==========+++++ %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    DLog(@"%s: error =========+++++ %@; data ==========+++++ %@", __PRETTY_FUNCTION__, error, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     
     
     if (responseData==nil) {
         
-        NSLog(@"connection has broken.");
+        DLog(@"connection has broken.");
 
     }
 
@@ -1227,17 +1227,17 @@
         
         if (error==nil ) {
             
-            NSLog(@"successfully submitted");
+            DLog(@"successfully submitted");
             
             responseDataForRestOfTheDetailService =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
             
-            NSLog(@"ressssssssssssssssss---%@",responseDataForRestOfTheDetailService);
+            DLog(@"ressssssssssssssssss---%@",responseDataForRestOfTheDetailService);
          
             [self uploadThumbnail:[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]];
 
         }else{
             
-            NSLog(@"error available!");
+            DLog(@"error available!");
            // [self   sendVideo_ToServer];
 
             
@@ -1306,7 +1306,7 @@
     
     NSString * urlstring = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
     
-    NSLog(@"video url 3--%@",urlstring);
+    DLog(@"video url 3--%@",urlstring);
     
     NSURL * url = [NSURL URLWithString:urlstring]; //@"http://prngapi.cloudapp.net/api/CJDetails"];
     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
@@ -1363,12 +1363,12 @@
         
     }
     
-    NSLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
+    DLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
     
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
     
-     NSLog(@"Request ON Video ===%@",finalDictionary);
+     DLog(@"Request ON Video ===%@",finalDictionary);
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
@@ -1388,11 +1388,11 @@
     
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           NSLog(@"Response:%@ %@\n", response, error);
+                                                           DLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                          {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               NSLog(@"final audio o/p is  ==== %@",text);
+//                                                               DLog(@"final audio o/p is  ==== %@",text);
                                                              
                                                    
                                                              NSError *jsonError;
@@ -1400,7 +1400,7 @@
                                                                                                               options:kNilOptions
                                                                                                                 error:&jsonError];
 
-                                                             NSLog(@"array is ====%@",array);
+                                                             DLog(@"array is ====%@",array);
                                                              
                                                              /*
                                                               array is ===={
@@ -1442,7 +1442,7 @@
                                                                  NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
                                                                 [dateFormatter setDateFormat:@"dd/MM/yyyy"];
                                                                  NSString *date=[dateFormatter stringFromDate:[NSDate date]];
-//                                                                 NSLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
+//                                                                 DLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
                                                                  
                                                                  
                                                                  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1490,7 +1490,7 @@
                                                                  
                                                                  
                                                                  
-                                                                 NSLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
+                                                                 DLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
                                                                  
                                                                
                                                                  ok_For_Success_Outlet.tag=1;
@@ -1590,12 +1590,12 @@
 
     
     NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/VideoThumbnail?id=",Id_BlobFromService,@"&token=",Finaltoken];
-    NSLog(@"url video 4 --%@",urlstring);
+    DLog(@"url video 4 --%@",urlstring);
     
     
     NSURL *url = [NSURL URLWithString:urlstring];//[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/VideoThumbnail?id=%@",Id_BlobFromService]];
     
-    NSLog(@"%@",url);
+    DLog(@"%@",url);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1649,10 +1649,10 @@
     
     NSURLSessionDataTask * dataTask =[session dataTaskWithRequest:request
                                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                    NSLog(@"Response:%@ %@\n", response, error);
+                                                    DLog(@"Response:%@ %@\n", response, error);
                                                     if(error == nil)
                                                     {
-                                                        NSLog(@" I am already INSIDE");
+                                                        DLog(@" I am already INSIDE");
                                                         
                                                         [self sendRestOfTheVideoDATA:Id_BlobFromService];
                                                     }else{
@@ -1744,10 +1744,10 @@
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        NSLog(@"converted data--%@",data);
+        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-        //    NSLog(@"imagepath==================== %@",localUrl);
+        //    DLog(@"imagepath==================== %@",localUrl);
         
         if(isCameraClicked)
         {
@@ -1756,9 +1756,9 @@
             
         }
         
-        NSLog(@"image is ========%@",mainImage);
+        DLog(@"image is ========%@",mainImage);
         
-        NSLog(@"info==============%@",info);
+        DLog(@"info==============%@",info);
         
         //New changes
         
@@ -1776,7 +1776,7 @@
         
         //Gaurav's logic
         
-        NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+        DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
         
         
         // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
@@ -1806,7 +1806,7 @@
         [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         //[picker dismissViewControllerAnimated:YES completion:NULL];
-        NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+        DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
         
         captureduniqueName = [self generateUniqueName];
         
@@ -1875,8 +1875,8 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        NSLog(@"this is the value of sucess---%hhd",success);
-        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+        DLog(@"this is the value of sucess---%hhd",success);
+        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         if (isBrowserTapped)
         {
@@ -2244,7 +2244,7 @@
     
     // when capture video is tapped!!!
     // for both borowse and capture !!!!
-    NSLog(@"tapped cancel!");
+    DLog(@"tapped cancel!");
     [self dismissViewControllerAnimated:YES completion:nil];
     segment_Outlet.selectedSegmentIndex=-1;
     
@@ -2267,7 +2267,7 @@
     
         if ([sender selectedSegmentIndex]==0) {
             
-            NSLog(@"capture Video tapped");
+            DLog(@"capture Video tapped");
             isBrowserTapped=YES;
             [self.view endEditing:YES];
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2287,7 +2287,7 @@
         }else if ([sender selectedSegmentIndex]==1){
             
             [self.view endEditing:YES];
-            NSLog(@"Browose Tapped");
+            DLog(@"Browose Tapped");
             isBrowserTapped=NO;
             [self startMediaBrowserFromViewController: self usingDelegate: self];
             
@@ -2302,7 +2302,7 @@
         
         if ([sender selectedSegmentIndex]==0) {
             
-            NSLog(@"capture Video tapped");
+            DLog(@"capture Video tapped");
              isBrowserTapped=YES;
             [self.view endEditing:YES];
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2322,7 +2322,7 @@
         }else if ([sender selectedSegmentIndex]==1){
             
             [self.view endEditing:YES];
-            NSLog(@"Browose Tapped");
+            DLog(@"Browose Tapped");
             isBrowserTapped=NO;
             [self startMediaBrowserFromViewController: self usingDelegate: self];
             
@@ -2387,10 +2387,10 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
         
-        // NSLog(@"quite empty!!!!");
+        // DLog(@"quite empty!!!!");
         // [app getCategory];
         
-        NSLog(@"coming!");
+        DLog(@"coming!");
     }else{
 
     isPickerTapped=YES;
@@ -2491,7 +2491,7 @@
         
         NSArray * viewsList = [self.navigationController viewControllers];
         
-        NSLog(@"views list --%@",viewsList);
+        DLog(@"views list --%@",viewsList);
         [self.navigationController popToViewController:[viewsList objectAtIndex:1] animated:YES];
 
         
@@ -2509,7 +2509,7 @@
         
         NSArray * viewsList =[self.navigationController viewControllers];
         
-        NSLog(@"views list --%@",viewsList);
+        DLog(@"views list --%@",viewsList);
         [self.navigationController popToViewController:[viewsList objectAtIndex:1] animated:YES];
 
         
@@ -2599,7 +2599,7 @@
                 
                 // if ([sender selectedSegmentIndex]==0) {
                 [self.view endEditing:YES];
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2617,7 +2617,7 @@
                 
                 //   if ([sender selectedSegmentIndex]==0) {
                 
-                NSLog(@"capture photo tapped");
+                DLog(@"capture photo tapped");
                 
                 isCameraClicked=YES;
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -2677,7 +2677,7 @@
         
         
             
-            NSLog(@"capture Video tapped");
+            DLog(@"capture Video tapped");
             isBrowserTapped=YES;
             [self.view endEditing:YES];
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2702,7 +2702,7 @@
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -2873,7 +2873,7 @@
 
 #pragma mark -- Custom Button called...
 -(void)submitButtonTap {
-    NSLog(@"submit tapped");
+    DLog(@"submit tapped");
     [visualEffectView removeFromSuperview];
     [customAlertView removeFromSuperview];
     
@@ -2923,7 +2923,7 @@
     
     
     
-    NSLog(@"user-agent in data video --%@",UserAgent);
+    DLog(@"user-agent in data video --%@",UserAgent);
     
     
     
@@ -2939,69 +2939,69 @@
     //NSString *newDateString = [outputFormatter stringFromDate:[now timeIntervalSince1970 ]];
     
     
-    NSLog(@"newDateString %f", [now timeIntervalSince1970 ]);
+    DLog(@"newDateString %f", [now timeIntervalSince1970 ]);
     
     
     double Finaldate = [now timeIntervalSince1970] ;
     
     double milliseconds = Finaldate *1000;
     
-    NSLog(@"final date---%f",milliseconds);
+    DLog(@"final date---%f",milliseconds);
     
     //    NSString *myStringValue = @"hello";
     //    NSString *mySecretKey = @"some";
     //    NSString *result1 = [ViewController hashedString:myStringValue withKey:mySecretKey];
-    //    NSLog(@"result-- %@", result1);
+    //    DLog(@"result-- %@", result1);
     
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"idfv is audio view  =====%@",idfv);
+    DLog(@"idfv is audio view  =====%@",idfv);
     
     
     
     
     
     NSString * deviceID =  idfv; //app.FinalKeyChainValue; //@"JYGSyzMsYrfZQA1FSqOY58eIZ9k=";
-    NSLog(@"device id upload video --%@",deviceID);
+    DLog(@"device id upload video --%@",deviceID);
     NSString * salt =  [NSString stringWithFormat:@"%@:rz8LuOtFBXphj9WQfvFh",[[NSUserDefaults standardUserDefaults]valueForKey:@"userID_Default"]];
-    NSLog(@"key is upload video view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
+    DLog(@"key is upload video view --%@",salt);//  @":rz8LuOtFBXphj9WQfvFh";
     NSString * IPAddress = [self getIPAddress];
     NSString * sourceParam = @"SkagitTimes";
     //  NSString * userAgent = @"iOS";
     double  ticks =  ((milliseconds * 10000) + 621355968000000000);
-    NSLog(@"ticks--%0.00000f",ticks);
+    DLog(@"ticks--%0.00000f",ticks);
     
     NSString *hashLeft = [NSString stringWithFormat:@"%@:%@:%@:%f:%@", deviceID,IPAddress ,UserAgent,ticks,sourceParam];
-    NSLog(@"final string--%@",hashLeft);
+    DLog(@"final string--%@",hashLeft);
     
     
     
-    // NSLog(@"ip address--%@",IPAddress);
+    // DLog(@"ip address--%@",IPAddress);
     NSData *saltData = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData = [hashLeft dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     NSMutableData* hash = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, saltData.bytes, saltData.length, paramData.bytes, paramData.length, hash.mutableBytes);
     NSString *base64LeftHash = [Base64 base64forData:hash];
-    NSLog(@"left hash  base 64--%@",base64LeftHash);
+    DLog(@"left hash  base 64--%@",base64LeftHash);
     
     
     
     // rightHash...
     
     NSString *hashRight =[NSString stringWithFormat:@"%@:%0.00000f:%@",deviceID,ticks,sourceParam];
-    NSLog(@"right Hash --%@",hashRight);
+    DLog(@"right Hash --%@",hashRight);
     
     NSString *token = [NSString stringWithFormat:@"%@:%@",base64LeftHash,hashRight];
-    NSLog(@"concated hash --%@",token);
+    DLog(@"concated hash --%@",token);
     //   NSData *saltData2 = [salt dataUsingEncoding:NSUTF8StringEncoding];
     NSData *paramData2 = [token dataUsingEncoding:NSUTF8StringEncoding];//deviceID
     
     //    NSMutableData* hash2 = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     //CCHmac(kCCHmacAlgSHA256, saltData2.bytes, saltData2.length, paramData2.bytes, paramData2.length, hash2.mutableBytes);
     Finaltoken = [Base64 base64forData:paramData2];
-    NSLog(@"final token--%@",Finaltoken);
+    DLog(@"final token--%@",Finaltoken);
     
     
 }
@@ -3051,7 +3051,7 @@
     // Free memory
     freeifaddrs(interfaces);
     
-    NSLog(@"IP Address--%@",address);
+    DLog(@"IP Address--%@",address);
     return address;
     
 }
@@ -3167,12 +3167,12 @@
         [VideocollectedDict setValue:lbl_output_category.text forKey:@"localCategoryName"];
         
         // app.submitDict = [collectedDict copy];
-        //NSLog(@"collected data in app--%@",VideocollectedDict);
+        //DLog(@"collected data in app--%@",VideocollectedDict);
         /*
         if ([objectDataClass.globalSubmitArray count]<15) {
             
             [objectDataClass.globalSubmitArray  addObject:VideocollectedDict];
-            NSLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
+            DLog(@"global arra neew --%@",objectDataClass.globalSubmitArray);
             
         }else{
             
@@ -3183,7 +3183,7 @@
         
         
         [[NSUserDefaults standardUserDefaults]setValue:objectDataClass.globalSubmitArray forKey:@"SubmitArray"];
-        NSLog(@"array length======%lu",[objectDataClass.globalSubmitArray count]);
+        DLog(@"array length======%lu",[objectDataClass.globalSubmitArray count]);
         // [[NSUserDefaults standardUserDefaults]synchronize];
         
         */
@@ -3219,7 +3219,7 @@
         
         
         
-     //   NSLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
+     //   DLog(@"My Array is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
         
         
         
@@ -3236,13 +3236,13 @@
         
 //        objectDataClass.globalSubmitArray = [NSMutableArray arrayWithObjects:collectedDict, nil];
 //        
-//        NSLog(@"gloabal array  photo--%@",objectDataClass.globalSubmitArray);
+//        DLog(@"gloabal array  photo--%@",objectDataClass.globalSubmitArray);
 //        
 //        
 //        [[NSUserDefaults standardUserDefaults]setValue:objectDataClass.globalSubmitArray forKey:@"SubmitArray"];
 //        [[NSUserDefaults standardUserDefaults]synchronize];
 //        
-//        NSLog(@"nsuser array photo--%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy]);
+//        DLog(@"nsuser array photo--%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy]);
         
         
         // showing alertcontroller...
@@ -3268,10 +3268,10 @@
 //    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
 //    mainImage = chosenImage;
 //    data = UIImagePNGRepresentation(mainImage);
-//    NSLog(@"converted data--%@",data);
+//    DLog(@"converted data--%@",data);
 //    
 //    //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-//    //    NSLog(@"imagepath==================== %@",localUrl);
+//    //    DLog(@"imagepath==================== %@",localUrl);
 //    
 //    if(isCameraClicked)
 //    {
@@ -3280,9 +3280,9 @@
 //        
 //    }
 //    
-//    NSLog(@"image is ========%@",mainImage);
+//    DLog(@"image is ========%@",mainImage);
 //    
-//    NSLog(@"info==============%@",info);
+//    DLog(@"info==============%@",info);
 //    
 //    //New chamges
 //    
@@ -3300,7 +3300,7 @@
 //    
 //    //Gaurav's logic
 //    
-//    NSLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
+//    DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
 //    
 //    
 //    // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
@@ -3330,7 +3330,7 @@
 //    [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
 //    [[NSUserDefaults standardUserDefaults]synchronize];
 //    //[picker dismissViewControllerAnimated:YES completion:NULL];
-//    NSLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
+//    DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
 //    
 //    captureduniqueName = [self generateUniqueName];
 //    
@@ -3374,7 +3374,7 @@
 //
 //- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
 //    
-//    NSLog(@"cancel Tapped!");
+//    DLog(@"cancel Tapped!");
 //    
 //    isPickerTapped = YES;
 //    //   segment_Outlet.selectedSegmentIndex=-1;
@@ -3410,7 +3410,7 @@
 //    // int randomValue = arc4random() % 1000;
 //    //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
 //    finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
-//    NSLog(@"unique name --%@",finalUnique);
+//    DLog(@"unique name --%@",finalUnique);
 //    return finalUnique;
 //    
 //}
@@ -3422,7 +3422,7 @@
         // code for ios 8 or above !!!!!!!!!
         
         
-        NSLog(@"Browose Tapped");
+        DLog(@"Browose Tapped");
         
         isCameraClicked=NO;
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -3442,7 +3442,7 @@
     }else{
         
         
-        NSLog(@"Browose Tapped");
+        DLog(@"Browose Tapped");
         
         isCameraClicked=NO;
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -3469,7 +3469,7 @@
         
         
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         isBrowserTapped=YES;
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -3494,7 +3494,7 @@
         
     }else { // for IOS less than 7
         
-        NSLog(@"capture Video tapped");
+        DLog(@"capture Video tapped");
         
         isBrowserTapped=YES;
         [self.view endEditing:YES];
@@ -3543,12 +3543,12 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
+    DLog(@"didFailWithError: %@", error);
     
     
     if([CLLocationManager locationServicesEnabled]){
         
-        NSLog(@"Location Services Enabled");
+        DLog(@"Location Services Enabled");
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
@@ -3591,14 +3591,14 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+    DLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil)
     {
         
-        NSLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
+        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         locationManager = nil;
         [locationManager stopUpdatingLocation];
         [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
@@ -3633,9 +3633,9 @@
 -(void)syncSuccess:(id)responseObject
 {
     
-    NSLog(@"%@",responseObject);
+    DLog(@"%@",responseObject);
     
-    NSLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+    DLog(@"op address is ===%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
     
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[responseObject valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
     

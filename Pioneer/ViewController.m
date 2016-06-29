@@ -103,28 +103,8 @@
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
     NSLog(@"saved key  is =====%@",idfv_Local);
     
-    if ([idfv_Local length]==0)
+    if ([idfv_Local length]!=0)
     {
-        NSLog(@"keychain is nil for all.");
-        
-//        if ([[[UIDevice currentDevice] systemVersion] floatValue] > 9.2 )
-//        {
-//            
-//            [self alertMessage:@"Warning"  message:@"This app is not compatible with the OS version on your device."];
-//            
-//        }
-
-       /* if ([Utility connected] == NO)
-        {
-                        [self alertMessage:@"Alert!" message:@"Internet connection is not available. Please try again."];
-        }*/
-        
-    }
-    else
-    {
-        
-        
-        NSLog(@"keychain is not null");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         
         if (size.height==480)
@@ -149,11 +129,11 @@
         
         
         NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
-        NSLog(@"URL===%@",urlString);
+        DLog(@"URL===%@",urlString);
         
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-          NSLog(@"JSON: %@", responseObject);
+          DLog(@"JSON: %@", responseObject);
           NSDictionary *json = [Utility cleanJsonToObject:responseObject];
             
             if (json)
@@ -164,7 +144,7 @@
                 if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"0"])
                 {
                     
-                    NSLog(@"keychain is not null");
+                    DLog(@"keychain is not null");
                     CGSize size = [[UIScreen mainScreen]bounds].size;
                     
                     if (size.height==480)
@@ -208,7 +188,7 @@
          
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
+            DLog(@"Error: %@", error);
             
            
         }];
@@ -425,8 +405,6 @@
     
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?token=%@",[GlobalStuff generateToken]];
     
-    NSLog(@"while registration data sent is = %@",finalDictionary);
- 
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self.view setUserInteractionEnabled:NO];
@@ -444,7 +422,6 @@
 -(void)syncSuccess:(id) responseObject
 {
     
-    NSLog(@"%@",responseObject);
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self.view setUserInteractionEnabled:YES];
@@ -464,7 +441,6 @@
         [[NSUserDefaults standardUserDefaults]setValue:strCompare forKeyPath:@"TimesOfIndiaRegistrationID"];
         [[NSUserDefaults standardUserDefaults]synchronize];
 
-        NSLog(@"id is = %@",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"]);
         // set keychain value
 
         AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -527,7 +503,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     
-   // NSLog(@"range is =====%i",range.length);
+   // DLog(@"range is =====%i",range.length);
     
     if (range.length==1)
     {

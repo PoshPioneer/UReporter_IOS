@@ -113,7 +113,7 @@
             [selectedTitles addObject:[NSDateFormatter localizedStringFromDate:_datePicker.date dateStyle:_dateStyle timeStyle:NSDateFormatterNoStyle]];
             [self setDate:_datePicker.date];
             
-            NSLog(@"_datePicker.date is ===%@",_datePicker.date);
+            DLog(@"_datePicker.date is ===%@",_datePicker.date);
             
 //              NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:_datePicker.date];
 //              NSInteger day = [components day];
@@ -124,7 +124,7 @@
        
             // date to str.....
             NSString *str = [NSString stringWithFormat:@"%@",_datePicker.date];
-            NSLog(@"IQstr is ======%@",str);
+            DLog(@"IQstr is ======%@",str);
             
             
             
@@ -136,34 +136,34 @@
             dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"EN"];
             NSDate *date = [dateFormatter dateFromString:str];//@"Mon, 14 May 2012, 12:00:55 +0200"];
             
-            NSLog(@"date: %@", date);
-            NSLog(@"str : %@", str);
+            DLog(@"date: %@", date);
+            DLog(@"str : %@", str);
             
             //converting str to date ...
 //
 //            NSDateFormatter *month =[[NSDateFormatter alloc]init];
 //            [month setDateFormat:@"MMMM"];
-//            NSLog(@"month is -----%@",[month stringFromDate:date]);
+//            DLog(@"month is -----%@",[month stringFromDate:date]);
 //            
 //            NSString *strMonth = [NSString stringWithFormat:@"%@",[month stringFromDate:date]];
-//            NSLog(@"month is ======%@",strMonth);
+//            DLog(@"month is ======%@",strMonth);
 //            app.global_month=strMonth;
 //            
 //            NSDateFormatter *year = [[NSDateFormatter alloc]init];
 //            [year setDateFormat:@"yyyy"];
-//            NSLog(@"year is ===%@",[year stringFromDate:date]);
+//            DLog(@"year is ===%@",[year stringFromDate:date]);
 //
 //            NSString *strYear = [NSString stringWithFormat:@"%@",[year stringFromDate:date]];
-//            NSLog(@"month is ======%@",strYear);
+//            DLog(@"month is ======%@",strYear);
 //            app.global_year=strYear;
 //
 //            
 //            NSDateFormatter *weekDay = [[NSDateFormatter alloc] init];
 //            [weekDay setDateFormat:@"EEE"];
-//            NSLog(@"---------%@",[weekDay stringFromDate:date]);
+//            DLog(@"---------%@",[weekDay stringFromDate:date]);
 //            
 //            NSString *strDay = [NSString stringWithFormat:@"%@",[weekDay stringFromDate:date]];
-//            NSLog(@"IQstr is ======%@",strDay);
+//            DLog(@"IQstr is ======%@",strDay);
 //            app.global_Day=strDay;
 //
 //

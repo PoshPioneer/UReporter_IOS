@@ -96,9 +96,9 @@
    // self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
     
     
-    NSLog(@"Audio is playing...");
+    DLog(@"Audio is playing...");
 //    timerCheck = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkCategoryData) userInfo:nil repeats:YES];
-    NSLog(@"path of url is %@",app.yourFileURL);
+    DLog(@"path of url is %@",app.yourFileURL);
     
     
     //[btnStop setBackgroundImage:[UIImage imageNamed:@"audio_stop_btn.png"] forState:UIControlStateNormal];

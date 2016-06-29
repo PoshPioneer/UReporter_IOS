@@ -145,7 +145,7 @@
 (NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    NSLog(@"Section:%ld Row:%ld selected and its data is %@",
+    DLog(@"Section:%ld Row:%ld selected and its data is %@",
           (long)indexPath.section,(long)indexPath.row,cell.textLabel.text);
     
     if(indexPath.row==0){
@@ -176,7 +176,7 @@
        
        //if ([Utility connected] == YES) {
 
-                    NSLog(   @"this is edit profile");
+                    DLog(   @"this is edit profile");
                     CGSize size = [[UIScreen mainScreen]bounds].size;
           
                     if (size.height==480) {
@@ -201,7 +201,7 @@
        
    }
    else if (indexPath.row==2){
-       NSLog(@"this is about...");
+       DLog(@"this is about...");
        
        CGSize size = [[UIScreen mainScreen]bounds].size;
        
@@ -220,7 +220,7 @@
 
    }
    else if (indexPath.row==3){
-       NSLog(@"this privacy policy");
+       DLog(@"this privacy policy");
        
        CGSize size = [[UIScreen mainScreen]bounds].size;
        

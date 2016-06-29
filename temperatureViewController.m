@@ -35,7 +35,7 @@
     [self.view setUserInteractionEnabled:NO];
     spinner=[SpinnerView loadSpinnerIntoView:self.view];
     
-    NSLog(@"loading web url");
+    DLog(@"loading web url");
     [self load_webView_Url];
 
 }
@@ -65,7 +65,7 @@
     
     url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?zip=98274,us&appid=025fd416c44e35caa638609d50f6c056&units=metric"];
     
-   // NSLog(@"DICT IS===%@",getData);
+   // DLog(@"DICT IS===%@",getData);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
@@ -77,15 +77,15 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                NSError *jsonError;
                                
-                               NSLog(@"data = %@",data);
-                               NSLog(@"response = %@",response);
-                               NSLog(@"error = %@",error);
+                               DLog(@"data = %@",data);
+                               DLog(@"response = %@",response);
+                               DLog(@"error = %@",error);
                                
                                if (data==nil || response==nil) {
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                       NSLog(@"inside main thread!");
-                                       NSLog(@"An error occured: %@", jsonError);
+                                       DLog(@"inside main thread!");
+                                       DLog(@"An error occured: %@", jsonError);
                                        [self.view setUserInteractionEnabled:YES];
                                        [spinner removeSpinner];
                                    });
@@ -97,22 +97,22 @@
                                    id  json = [NSJSONSerialization JSONObjectWithData:data
                                                                               options:kNilOptions
                                                                                 error:&jsonError];
-                                   NSLog(@"json is for UserDetails== %@",json);
+                                   DLog(@"json is for UserDetails== %@",json);
                                    
                                    NSString * temperature  = [NSString stringWithFormat:@"%@",[[json valueForKey:@"main"] valueForKey:@"temp"]];
-                                   NSLog(@"temperature is --%@",temperature);
+                                   DLog(@"temperature is --%@",temperature);
                                    
                                    
                                    if ( error ==nil) {
                                        
                                        if (json) {
                                            
-                                          // NSLog(@"json is --%@",json);                                    }
+                                          // DLog(@"json is --%@",json);                                    }
                                        
                                    } // error == nil check !!!end
                                    else{
                                        
-                                    NSLog(@"json 2--%@",json);
+                                    DLog(@"json 2--%@",json);
                                    
                                    }
                                }
@@ -133,7 +133,7 @@
 #pragma marks NSURLConnection delegate methods
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    NSLog(@"error is %@",[error localizedDescription]);
+    DLog(@"error is %@",[error localizedDescription]);
     
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
@@ -166,11 +166,11 @@
     if (json) {
         
         
-        NSLog(@"json 3---%@",json);
+        DLog(@"json 3---%@",json);
     }else {
         
         
-        NSLog(@"nothing");
+        DLog(@"nothing");
     }
     
     
@@ -182,7 +182,7 @@
 #pragma mark --WEbView delegate
 -(void)webViewDidStartLoad:(UIWebView *)webView {
     
-    NSLog(@"web view did started  ");
+    DLog(@"web view did started  ");
     
 
     
@@ -190,7 +190,7 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
-    NSLog(@"error is --%@",error );
+    DLog(@"error is --%@",error );
     
     
     [self.view setUserInteractionEnabled:YES];
@@ -200,7 +200,7 @@
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     
-    NSLog(@"finish loading");
+    DLog(@"finish loading");
     
     
 
