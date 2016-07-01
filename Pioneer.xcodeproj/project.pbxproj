@@ -2030,7 +2030,7 @@
 				GCC_PREFIX_HEADER = "Pioneer/Pioneer-Prefix.pch";
 				INFOPLIST_FILE = "Pioneer/Pioneer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry3.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry4.com;
 				PRODUCT_NAME = Pioneer;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2054,7 +2054,7 @@
 				GCC_PREFIX_HEADER = "Pioneer/Pioneer-Prefix.pch";
 				INFOPLIST_FILE = "Pioneer/Pioneer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry3.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.poshjerry4.com;
 				PRODUCT_NAME = Pioneer;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
