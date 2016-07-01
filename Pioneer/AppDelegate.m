@@ -652,22 +652,7 @@
                                       NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
                                       DLog(@"idfv is =====%@",idfv);
                                       // getting ...
-                                     
-
-                                     ///// for settting ....
-//                                     NSMutableDictionary *usernamepasswordKVPairs = [NSMutableDictionary dictionary];
-//                                     [usernamepasswordKVPairs setObject:@"Amit_Parameter_argument" forKey:KEY_PASSWORD];
-//                                     [KeyChainValteck keyChainSaveKey:app.putValueToKeyChain data:usernamepasswordKVPairs];
-//                                     
-//                                     /// for setting ......
-//                                     
-//                                     NSString *    idfvAfter = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-//                                    
-//                                     DLog(@"idfv is =====%@",idfvAfter);
-//                                    // [[NSNotificationCenter defaultCenter]postNotificationName:@"goBackToHome" object:nil];
-//                                       // amit joshi commented  5 august ...
-// //*/
-
+                                   
                                    }
                                    else {
                                        // No joy...
@@ -713,9 +698,6 @@
                                     };
                                     }
                                     */
-                                   
-                                   
-                                   
                                    
                                    // PickerViewForCategory.delegate=self;
                                    //return to main thread

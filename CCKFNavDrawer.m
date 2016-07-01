@@ -95,8 +95,6 @@
     objectDataClass = [DataClass getInstance];
     sectionTitleArray = [[NSMutableArray alloc] init];
     
-    
-    
 }
 
 
@@ -176,10 +174,6 @@
 
     }
 
-    // drawer list
-   // [self.drawerView.drawerTableView setContentInset:UIEdgeInsetsMake(64, 0, 0, 0)]; // statuesBarHeight+navBarHeight
-    
-    // [self.drawerView.drawerTableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)]; // statuesBarHeight+navBarHeight
     self.drawerView.drawerTableView.contentInset = UIEdgeInsetsMake(-1.0f, 0.0f, 0.0f, 0.0);
     self.drawerView.drawerTableView.dataSource = self;
     self.drawerView.drawerTableView.delegate = self;
@@ -200,9 +194,7 @@
     [self.view addGestureRecognizer:self.pan_gr];
     [self.view bringSubviewToFront:self.navigationBar];
     
-//    for (id x in self.view.subviews){
-//        DLog(@"%@",NSStringFromClass([x class]));
-//    }
+
 }
 
 - (void)drawerToggle:(int)myCheck
@@ -457,11 +449,7 @@
         /********** If the section supposed to be Opened *******************/
         else
         {
-            
-            
-            
-   
-            
+          
           subCategoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 0.0, 100.0, 35.0)]; // 30
             subCategoryLabel.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
             subCategoryLabel.text=[NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Name"]];
@@ -582,13 +570,6 @@
        // UILabel * iconLabel = [[UILabel alloc] initWithFrame:CGRectMake(6.0, 7.0, 20.0, 20.0)];
         UIImageView * iconImage = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, 7.0, 20.0, 20.0)];
 
-            /*let label = UILabel(frame: CGRectMake(0, 0, 100, 100))
-             label.font = UIFont(name: "FontAwesome", size: 40)
-             let myChar: UniChar = 0xF180
-             label.text = String(format: "%C", myChar)
-             self.view.addSubview(label)*/
-           
-        DLog(@"image url--%@",iconImageUrl);
             
         if ([sideIconType isEqualToString:@"Image"]) {
             
@@ -675,12 +656,6 @@
     [sectionView addSubview:viewLabel];
     [sectionView addSubview:imageViewIcon];
 
-    /********** Add a custom Separator with Section view *******************/
-    
-   
-    
-    /********** Add UITapGestureRecognizer to SectionView   **************/
-    
     UITapGestureRecognizer  *headerTapped   = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sectionHeaderTapped:)];
     [sectionView addGestureRecognizer:headerTapped];
     
@@ -781,12 +756,8 @@
     }
     else {
       
-        
-        
      objectDataClass.sectionIndex = indexPath.section;
   
-        
-        
     if (indexPath.row == 0) {
         BOOL collapsed  = [[arrayForBool objectAtIndex:indexPath.section] boolValue];
         objectDataClass.flag = !collapsed;
@@ -795,9 +766,6 @@
             objectDataClass.rowIndex = -1;
 
         }
-        
-        
-        
         
         for (int i=0; i<[sectionTitleArray count]; i++) {
             
@@ -860,35 +828,6 @@
     
     
 }
-
-/*
-- (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Add your Colour.
-    
-    CustomCellForSlider *cell = (CustomCellForSlider *)[tableView cellForRowAtIndexPath:indexPath];
-  [self setCellColor:[UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0] ForCell:cell];
-
-    subCategoryLabel.textColor = [UIColor whiteColor];
-    subCategoryLabel.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
-
-}
-
-
-- (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Reset Colour.
-    
-    CustomCellForSlider *cell = (CustomCellForSlider *)[tableView cellForRowAtIndexPath:indexPath];
-    
-    [self setCellColor:[UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0]  ForCell:cell];
-}
-
-- (void)setCellColor:(UIColor *)color ForCell:(UITableViewCell *)cell {
-    
-    cell.contentView.backgroundColor = color;
-    cell.backgroundColor = color;
-}
-
-*/
 
 -(CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {

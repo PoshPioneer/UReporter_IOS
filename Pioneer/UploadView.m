@@ -129,18 +129,31 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            //[self.view setUserInteractionEnabled:NO];
-            [self.refreshControl beginRefreshing];
-            
+            [self beginRefreshingTableView];
         });
         
          [self checkUserAlreadyAvailableService];
          [self loadWeather];
          [self loadHomeFeed];
-        
- 
 }
+
+- (void)beginRefreshingTableView {
+    
+    [self.refreshControl beginRefreshing];
+    
+    if (self.tableView.contentOffset.y == 0) {
+        
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^(void){
+            
+            self.tableView.contentOffset = CGPointMake(0, -self.refreshControl.frame.size.height);
+            
+        } completion:^(BOOL finished){
+            
+        }];
+        
+    }
+}
+
 
 -(void) handleServiceCallCompletion
 {
@@ -197,7 +210,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 - (void)refresh:(UIRefreshControl *)refreshControl {
  
     [self loadCategoryAPI];
-    //[self.refreshControl endRefreshing];
+    
 }
 
 -(void)loadApiAndCheckInternet{
@@ -773,7 +786,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             DataClass *obj = [DataClass getInstance];
             
                 //[self.view setUserInteractionEnabled:NO];
-                [self.refreshControl beginRefreshing];
+                [self beginRefreshingTableView];
                 
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil)
                 {
@@ -1503,8 +1516,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadCategoryAPI {
     
-    //[self.view setUserInteractionEnabled:NO];
-    [self.refreshControl beginRefreshing];
+    [self beginRefreshingTableView];
     
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/menu/GetMenuCategories?source=%@",@"SkagitTimes"];
     DLog(@"url string service otp--%@",urlString);
@@ -1518,16 +1530,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             NSArray *json = [Utility cleanJsonToObject:responseObject];
             
-            
-            
-            [self.view setUserInteractionEnabled:YES];
-            [self.refreshControl endRefreshing];
-
             if (json.count>0)
             {
                
-
-
                 NSMutableDictionary *jsonDict= [[NSMutableDictionary alloc] init];
                 
                 
@@ -1556,18 +1561,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
                 [sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
                     
-                }else{
-                    
-                    // no....
                 }
-
-
+                
                 [self callServicesInQueue]; // call webservice in queue
 
                 
             } else {
-                
-                
                 
                 UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Not found data from server." preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1576,10 +1575,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 [errorAlert addAction:errorAction];
                 [self presentViewController:errorAlert animated:YES completion:nil];
                 
-
-                
             }
             
+            [self.refreshControl endRefreshing];
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
             DLog(@"Error: %@", error);
@@ -1685,21 +1683,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
            
 
         }];
-        
-     
-   /* } else {
-        
-        
-        UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
-        }];
-        
-        [errorAlert addAction:errorAction];
-        [self presentViewController:errorAlert animated:YES completion:nil];
-        
-        
-    }*/
-    
     
 
 }
@@ -1841,13 +1824,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     fileName = [NSString stringWithFormat:@"%lu.png",(NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
     
-    
-    
-    //
-    
-    
-    // NSString *documentsDirectory = [pathArray objectAtIndex:0];
-    
     localUrl =  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:fileName];//[documentsDirectory stringByAppendingPathComponent:fileName];
     NSLog (@"File Path = %@", localUrl);
     
@@ -1892,12 +1868,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     
                 }
     
-    
-   
-    
-  //  [self.scrollView_Photo setScrollEnabled:YES];
-    // [self.scrollView_Photo setContentSize:CGSizeMake(320, 600)];
-   // [self.scrollView_Photo setContentOffset:CGPointMake(5, 5) animated:YES];
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.view setNeedsLayout];
     
@@ -1907,17 +1877,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(NSString *)generateUniqueNameVideo{
     
     
-    // NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
-    //NSString *finalUnique= [NSString stringWithFormat:@"Video_%.0f.mp4", time];
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyyMMdd_HHmmss"];
     
     NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
     
-    // int randomValue = arc4random() % 1000;
-    //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUniqueVideo = [NSString stringWithFormat:@"Video_%@.mp4",dateString];
     
     return finalUniqueVideo;
@@ -1934,28 +1899,18 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     [picker dismissViewControllerAnimated:YES completion:NULL];
   
-   // [picker dismissViewControllerAnimated:<#(BOOL)#> completion:<#^(void)completion#>];
-    
     [self.view setNeedsLayout];
     
-  
-    
 }
-
-
 
 #pragma mark - Image Picker Controller delegate methods   ends ...
 
 -(NSString *)generateUniqueName{
     
-    //  NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
-    // NSString *finalUnique= [NSString stringWithFormat:@"Photo_%.0f.jpg", time];
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd_HHmmss"];
     NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
-    // int randomValue = arc4random() % 1000;
-    //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
+    
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
     DLog(@"unique name --%@",finalUnique);
     return finalUnique;
@@ -1998,10 +1953,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             
-            /*  UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Message!" message:@"Camera is not present!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-             [alert show];
-             */
-            
             UIAlertController *DoNothing_alrt = [UIAlertController alertControllerWithTitle:@"Message!" message:@"Camera is not present!" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
                 // action.,.........
@@ -2035,8 +1986,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         || (controller == nil))
         return NO;
     
-    
-    
     UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
     cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
     cameraUI.cameraDevice=UIImagePickerControllerCameraDeviceRear;
@@ -2048,7 +1997,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     cameraUI.delegate = self;
     
     [self presentViewController:cameraUI animated:NO completion:nil];
-    
     
     int64_t delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
