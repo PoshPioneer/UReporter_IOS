@@ -27,7 +27,6 @@
     webViewStatic.delegate  = self;
     objectDataClass =[DataClass getInstance];
     
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -41,24 +40,6 @@
                                          timeoutInterval:300];
         [webViewStatic loadRequest:request];
 
-        
-    /*}
-    else{
-        
-        UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction  *errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction  *alert){
-            
-            
-        }];
-        
-        [errorAlert addAction:errorAction];
-        [self presentViewController:errorAlert animated:YES completion:nil];
-
-    }*/
-    
-    
-    
-    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -125,6 +106,10 @@
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
 
+    if(self.previousMenuIndex >= 0) {
+        objectDataClass.sectionIndex = self.previousMenuIndex;
+    }
+    
     [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
     
     

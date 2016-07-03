@@ -104,6 +104,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 }
 
+@property(assign) NSInteger previousRSSSectionIndex;
 @property (strong, nonatomic) CCKFNavDrawer *rootNav;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 
@@ -204,6 +205,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
     [self loadApiAndCheckInternet];
     
+    self.previousRSSSectionIndex = 0;
+    objectDataClass.sectionIndex = self.previousRSSSectionIndex;
 
 }
 
@@ -262,6 +265,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 {
 
     DLog(@"goBackToHomeScreen");
+    
     [self.navigationController popViewControllerAnimated:YES];
 
 }
@@ -639,7 +643,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }
 
         
-    }else if ( [obj.globalcompleteCategory count]+1 == indexValue) {
+    } else if ( [obj.globalcompleteCategory count]+1 == indexValue) {
         DLog(@"terms and conditions!!!");
         
         CGSize size = [[UIScreen mainScreen]bounds].size;
@@ -658,7 +662,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }
         
-    }else if ( [obj.globalcompleteCategory count]+2 == indexValue) {
+    } else if ( [obj.globalcompleteCategory count]+2 == indexValue) {
         
        
         DLog(@" privacy policy");
@@ -668,9 +672,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy3.5" bundle:nil];
             [self.navigationController pushViewController:termsOfUse animated:YES];
             
-            
         }else{
-            
             
             PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy" bundle:nil];
             [self.navigationController pushViewController:termsOfUse animated:YES];
@@ -693,41 +695,29 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             About *abt = [[About alloc]initWithNibName:@"About" bundle:nil];
             [self.navigationController pushViewController:abt animated:YES];
-            
-            
+        
         }
 
-        
-    }else if ([obj.globalcompleteCategory count]+4 == indexValue){
+    } else if ([obj.globalcompleteCategory count]+4 == indexValue){
          DLog(@"my submission");
         
          CGSize size = [[UIScreen mainScreen]bounds].size;
         
         if (size.height==480) {
             
-            
             Submission *submission=[[Submission alloc]initWithNibName:@"Submission3.5" bundle:nil];
             
             [self.navigationController pushViewController:submission animated:YES];
             
-        }
-        else{
-            
+        } else {
             
             Submission *submission=[[Submission alloc]initWithNibName:@"Submission" bundle:nil];
             
             [self.navigationController pushViewController:submission animated:YES];
             
-            
         }
-
-       
-        
-       
-        
-       
-        
-    }else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
+ 
+    } else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
         DLog(@"save for later");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         if (480 == size.height) {
@@ -763,11 +753,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             DLog(@"link is static");
             StaticLinkView * staticObj = [[StaticLinkView alloc] initWithNibName:@"StaticLinkView" bundle:nil];
             staticObj.staticlink = objectDataClass.globalstaticLink;
+            staticObj.previousMenuIndex = self.previousRSSSectionIndex;
             [self.navigationController pushViewController:staticObj animated:YES];
             
-            
-            
-        }else if ([objectDataClass.globalFeedType isEqualToString:@"Live Streaming"]) {
+        } else if ([objectDataClass.globalFeedType isEqualToString:@"Live Streaming"]) {
             //For opening link in external browser.
             UIApplication *mySafari = [UIApplication sharedApplication];
             NSURL *myURL = [[NSURL alloc]initWithString:objectDataClass.globalstaticLink];
@@ -782,7 +771,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }
         else{
-            
+            self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
             DataClass *obj = [DataClass getInstance];
             
                 //[self.view setUserInteractionEnabled:NO];
@@ -1089,10 +1078,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
             }
             
-
             [secondImageView addSubview:gradientImage];
 
-            
             //UILabel for title
             UILabel * labelImage = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 241.0, 48.0)];
             labelImage.numberOfLines =2;
@@ -1124,58 +1111,17 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             UIImageView * secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, 3.0, 295.0, 95.0)]; // 2,7,95,85
             
             NSString * imgURl = [NSString stringWithFormat:@"%@",testing];
-           // NSURL *imageUrlForThumb=[NSURL URLWithString:imgURl];
             
-            
-            
+            secondImageView.contentMode = UIViewContentModeScaleAspectFill;
+            secondView.layer.masksToBounds = YES;
+            secondView.clipsToBounds = YES;
                 
-                secondImageView.contentMode = UIViewContentModeScaleAspectFill;
-                secondView.layer.masksToBounds = YES;
-                secondView.clipsToBounds = YES;
-                
-                UIImageView * gradientImage = [[UIImageView alloc] init];
-                gradientImage.frame = secondView.bounds;
-                [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-                gradientImage.contentMode = UIViewContentModeScaleToFill;
-               // NSURL *thumbnailURL = [NSURL URLWithString:imgURl];
+            UIImageView * gradientImage = [[UIImageView alloc] init];
+            gradientImage.frame = secondView.bounds;
+            [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
+            gradientImage.contentMode = UIViewContentModeScaleToFill;
             [secondImageView setImage: [UIImage imageNamed:@"VideoPlaceHolder@2x.png"]];
 
-                // Do something...
-
-                   // if ([imgURl length]>0) {
-//                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-//                            
-//                            
-//                            AVAsset *asset = [AVAsset assetWithURL:thumbnailURL];
-//                            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-//                            
-//                            int frameTimeStart = 30;
-//                            int frameLocation = 10;
-//                            
-//                            //Snatch a frame
-//                            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:CMTimeMake(frameTimeStart,frameLocation) actualTime:nil error:nil];
-//                            UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-//                            CGImageRelease(imageRef); // CGImageRef won’t be released by ARC
-//                            
-//                            
-//                            if(thumbnail){
-//                                // do UI stuff back in UI land
-//                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                    
-//                                    secondImageView.image = thumbnail;
-//                                    
-//                                });
-//                                
-//                                
-//                                
-//                            }
-//                        });
-//                    }else{
-//                        
-//                        [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder.png"]];
-//                    }
-
-            
             [secondImageView addSubview:gradientImage];
 
             
@@ -1219,12 +1165,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
             }else{
                 
-                // [secondImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                
                 [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder.png"]];
             }
-//        [secondImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",testing] ]];
-        
+       
             [secondView addSubview:secondImageView];
   
             UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 10.0, 100.0, 30.0)];//119,13,187,25
@@ -1369,29 +1312,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     return thumbnail;
     
-    
-    
-    
-
-    
-    
-    
-    
-    
-//    CGImageRelease(imageRef); // CGImageRef won’t be released by ARC
-//    
-//    
-//    DLog(@"------------------------------------URL-%@---------------------------------",urlVideo);
-//    
-//    
-//    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:urlVideo options:nil];
-//    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-//    generate.appliesPreferredTrackTransform=TRUE;
-//    NSError *err = NULL;
-//    CMTime time = CMTimeMake(30, 10);
-//    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-//    DLog(@"err==%@, imageRef==%@", err, imgRef);
-//    return [[UIImage alloc] initWithCGImage:imgRef];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
