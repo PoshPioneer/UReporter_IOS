@@ -17,7 +17,7 @@
 
 
 @property(nonatomic,strong)NSString *staticlink;
-
+@property(nonatomic) NSInteger previousMenuIndex;
 
 @property(nonatomic,strong)IBOutlet UIWebView * webViewStatic;
 
