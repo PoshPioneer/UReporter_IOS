@@ -521,11 +521,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             if (size.height==480) {
                 UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-                [self.navigationController pushViewController:text animated:NO];
+                [self.navigationController pushViewController:text animated:YES];
                 
             }else{
                 UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
-                [self.navigationController pushViewController:text animated:NO];
+                [self.navigationController pushViewController:text animated:YES];
                 
             }
 
@@ -723,7 +723,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         if (480 == size.height) {
             // for iPhone 4.
             SubmitForReview * submitForReviewObj = [[SubmitForReview alloc] initWithNibName:@"SubmitForReview3.5" bundle:nil];
-            [self.navigationController pushViewController:submitForReviewObj animated:NO];
+            [self.navigationController pushViewController:submitForReviewObj animated:YES];
             
             
         } else {
@@ -731,7 +731,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             SubmitForReview * submitForReviewObj = [[SubmitForReview alloc]initWithNibName:@"SubmitForReview" bundle:nil];
             
-            [self.navigationController pushViewController:submitForReviewObj animated:NO];
+            [self.navigationController pushViewController:submitForReviewObj animated:YES];
             
         }
         
@@ -1678,7 +1678,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             uploadV.receivedPath = tempPath;
             uploadV.ReceivedURl =videoURL;
             uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
+            [self.navigationController pushViewController:uploadV animated:YES];
             
         }else{
             
@@ -1686,7 +1686,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
              uploadV.receivedPath = tempPath;
             uploadV.ReceivedURl =videoURL;
              uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
+            [self.navigationController pushViewController:uploadV animated:YES];
             
         }
         
@@ -1775,7 +1775,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     uploadP.transferPhotoUniqueName = captureduniqueName;
                     uploadP.navigateValue = Nav_valueToPhoto;
                     uploadP.transferFileURl =localUrl;
-                    [self.navigationController pushViewController:uploadP animated:NO];
+                    [self.navigationController pushViewController:uploadP animated:YES];
     
                 }else{
     
@@ -1784,7 +1784,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     uploadP.transferPhotoUniqueName = captureduniqueName;
                     uploadP.navigateValue = Nav_valueToPhoto;
                     uploadP.transferFileURl =localUrl;
-                    [self.navigationController pushViewController:uploadP animated:NO];
+                    [self.navigationController pushViewController:uploadP animated:YES];
                     
                 }
     
