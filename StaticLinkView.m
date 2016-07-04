@@ -110,7 +110,7 @@
         objectDataClass.sectionIndex = self.previousMenuIndex;
     }
     
-    [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
+    [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
     
     
 }
