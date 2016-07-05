@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -22,6 +22,17 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWm-IR-Snj">
+                    <rect key="frame" x="0.0" y="64" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="7Bm-zx-qaM"/>
+                        <constraint firstAttribute="width" constant="600" id="Gkm-b0-6iH"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9IW-vG-ty3" customClass="CustomTextField">
                     <rect key="frame" x="30" y="207" width="541" height="40"/>
                     <constraints>
@@ -53,7 +64,7 @@
                                 <constraint firstAttribute="width" constant="63" id="LLx-rd-lei"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.27058823529411763" green="0.27058823529411763" blue="0.27058823529411763" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Y4-Cg-HYt">
@@ -67,7 +78,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.098039215686274508" green="0.098039215686274508" blue="0.098039215686274508" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="7Y4-Cg-HYt" firstAttribute="centerY" secondItem="Vaw-UJ-oRl" secondAttribute="centerY" id="QKc-yx-EkP"/>
                         <constraint firstItem="Lyf-2Q-lAj" firstAttribute="top" secondItem="Vaw-UJ-oRl" secondAttribute="top" constant="12" id="WSi-Br-BzL"/>
@@ -136,15 +147,17 @@
                     <rect key="frame" x="237" y="97" width="126" height="29"/>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="ecU-3R-okZ" firstAttribute="top" secondItem="Vaw-UJ-oRl" secondAttribute="bottom" constant="33" id="29U-eZ-GR4"/>
                 <constraint firstItem="9IW-vG-ty3" firstAttribute="leading" secondItem="4O6-Aj-vBx" secondAttribute="leading" id="6DY-y7-ZDE"/>
                 <constraint firstItem="ZGI-am-1Gn" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="6sq-mz-xKr"/>
+                <constraint firstItem="rWm-IR-Snj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="6zz-Zp-vgK"/>
                 <constraint firstItem="u9d-6Z-vrx" firstAttribute="top" secondItem="4O6-Aj-vBx" secondAttribute="bottom" constant="14" id="9QN-QL-uOs"/>
                 <constraint firstAttribute="bottom" secondItem="59a-Ol-ejT" secondAttribute="bottom" id="DTp-cB-Qi4"/>
                 <constraint firstItem="prK-Rt-pPl" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="Grr-5K-I51"/>
                 <constraint firstItem="ecU-3R-okZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="97" id="I3D-26-oSM"/>
+                <constraint firstAttribute="trailing" secondItem="rWm-IR-Snj" secondAttribute="trailing" id="JTn-3t-MKQ"/>
                 <constraint firstItem="4O6-Aj-vBx" firstAttribute="top" secondItem="9IW-vG-ty3" secondAttribute="bottom" constant="8" symbolic="YES" id="MhM-nU-chv"/>
                 <constraint firstItem="9IW-vG-ty3" firstAttribute="trailing" secondItem="4O6-Aj-vBx" secondAttribute="trailing" id="Mvl-iD-hw4"/>
                 <constraint firstItem="prK-Rt-pPl" firstAttribute="top" secondItem="u9d-6Z-vrx" secondAttribute="bottom" constant="34" id="NYo-zN-1QT"/>
@@ -156,13 +169,22 @@
                 <constraint firstAttribute="trailing" secondItem="Vaw-UJ-oRl" secondAttribute="trailing" id="gTd-jl-7uO"/>
                 <constraint firstItem="Vaw-UJ-oRl" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="mw9-EM-duz"/>
                 <constraint firstItem="prK-Rt-pPl" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="nlV-0y-R5W"/>
+                <constraint firstItem="rWm-IR-Snj" firstAttribute="top" secondItem="Vaw-UJ-oRl" secondAttribute="bottom" id="qS0-GN-gqV"/>
                 <constraint firstItem="9IW-vG-ty3" firstAttribute="top" secondItem="ecU-3R-okZ" secondAttribute="bottom" constant="81" id="rB1-gK-Sik"/>
                 <constraint firstItem="prK-Rt-pPl" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="40:600" id="rBm-dH-Nh5"/>
                 <constraint firstAttribute="trailing" secondItem="59a-Ol-ejT" secondAttribute="trailing" id="ttS-sN-qld"/>
                 <constraint firstItem="59a-Ol-ejT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uFf-YR-rNJ"/>
             </constraints>
-            <point key="canvasLocation" x="719" y="431"/>
+            <point key="canvasLocation" x="-67" y="364"/>
         </view>
+        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KSs-GO-8Op">
+            <rect key="frame" x="0.0" y="0.0" width="104" height="137"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <nil key="highlightedColor"/>
+            <point key="canvasLocation" x="245" y="217.5"/>
+        </label>
     </objects>
     <resources>
         <image name="Arrow45x45.png" width="45" height="45"/>

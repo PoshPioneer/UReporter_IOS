@@ -100,7 +100,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     NSString*finalUniqueVideo;
 
     SyncManager *sync;
-
+    CGSize screenSize;
+    
+    NSString * wetherIcon;
+    
+    NSMutableArray * PhotoUrl;
 
 }
 
@@ -114,7 +118,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 @synthesize iOutlet,mainImagePhoto;
 @synthesize tabBarController,photoTabBar,videoTabBar,audioTabBar,textTabBar;
-@synthesize show_temperature,mainImage ,tableView;
+@synthesize show_temperature,mainImage ,uploadTableView,wetherIconImage;
+@synthesize tempStringFeedType;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -128,13 +133,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)callServicesInQueue
 {
-        
+    
         dispatch_async(dispatch_get_main_queue(), ^{
             [self beginRefreshingTableView];
         });
         
          [self checkUserAlreadyAvailableService];
-         [self loadWeather];
          [self loadHomeFeed];
 }
 
@@ -155,11 +159,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     }
 }
 
-
 -(void) handleServiceCallCompletion
 {
     
-    if(checkUserAlreadyAvailableServiceCallComplete && homeFeedServiceCallComplete && loadWeatherServiceCallComplete)
+    if(checkUserAlreadyAvailableServiceCallComplete && homeFeedServiceCallComplete )
     {
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -179,10 +182,15 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     sync = [[SyncManager alloc] init];
     sync.delegate = self;
     
+    
+    screenSize = [[UIScreen mainScreen] bounds].size;
+    
+    
+    
     objectDataClass =[DataClass getInstance];
-    [self.tableView setBackgroundView:nil];
-    [self.tableView setBackgroundColor:[UIColor clearColor]];
-    [self.show_temperature setHidden:YES];
+    [self.uploadTableView setBackgroundView:nil];
+    [self.uploadTableView setBackgroundColor:[UIColor clearColor]];
+    //[self.show_temperature setHidden:YES];
     [self setNeedsStatusBarAppearanceUpdate];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -199,6 +207,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     textTabBar.tag  = 3;
     
     //CCFnavDrawer
+    DLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
     
     self.rootNav = (CCKFNavDrawer *)self.navigationController;
     [self.rootNav setCCKFNavDrawerDelegate:self];
@@ -222,32 +231,55 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
 }
 
--(void)loadWeather {
+-(void)loadWeather:(NSString*)cityNameFromLatandLong {
     
     
+    //cityNameFromLatandLong=@"London";
+   
     
-    loadWeatherServiceCallComplete = YES;
-    [self handleServiceCallCompletion];
-    
-        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
-        [manager POST:@"http://api.openweathermap.org/data/2.5/weather?zip=98274,us&appid=025fd416c44e35caa638609d50f6c056&units=metric" parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager GET:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/weather?cityname=%@",cityNameFromLatandLong] parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
+            NSLog(@"JSON weather: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];
             
-            if (json) {
+            if (json!=NULL || [json isKindOfClass:[NSNull class]]) {
                 
-                NSString * temperature  = [NSString stringWithFormat:@"%@",[[json valueForKey:@"main"] valueForKey:@"temp"]];
+                NSString * temperature  = [NSString stringWithFormat:@"%@",[json valueForKey:@"Temp"]];
+                
+                if ([temperature isEqualToString:@"0"]) {
+                    
+                    
+                    
+                    
+                }else{
+                
                 
                 //setting temperature to label.....
-                show_temperature.text = [NSString stringWithFormat:@"%0.0f",[temperature floatValue]];
-                DLog(@"temperature is --%0.0f",[show_temperature.text floatValue]);
+                show_temperature.text = [[[NSString stringWithFormat:@"%d",[temperature intValue]] stringByAppendingString:@"\u00B0"] stringByAppendingString:@"C"];
+                NSLog(@"temperature is --%0.0f",[show_temperature.text floatValue]);
+                wetherIcon = [json valueForKey:@"Icon"];
+                NSLog(@"wether icon is:%@",wetherIcon);
+                
+                
+                NSString *ImageURL = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png",wetherIcon];
+                //NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
+                //wetherIconImage.image = [UIImage imageWithData:imageData];
+                
+                [wetherIconImage  sd_setImageWithURL:[NSURL URLWithString:ImageURL] placeholderImage:[UIImage imageNamed:@""]];
                 
                 //setting temp to global variable......
                 objectDataClass.temperature = [temperature floatValue];
-                DLog(@"global temp --%0.0f",objectDataClass.temperature);
-
+                NSLog(@"global temp --%0.0f",objectDataClass.temperature);
+                
+                
+                }
+                
                 
             } else {
+               
+                
+                
                 
             }
             
@@ -257,15 +289,17 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             [self handleServiceCallCompletion];
         }];
     
+ 
 
 }
+
+
 
 
 -(void)gobackToHomeScreen
 {
 
     DLog(@"goBackToHomeScreen");
-    
     [self.navigationController popViewControllerAnimated:YES];
 
 }
@@ -280,19 +314,50 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
+
+  //  feeds=[[NSUserDefaults standardUserDefaults]valueForKey:@"feesArray"];
+    
+
+    PhotoUrl = [NSMutableArray new];
+    
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager requestAlwaysAuthorization];
+    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+        
+        [locationManager requestAlwaysAuthorization];
+    }
+    [locationManager startUpdatingLocation];
+
+    
+    objectDataClass.audioDetailsMutableArray=nil; // removing object....
+    
     // pending ......
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveNotification:) name:@"RefreshUploadeView" object:nil];
     
+    
+
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
     
     
-    if (objectDataClass.globalStaticCheck != YES) {
+    NSLog(objectDataClass.globalStaticCheck ? @"Yes" : @"No");
         
+    if (objectDataClass.globalStaticCheck == YES) {
+        
+            
+            
+    }
+    else
+    {
+
         videoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
         audioTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
         textTabBar.imageInsets  = UIEdgeInsetsMake(6, 0, -6, 0);
         photoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
+    
 
     }
     
@@ -303,12 +368,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
     checkUserAlreadyAvailableServiceCallComplete = YES;
     
-    NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
-    DLog(@"URL===%@",urlString);
     
-    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+    
+    NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?deviceId=&source=&token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
+    NSLog(@"URL===%@",urlString);
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        DLog(@"JSON: %@", responseObject);
+        NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         
         if (json)
@@ -321,17 +388,15 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
                 // no location details are there ...
                 
+                [[NSUserDefaults standardUserDefaults] setValue:@"LocationOff" forKey:@"LocationCheck"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+
+                
             }
             else
             {
-                
-                locationManager = [[CLLocationManager alloc] init];
-                locationManager.delegate = self;
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-                [locationManager requestAlwaysAuthorization];
-                [locationManager startUpdatingLocation];
-                
-                
+                [[NSUserDefaults standardUserDefaults] setValue:@"LocationOn" forKey:@"LocationCheck"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
             }
             
             NSString *userID_Default = [NSString stringWithFormat:@"%@",[[json valueForKey:@"header"] valueForKey:@"UserId"]];
@@ -352,21 +417,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     LoginView *loginView=[[LoginView alloc]initWithNibName:@"LoginView" bundle:nil];
                     [self presentViewController:loginView animated:YES completion:nil];
                 }
-                
-              
-
-                
-                
             }
-            
-            
-            
-
         }
         
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        DLog(@"Error: %@", error);
+        NSLog(@"Error: %@", error);
         
         [self handleServiceCallCompletion];
     }];
@@ -455,6 +511,27 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 }
 
+/*- (IBAction)i_ForContent_Tapped:(id)sender {
+    
+
+    CGSize size = [[UIScreen mainScreen]bounds].size;
+    
+    if (size.height==480) {
+        
+        Info *uploadV = [[Info alloc]initWithNibName:@"info3.5" bundle:nil];
+        [self.navigationController pushViewController:uploadV animated:YES];
+        
+    }else{
+        
+        Info *uploadV = [[Info alloc]initWithNibName:@"Info" bundle:nil];
+        [self.navigationController pushViewController:uploadV animated:YES];
+        
+    }
+    
+    
+}*/
+
+
 -(void)checkforNavigationInternetconnection:(int)type{
     
     
@@ -517,17 +594,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }else if (type==4){
             
-            CGSize size = [[UIScreen mainScreen]bounds].size;
             
-            if (size.height==480) {
-                UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-                [self.navigationController pushViewController:text animated:YES];
-                
-            }else{
                 UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
-                [self.navigationController pushViewController:text animated:YES];
+                [self.navigationController pushViewController:text animated:YES
                 
-            }
+            
 
             
             
@@ -556,43 +627,55 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    DLog(@"didUpdateToLocation: %@", newLocation);
-    CLLocation *currentLocation = newLocation;
     
-    if (currentLocation != nil) {
+ __block  NSString *cityName;
+    DLog(@"didUpdateToLocation: %@", newLocation);
+   
+    
+    //CLLocation *currentLocation = newLocation;
+    
+    CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+    
+    [reverseGeocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        // NSLog(@"Received placemarks: %@", placemarks);
         
-        DLog(@"lat is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        DLog(@"long is ====%@",[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
-        [self getAdrressFromLatLong:currentLocation.coordinate.latitude lon:currentLocation.coordinate.longitude];
+        CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+       
+        cityName= myPlacemark.subAdministrativeArea;
+        [self loadWeather:cityName];
+
         locationManager = nil;
         [locationManager stopUpdatingLocation];
-        
-        
-    }
+
+    }];
 }
 
 
 -(void)getAdrressFromLatLong : (CGFloat)lat lon:(CGFloat)lon{
-  
+    // coding to send data to server .......start
+    ///// we need to fetch location.....
+//    [self.view setUserInteractionEnabled:NO];
+//    spinner=[SpinnerView loadSpinnerIntoView:self.view];
+
     NSString *urlString = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&amp;sensor=false",lat,lon];
-    NSURL *url = [NSURL URLWithString:urlString];
+    NSURL *url1 = [NSURL URLWithString:urlString];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url1];
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc]init]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                           completionHandler:^(NSURLResponse *response, NSData *data1, NSError *error) {
                                NSError *jsonError;
-                               NSArray *array = [NSJSONSerialization JSONObjectWithData:data
+                               NSArray *array = [NSJSONSerialization JSONObjectWithData:data1
                                                                                 options:kNilOptions
                                                                                   error:&jsonError];
                                if (array) {
                                    
-                                   for (NSDictionary * dict in array) {
+                                  // for (NSDictionary * dict in array) {
                                        
-                                       DLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
+                                       NSLog(@"op address is ===%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]);
                                        [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@",[[[array valueForKey:@"results"] valueForKey:@"formatted_address"]objectAtIndex:0]] forKey:@"address_Default"];
                                        [[NSUserDefaults standardUserDefaults]synchronize];
                                        
-                                   }
+                                  // }
                                    //return to main thread
                                    dispatch_async(dispatch_get_main_queue(), ^{
                                        
@@ -603,6 +686,15 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                                        NSString *address = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
                                        [[NSUserDefaults standardUserDefaults]synchronize];
                                        
+                                       if (!address) {
+                                           
+//                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"There was an error while getting the location." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//                                           [alert show];
+                                           
+                                       }else{
+                                           // do nothing!!!!!
+                                       }
+                                       NSLog(@"inside main thread!");
                                    });
                                }
                                else{
@@ -630,100 +722,76 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     if ( [obj.globalcompleteCategory count] ==indexValue) {
         DLog(   @"this is edit profile");
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            EditProfile *edit = [[EditProfile alloc]initWithNibName:@"EditProfile3.5" bundle:nil];
-            [self.navigationController pushViewController:edit animated:YES];
-            
-            
-        }else{
+       
             EditProfile *edit = [[EditProfile alloc]initWithNibName:@"EditProfile" bundle:nil];
             [self.navigationController pushViewController:edit animated:YES];
-        }
+       
 
         
-    } else if ( [obj.globalcompleteCategory count]+1 == indexValue) {
+    }else if ( [obj.globalcompleteCategory count]+1 == indexValue) {
         DLog(@"terms and conditions!!!");
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            TermsAndConditions *termsandconditions = [[TermsAndConditions alloc]initWithNibName:@"TermsAndConditions3.5 " bundle:nil];
-            [self.navigationController pushViewController:termsandconditions animated:YES];
-            
-            
-        }else{
             
             
             TermsAndConditions *termsandconditions = [[TermsAndConditions alloc]initWithNibName:@"TermsAndConditions" bundle:nil];
             [self.navigationController pushViewController:termsandconditions animated:YES];
             
             
-        }
         
-    } else if ( [obj.globalcompleteCategory count]+2 == indexValue) {
+        
+    }else if ( [obj.globalcompleteCategory count]+2 == indexValue) {
         
        
         DLog(@" privacy policy");
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy3.5" bundle:nil];
-            [self.navigationController pushViewController:termsOfUse animated:YES];
+       
             
-        }else{
             
             PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy" bundle:nil];
             [self.navigationController pushViewController:termsOfUse animated:YES];
             
-        }
+        
         
     }else if ([obj.globalcompleteCategory count]+3 == indexValue) {
         
         DLog(@"About us!!!!");
 
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            About *abt = [[About alloc]initWithNibName:@"About3.5" bundle:nil];
-            [self.navigationController pushViewController:abt animated:YES];
-            
-        }else{
+       
             
             About *abt = [[About alloc]initWithNibName:@"About" bundle:nil];
             [self.navigationController pushViewController:abt animated:YES];
+            
+            
         
-        }
 
-    } else if ([obj.globalcompleteCategory count]+4 == indexValue){
+        
+    }else if ([obj.globalcompleteCategory count]+4 == indexValue){
          DLog(@"my submission");
         
-         CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
             
-            Submission *submission=[[Submission alloc]initWithNibName:@"Submission3.5" bundle:nil];
-            
-            [self.navigationController pushViewController:submission animated:YES];
-            
-        } else {
             
             Submission *submission=[[Submission alloc]initWithNibName:@"Submission" bundle:nil];
             
             [self.navigationController pushViewController:submission animated:YES];
             
-        }
- 
-    } else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
+            
+        
+
+       
+        
+       
+        
+       
+        
+    }else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
         DLog(@"save for later");
         CGSize size = [[UIScreen mainScreen]bounds].size;
         if (480 == size.height) {
             // for iPhone 4.
             SubmitForReview * submitForReviewObj = [[SubmitForReview alloc] initWithNibName:@"SubmitForReview3.5" bundle:nil];
-            [self.navigationController pushViewController:submitForReviewObj animated:YES];
+            [self.navigationController pushViewController:submitForReviewObj animated:NO];
             
             
         } else {
@@ -731,7 +799,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             SubmitForReview * submitForReviewObj = [[SubmitForReview alloc]initWithNibName:@"SubmitForReview" bundle:nil];
             
-            [self.navigationController pushViewController:submitForReviewObj animated:YES];
+            [self.navigationController pushViewController:submitForReviewObj animated:NO];
             
         }
         
@@ -744,20 +812,33 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)CCKFNavDrawerSelection:(NSInteger)selectionIndex{
     
      DLog(@"CCKFNavDrawerSelection =================== %li", (long)selectionIndex);
+    //[self.view setUserInteractionEnabled:NO];
+    //spinner=[SpinnerView loadSpinnerIntoView:self.view];
+    
+   // [self.view setUserInteractionEnabled:NO];
+   // spinner=[SpinnerView loadSpinnerIntoView:self.view];
+    
     
     if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone){
         
         if ([objectDataClass.globalFeedType isEqualToString:@"Static Link"]) {
             // For this open link in webview..
             
-            DLog(@"link is static");
+            NSLog(@"link is static");
             StaticLinkView * staticObj = [[StaticLinkView alloc] initWithNibName:@"StaticLinkView" bundle:nil];
             staticObj.staticlink = objectDataClass.globalstaticLink;
-            staticObj.previousMenuIndex = self.previousRSSSectionIndex;
+            objectDataClass.globalFeedType=tempStringFeedType;
+	    staticObj.previousMenuIndex = self.previousRSSSectionIndex;
+
             [self.navigationController pushViewController:staticObj animated:YES];
             
-        } else if ([objectDataClass.globalFeedType isEqualToString:@"Live Streaming"]) {
+            
+            
+        }else if ([objectDataClass.globalFeedType isEqualToString:@"Live Streaming"]) {
             //For opening link in external browser.
+            
+            objectDataClass.globalFeedType=tempStringFeedType;
+
             UIApplication *mySafari = [UIApplication sharedApplication];
             NSURL *myURL = [[NSURL alloc]initWithString:objectDataClass.globalstaticLink];
             
@@ -774,7 +855,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
             DataClass *obj = [DataClass getInstance];
             
-                //[self.view setUserInteractionEnabled:NO];
+                tempStringFeedType=objectDataClass.globalFeedType;
                 [self beginRefreshingTableView];
                 
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil)
@@ -784,43 +865,75 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 }
                 
                 NSString* urlString;
-                if (objectDataClass.globalFeedID)
-                {
-                    urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",objectDataClass.globalFeedID,@"SkagitTimes"];
-                    DLog(@"url with feed id %@",urlString);
+                
+                if ([objectDataClass.globalCategory isEqualToString:@"Breaking News"]) {
+                    //ht tp://prngapi.cloudapp.net/api/BreakingNews?feedid=23&&source=SkagitTimes
+
+                  
+                    
+                    urlString = [NSString stringWithFormat:@"%@%@/BreakingNews?feedid=%@&source=%@",kBaseURL,kAPI,objectDataClass.globalFeedID,@"SkagitTimes" ];
+                    
+                    NSLog(@"url with feed id %@",urlString);
                     
                 }
                 else
                 {
-                    
-                    urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",firstFeedItemId,@"SkagitTimes"];
-                    
-                    
-                    DLog(@"url string home--%@",urlString);
-                    
-                }
                 
-                PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+                    if (objectDataClass.globalFeedID)
+                    {
+                        
+                        
+                        urlString = [NSString stringWithFormat:@"%@%@/%@/%@?feedid=%@&source=%@" ,kBaseURL,kAPI,kRssFeed,kGetRssFeed,objectDataClass.globalFeedID,@"SkagitTimes"];
+                        
+                        NSLog(@"url with feed id %@",urlString);
+                        
+                    }
+                    else
+                    {
+                       
+                        
+                        
+                        urlString = [NSString stringWithFormat:@"%@%@/%@/%@?feedid=%@&source=%@",kBaseURL,kAPI,kRssFeed,kGetRssFeed,firstFeedItemId,@"SkagitTimes" ];
+                                     
+                                     
+                        
+                        
+                        
+                        NSLog(@"url string home--%@",urlString);
+                        
+                    }
+                }
+                AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+                manager.requestSerializer = [AFJSONRequestSerializer serializer];
+                manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                
+                [manager.requestSerializer setValue:@"PoshMobile" forHTTPHeaderField:@"User-Agent"];
+
+
                 [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
                     
-                    DLog(@"JSON: %@", responseObject);
+                    NSLog(@"JSON: %@", responseObject);
                     NSDictionary *json = [Utility cleanJsonToObject:responseObject];
                     [self.view setUserInteractionEnabled:YES];
-                    
+                    [spinner removeSpinner];
                     if (json)
                     {
                         
-                        DLog(@"storing it first time");
+                            NSLog(@"storing it first time");
                         
                         if ([[json valueForKey:@"items"] isKindOfClass:[NSArray class]] && [[json valueForKey:@"items"] count]>0)
                         {
                             
                             
-                            feeds= [json valueForKey:@"items"];
-                            [tableView reloadData];
-                                
+                        
                             
-                            DLog(@"new feed are --%@",feeds);
+                            feeds= [json valueForKey:@"items"];
+                            
+//                            [[NSUserDefaults standardUserDefaults]setValue:feeds forKey:@"feesArray"];
+//                            [[NSUserDefaults standardUserDefaults]synchronize];
+                            [self.uploadTableView reloadData];
+
+                            NSLog(@"new feed are --%@",feeds);
                             
                         }
                         
@@ -839,18 +952,24 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                         }
                     }
                     
-                    [self.refreshControl endRefreshing];
-                    
                 } failure:^(NSURLSessionTask *operation, NSError *error) {
+                    NSLog(@"Error: %@", error);
                     
-                    DLog(@"Error: %@", error);
+                    UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"No data received from the server" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
+                        
+                        
+                    }];
+                    
+                    [errorAlert addAction:errorAction];
+                    [self presentViewController:errorAlert animated:YES completion:nil];
+
                     [self.view setUserInteractionEnabled:YES];
                     [self.refreshControl endRefreshing];
                     
                 }];
                 
-
-            }
+        }
     }
 }
 
@@ -871,10 +990,15 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     if (0 == indexPath.row ) {
         
-        return 200.0;
+        
+        return 250.0;
+    }
+    if ([objectDataClass.globalFeedType isEqualToString:@"Photo Gallery"] || [objectDataClass.globalFeedType isEqualToString:@"Video Gallery"])
+    {
+         return 117.0;
     }
     
-    return 110.0;
+    return 134.0;
 }
 
 
@@ -900,29 +1024,71 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     UILabel * firstIndexlabel;
     UILabel * newsPostTime_lbl;
+    UILabel * lblCategory;
     UIView * firstIndexView;
     UIView *secondView;
     UILabel *newsTitleNew;
+    UILabel * lblDiscription;
+
   
-    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor whiteColor];
     cell.backgroundView = [UIView new] ;
     cell.selectedBackgroundView = [UIView new];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    NSMutableArray *testArray =[[NSMutableArray alloc] init];
     NSArray *mediaArray =[[feeds objectAtIndex:indexPath.row] objectForKey:@"Mediaitems"] ;
-    NSString * testing;
+    NSString * mediaURL;
     if ([mediaArray  count]>0) {
         
         NSString* imageURltemp = [mediaArray[0] valueForKey:@"url"];
-        testing = imageURltemp;
+        mediaURL = imageURltemp;
         
     }
-
     if (0 == indexPath.row) {
         
-        firstIndexView = [[UIView alloc] initWithFrame:CGRectMake(2.0, 6.0, 301.0, 190.0)];
+        firstIndexView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, screenSize.width, 250.0)];
         [firstIndexView setBackgroundColor:[UIColor whiteColor]];
+        [cell addSubview:firstIndexView];
+        
+        
+        
+                NSString * imgURl = [NSString stringWithFormat:@"%@",mediaURL];
+                
+                UIImageView * firstImageView =[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, screenSize.width, 250.0)]; //2,6,301,170
+                firstImageView.contentMode = UIViewContentModeScaleAspectFill;
+                firstImageView.layer.masksToBounds = YES;
+                firstImageView.clipsToBounds= YES;
+                
+                if ([objectDataClass.globalFeedType isEqualToString:@"Video Gallery"]) {
+                    
+                    if (mediaURL)
+                    {
+
+                    [firstImageView setImage:[UIImage imageNamed:@"VideoPlaceHolder@2x.png"]];
+                    }
+                    
+                }else {
+                    
+                    if (mediaURL)
+                    {
+
+                    [firstImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
+                    }
+                    else
+                    {
+                        [firstImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
+                    }
+                }
+        
+                [firstIndexView addSubview:firstImageView];
+            
+        
+        UIImageView * gradientImage = [[UIImageView alloc] init];
+        gradientImage.frame = firstIndexView.bounds;
+        [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
+        gradientImage.contentMode = UIViewContentModeScaleToFill;
+        [firstIndexView addSubview:gradientImage];
+        
         
         UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:firstIndexView.bounds];
         firstIndexView.layer.masksToBounds = NO;
@@ -931,42 +1097,69 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         firstIndexView.layer.shadowOpacity = 0.5f;
         firstIndexView.layer.shadowRadius = 2.0;
         firstIndexView.layer.shadowPath = shadowPath.CGPath;
-        firstIndexlabel.layer.cornerRadius =3.0f;
 
-        firstIndexlabel  = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 145.0, 280.0, 40.0)];//14.0, 128.0, 280.0, 40.0
-        firstIndexlabel.numberOfLines = 3;
+        newsPostTime_lbl = [[UILabel alloc] initWithFrame:CGRectMake(17.0,120.0, 150.0, 15.0)];//14.0, 108.0, 260.0, 30.0)
+        newsPostTime_lbl.textColor = [UIColor colorWithRed:183.0/255.0  green:183.0/255.0 blue:183.0/255.0 alpha:1.0f];
+        newsPostTime_lbl.lineBreakMode =NSLineBreakByWordWrapping;
+        [newsPostTime_lbl setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+        newsPostTime_lbl.text =[[[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"] uppercaseString];
+        [firstIndexView addSubview:newsPostTime_lbl];
+        [firstIndexView bringSubviewToFront:newsPostTime_lbl];
+
+        
+        lblCategory = [[UILabel alloc] initWithFrame:CGRectMake(screenSize.width - 167,120.0, 150.0, 15.0)];//14.0, 108.0, 260.0, 30.0)
+        lblCategory.textColor = [UIColor colorWithRed:183.0/255.0  green:183.0/255.0 blue:183.0/255.0 alpha:1.0f];
+        [lblCategory setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+        lblCategory.textAlignment = NSTextAlignmentRight;
+        lblCategory.text = [[[feeds objectAtIndex:indexPath.row] objectForKey:@"category"] uppercaseString];
+        [firstIndexView addSubview:lblCategory];
+        
+        
+        
+        /*
+      
+        for (NSString* family in [UIFont familyNames])
+        {
+            NSLog(@"%@", family);
+            
+            for (NSString* name in [UIFont fontNamesForFamilyName: family])
+            {
+                NSLog(@"  %@", name);
+            }
+        }
+        
+         */
+        
+        
+        firstIndexlabel  = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 149.0, 280.0, 40.0)];//14.0, 128.0, 280.0, 40.0
+        firstIndexlabel.numberOfLines = 2;
         firstIndexlabel.textColor = [UIColor whiteColor];
         firstIndexlabel.lineBreakMode = NSLineBreakByWordWrapping;
-
-        [firstIndexlabel setFont:[UIFont fontWithName:@"Helvetica Neue" size:20.0]];
+        [firstIndexlabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:17.0]];
         firstIndexlabel.text =[[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-
-        
-        newsPostTime_lbl = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 125.0, 260.0, 30.0)];//14.0, 108.0, 260.0, 30.0)
-        newsPostTime_lbl.numberOfLines= 2;
-        newsPostTime_lbl.adjustsFontSizeToFitWidth = YES;
-        newsPostTime_lbl.textColor = [UIColor whiteColor];
-        newsPostTime_lbl.lineBreakMode =NSLineBreakByWordWrapping;
-        [newsPostTime_lbl setFont:[UIFont fontWithName:@"Helvetica Neue" size:15.0]];
-        newsPostTime_lbl.text =[[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-        
-        UIImageView * gradientImage = [[UIImageView alloc] init];
-        gradientImage.frame = firstIndexView.bounds;
-        [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-        gradientImage.contentMode = UIViewContentModeScaleToFill;
-
-
-        [cell addSubview:firstIndexView];
-        [firstIndexView addSubview:gradientImage];
         [firstIndexView addSubview:firstIndexlabel];
-        [firstIndexView addSubview:newsPostTime_lbl];
+        
+        
+        lblDiscription = [[UILabel alloc] initWithFrame:CGRectMake(17,198.0, screenSize.width-34, 35.0)];//14.0, 108.0, 260.0, 30.0)
+        lblDiscription.numberOfLines = 2;
+
+        lblDiscription.textColor = [UIColor colorWithRed:160.0/255.0  green:160.0/255.0 blue:160.0/255.0 alpha:1.0f];
+        [lblDiscription setFont:[UIFont fontWithName:@"PTSerif-Regular" size:12.0]];
+        
+        NSAttributedString *htmlString = [[NSAttributedString alloc] initWithData:[[[feeds objectAtIndex:indexPath.row] objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: [NSNumber numberWithInt:NSUTF8StringEncoding]} documentAttributes:nil error:nil];
+
+        lblDiscription.text = [htmlString string];
+        [firstIndexView addSubview:lblDiscription];
+        
+
        
     }
     else
     {
         //ads
-        secondView = [[UIView alloc] initWithFrame:CGRectMake(2.0, 6.0, 301.0, 100.0)];
-        [secondView setBackgroundColor:[UIColor whiteColor]];
+        secondView = [[UIView alloc] initWithFrame:CGRectMake(17.0, 17.0, screenSize.width-34, 100.0)];
+        [cell addSubview:secondView];
+        [secondView setBackgroundColor:[UIColor clearColor]];
         UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:secondView.bounds];
         secondView.layer.masksToBounds = NO;
         secondView.layer.shadowColor = [UIColor whiteColor].CGColor;
@@ -974,320 +1167,168 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         secondView.layer.shadowOpacity = 0.5f;
         secondView.layer.shadowRadius = 2.0;
         secondView.layer.shadowPath = shadowPath.CGPath;
-        secondView.layer.cornerRadius= 3.0;
-        [cell addSubview:secondView];
         
-     
-        if (testing) {
-            
-            
-        }
-        else
-        {
-        //for label with images..
-
-        newsTitleNew = [[UILabel alloc] initWithFrame:CGRectMake(119.0, 37.0, 170.0, 54.0)];
-        newsTitleNew.numberOfLines = 2;
-        newsTitleNew.adjustsFontSizeToFitWidth = YES;
-        newsTitleNew.lineBreakMode = NSLineBreakByWordWrapping;
-        [newsTitleNew setFont: [UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-        newsTitleNew .text  =  [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
+        
+        
+        newsTitleNew = [[UILabel alloc] init];
         [secondView addSubview:newsTitleNew];
+        newsTitleNew.numberOfLines = 2;
+        newsTitleNew.lineBreakMode = NSLineBreakByWordWrapping;
+        [newsTitleNew setFont: [UIFont fontWithName:@"Roboto-Regular" size:15.0]];
         
-            
-        UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(119.0, 10.0, 180.0, 30.0)];//119,13,187,25
-        [newsPostTimeNew setTextColor:[UIColor whiteColor]];
-        newsPostTimeNew.numberOfLines =1;
-        newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-        newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-        [newsPostTimeNew setFont: [UIFont fontWithName:@"Roboto-Regular" size:12.0]];
-        newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
+        NSString *trimmedTitle =  [[[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"] stringByTrimmingCharactersInSet:
+                                         [NSCharacterSet whitespaceCharacterSet]];
+
+        newsTitleNew .text  = trimmedTitle ;
+
+        
+        UILabel * newsPostTimeNew = [[UILabel alloc] init];//119,13,187,25
         [secondView addSubview:newsPostTimeNew];
-
-            
-        }
-    }
-    
-    DLog(@"testing array for media url --%@",testing);
-    //for index 0..
-    if (testing) {
+        [newsPostTimeNew setTextColor:[UIColor colorWithRed:183.0/255.0  green:183.0/255.0 blue:183.0/255.0 alpha:1.0f]];
+        [newsPostTimeNew setFont: [UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+        newsPostTimeNew.text = [[[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"] uppercaseString];
         
-    if (0 == indexPath.row )
-    {
-
-        [testArray addObject:testing];
-        DLog(@"testarray for image -%@",testArray);
-        NSString * imgURl = [NSString stringWithFormat:@"%@",testing];
-
-        UIImageView * firstImageView =[[UIImageView alloc] initWithFrame:CGRectMake(2.0, 6.0, 301.0, 190.0)]; //2,6,301,170
-        firstImageView.contentMode = UIViewContentModeScaleAspectFill;
-        firstImageView.layer.masksToBounds = YES;
-        firstImageView.clipsToBounds= YES;
-
-        if ([objectDataClass.globalFeedType isEqualToString:@"Video Gallery"]) {
-            
-            [firstImageView setImage:[UIImage imageNamed:@"VideoPlaceHolder@2x.png"]];
-            
-        }else{
-            
-            [firstImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-        }
-        
-
-        UIImageView * gradientImage = [[UIImageView alloc] init];
-        gradientImage.frame = firstImageView.bounds;
-        [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-        gradientImage.contentMode = UIViewContentModeScaleToFill;
-
-
-        [cell addSubview:firstImageView];
-        [firstImageView addSubview:gradientImage];
-        [firstImageView addSubview:newsPostTime_lbl];
-        [firstImageView addSubview:firstIndexlabel];
-        
-             
-        }//for 1 and further index....
-        [testArray addObject:testing];
-       // testArray = [testing copy];
-        DLog(@"test array in 2 --%@",testArray);
-        
-        if ([objectDataClass.globalFeedType isEqualToString:@"Photo Gallery"]) {
-            
-            //Increasing the width of imageview. for photo
-            
-            UIImageView * secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, 3.0, 295.0, 95.0)]; // 2,7,95,85
-            secondImageView.contentMode = UIViewContentModeScaleAspectFill;
-            secondView.layer.masksToBounds = YES;
-            secondView.clipsToBounds = YES;
-            
-            UIImageView * gradientImage = [[UIImageView alloc] init];
-            gradientImage.frame = secondView.bounds;
-            [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-            gradientImage.contentMode = UIViewContentModeScaleToFill;
-
-            NSString * imgURl = [NSString stringWithFormat:@"%@",testing];
-            
-            if ([imgURl length]>0) {
-            
-                [secondImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-
-            }else{
-                
-               // [secondImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-
-                [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
-            }
-            
-            [secondImageView addSubview:gradientImage];
-
-            //UILabel for title
-            UILabel * labelImage = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 241.0, 48.0)];
-            labelImage.numberOfLines =2;
-            labelImage.adjustsFontSizeToFitWidth= YES;
-            labelImage.lineBreakMode = NSLineBreakByWordWrapping;
-            [labelImage setFont: [UIFont fontWithName:@"Helvetica Neue Light" size:15.0]];
-            labelImage.textColor = [UIColor whiteColor];
-            labelImage.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-            [secondImageView addSubview:labelImage];
-
-            //uilabel for time
-            UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 10.0, 180.0, 30.0)];//119,13,187,25
-            [newsPostTimeNew setTextColor:[UIColor whiteColor]];
-            newsPostTimeNew.numberOfLines =1;
-            newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-            newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-            [newsPostTimeNew setFont:[UIFont fontWithName:@"Helvetica Neue Light" size:12.0]];
-            newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-            [secondImageView addSubview:newsPostTimeNew];
-
-            [secondView addSubview:secondImageView];
-
-            
-            
-        }
-        
-        else if ([objectDataClass.globalFeedType isEqualToString:@"Video Gallery"]){
-            
-            UIImageView * secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, 3.0, 295.0, 95.0)]; // 2,7,95,85
-            
-            NSString * imgURl = [NSString stringWithFormat:@"%@",testing];
-            
-            secondImageView.contentMode = UIViewContentModeScaleAspectFill;
-            secondView.layer.masksToBounds = YES;
-            secondView.clipsToBounds = YES;
-                
-            UIImageView * gradientImage = [[UIImageView alloc] init];
-            gradientImage.frame = secondView.bounds;
-            [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-            gradientImage.contentMode = UIViewContentModeScaleToFill;
-            [secondImageView setImage: [UIImage imageNamed:@"VideoPlaceHolder@2x.png"]];
-
-            [secondImageView addSubview:gradientImage];
-
-            
-            //UILabel for title
-            UILabel * labelImage = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 241.0, 48.0)];
-            labelImage.numberOfLines =2;
-            labelImage.adjustsFontSizeToFitWidth= YES;
-            labelImage.lineBreakMode = NSLineBreakByWordWrapping;
-            [labelImage setFont: [UIFont fontWithName:@"Helvetica Neue Light" size:15.0]];
-            labelImage.textColor = [UIColor whiteColor];
-            labelImage.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-            [secondImageView addSubview:labelImage];
-            
-            //uilabel for time
-            UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 10.0, 180.0, 30.0)];//119,13,187,25
-            [newsPostTimeNew setTextColor:[UIColor whiteColor]];
-            newsPostTimeNew.numberOfLines =1;
-            newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-            newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-            [newsPostTimeNew setFont:[UIFont fontWithName:@"Helvetica Neue Light" size:12.0]];
-            newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-            [secondImageView addSubview:newsPostTimeNew];
-            
-            [secondView addSubview:secondImageView];
-
-            
-        }
-        else
-        {
-        // if this is not photo then it will be mp4 ...
-            
-            
-            //Showing normal view.
-        UIImageView * secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, 7.0, 95.0, 85.0)]; // 2,7,85,85
-        secondImageView.contentMode = UIViewContentModeScaleAspectFit;
-            
-            
-            if ([testing length]>0) {
-                
-                [secondImageView sd_setImageWithURL:[NSURL URLWithString:testing] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-                
-            }else{
-                
-                [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder.png"]];
-            }
        
-            [secondView addSubview:secondImageView];
-  
-            UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 10.0, 100.0, 30.0)];//119,13,187,25
-            [newsPostTimeNew setTextColor:[UIColor darkGrayColor]];
-            
-            newsPostTimeNew.numberOfLines =1;
-            newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-            newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-            [newsPostTimeNew setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-            newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-            [secondView addSubview:newsPostTimeNew];
-            
-            
-            
-            UILabel * labelAfterNoImage2 = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 40.0, 150.0, 48.0)];
-            labelAfterNoImage2.numberOfLines =2;
-            labelAfterNoImage2.adjustsFontSizeToFitWidth= YES;
-            labelAfterNoImage2.lineBreakMode = NSLineBreakByWordWrapping;
-            [labelAfterNoImage2 setFont: [UIFont fontWithName:@"Roboto-Regular" size:16.0]];
-            labelAfterNoImage2.textColor = [UIColor blackColor];
-            labelAfterNoImage2.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-            [secondView addSubview:labelAfterNoImage2];
         
-        }
-     
-    }else{
         
-        [newsTitleNew setHidden:YES];
- 
-        if (indexPath.row==0) {
-            
-            UIImageView * firstImageView =[[UIImageView alloc] initWithFrame:CGRectMake(2.0, 6.0, 301.0, 190.0)]; //2,6,301,170
-            firstImageView.contentMode = UIViewContentModeScaleAspectFill;
-            firstImageView.layer.masksToBounds = YES;
-            firstImageView.clipsToBounds= YES;
-            
-            
-            [firstImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
-            
-            
-            UIImageView * gradientImage = [[UIImageView alloc] init];
-            gradientImage.frame = firstImageView.bounds;
-            [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-            gradientImage.contentMode = UIViewContentModeScaleToFill;
-            
-            
-            [cell addSubview:firstImageView];
-            [firstImageView addSubview:gradientImage];
-            
-            
-            // no image in celll , then add title to label .
-            
-            UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 100.0, 180.0, 30.0)];//119,13,187,25
-            [newsPostTimeNew setTextColor:[UIColor lightGrayColor]];
-            
-            newsPostTimeNew.numberOfLines =1;
-            newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-            newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-            [newsPostTimeNew setFont: [UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-            newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-            [firstImageView addSubview:newsPostTimeNew];
-            
-            
-            
-            UILabel * labelAfterNoImage2 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 130.0, 241.0, 48.0)];
-            labelAfterNoImage2.numberOfLines =2;
-            labelAfterNoImage2.adjustsFontSizeToFitWidth= YES;
-            labelAfterNoImage2.lineBreakMode = NSLineBreakByWordWrapping;
-            [labelAfterNoImage2 setFont: [UIFont fontWithName:@"Roboto-Regular" size:16.0]];
-            labelAfterNoImage2.textColor = [UIColor whiteColor];
-            labelAfterNoImage2.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-            [firstImageView addSubview:labelAfterNoImage2];
+            if ([objectDataClass.globalFeedType isEqualToString:@"Photo Gallery"]) {
+                
+                //Increasing the width of imageview. for photo
+                
+                lblCategory=[[UILabel alloc]init];
+                [lblCategory setFrame:CGRectMake(165, 23, 100, 30)];
+                lblCategory.textColor = [UIColor colorWithRed:183.0/255.0  green:183.0/255.0 blue:183.0/255.0 alpha:1.0f];
+                [lblCategory setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+                lblCategory.textAlignment = NSTextAlignmentRight;
+                lblCategory.text = [[[feeds objectAtIndex:indexPath.row] objectForKey:@"category"] uppercaseString];
+                
+                newsPostTimeNew.frame = CGRectMake(17.0, 30.0, 150, 15);
+                
+                newsTitleNew.frame = CGRectMake(17.0, 55.0, screenSize.width - 51.0, 40.0);
+                newsTitleNew.textColor = [UIColor whiteColor];
+                
+                
+                UIImageView * secondImageView = [[UIImageView alloc] init]; // 2,7,95,85
+                [secondView addSubview:secondImageView];
+                secondImageView.frame = secondView.bounds;
+                secondImageView.contentMode = UIViewContentModeScaleAspectFill;
+                secondView.layer.masksToBounds = YES;
+                secondView.clipsToBounds = YES;
+                [secondView sendSubviewToBack:secondImageView];
+                
+                // Do something...
+                
+                UIImageView * gradientImage = [[UIImageView alloc] init];
+                gradientImage.frame = secondView.bounds;
+                [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
+                gradientImage.contentMode = UIViewContentModeScaleToFill;
+                [secondImageView addSubview:gradientImage];
+                [secondView sendSubviewToBack:gradientImage];
+                
 
-            
-            
-        }else{
-            
-            UIImageView * secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, 3.0, 295.0, 95.0)]; // 2,7,95,85
-            secondImageView.contentMode = UIViewContentModeScaleAspectFill;
-            secondView.layer.masksToBounds = YES;
-            secondView.clipsToBounds = YES;
-            [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
-            
-            UIImageView * gradientImage = [[UIImageView alloc] init];
-            gradientImage.frame = secondView.bounds;
-            [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
-            gradientImage.contentMode = UIViewContentModeScaleToFill;
-            
-            [secondImageView addSubview:gradientImage];
-            
-            [secondView addSubview:secondImageView];
-
-            
-            // no image in celll , then add title to label .
-            
-            UILabel * newsPostTimeNew = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 100.0, 180.0, 30.0)];//119,13,187,25
-            [newsPostTimeNew setTextColor:[UIColor lightGrayColor]];
-            
-            newsPostTimeNew.numberOfLines =1;
-            newsPostTimeNew.adjustsFontSizeToFitWidth = YES;
-            newsPostTimeNew.lineBreakMode = NSLineBreakByWordWrapping;
-            [newsPostTimeNew setFont: [UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-            newsPostTimeNew.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"pubDate"];
-            [secondImageView addSubview:newsPostTimeNew];
-            
-            
-            
-            UILabel * labelAfterNoImage2 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 130.0, 241.0, 48.0)];
-            labelAfterNoImage2.numberOfLines =2;
-            labelAfterNoImage2.adjustsFontSizeToFitWidth= YES;
-            labelAfterNoImage2.lineBreakMode = NSLineBreakByWordWrapping;
-            [labelAfterNoImage2 setFont: [UIFont fontWithName:@"Roboto-Regular" size:16.0]];
-            labelAfterNoImage2.textColor = [UIColor whiteColor];
-            labelAfterNoImage2.text = [[feeds objectAtIndex:indexPath.row] objectForKey:@"Title"];
-            [secondImageView addSubview:labelAfterNoImage2];
+                NSString * imgURl = [NSString stringWithFormat:@"%@",mediaURL];
+                
+                if ([imgURl length]>0) {
+                    
+                    [secondImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
+                    
+                    
+                    
+                    
+                }else{
+                    
+                    // [secondImageView sd_setImageWithURL:[NSURL URLWithString:imgURl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+                    
+                    [secondImageView setImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
+                }
+                
+                [secondImageView addSubview:lblCategory];
+                
+                
             
         }
+            else if ([objectDataClass.globalFeedType isEqualToString:@"Video Gallery"]){
+                
+                
+                newsPostTimeNew.frame = CGRectMake(17.0, 30.0, 150, 15);
+                
+                newsTitleNew.frame = CGRectMake(17.0, 55.0, screenSize.width - 51.0, 40.0);
+                newsTitleNew.textColor = [UIColor whiteColor];
+                
+                UIImageView * secondImageView = [[UIImageView alloc] init]; // 2,7,95,85
+                [secondView addSubview:secondImageView];
+                secondImageView.frame = CGRectMake(0, 0, secondView.frame.size.width, secondView.frame.size.height);
+                secondImageView.contentMode = UIViewContentModeScaleAspectFill;
+                secondView.layer.masksToBounds = YES;
+                secondView.clipsToBounds = YES;
+                [secondImageView setImage: [UIImage imageNamed:@"VideoPlaceHolder@2x.png"]];
+                [secondView sendSubviewToBack:secondImageView];
+                
+                // Do something...
+                
+                UIImageView * gradientImage = [[UIImageView alloc] init];
+                gradientImage.frame = CGRectMake(0, 0, secondView.frame.size.width, secondView.frame.size.height);
+                [gradientImage setImage:[UIImage imageNamed:@"Gradient-02@2x.png"]];
+                gradientImage.contentMode = UIViewContentModeScaleToFill;
+                [secondImageView addSubview:gradientImage];
+                [secondView sendSubviewToBack:gradientImage];
+                
+               
+
+                
+            }
+            else if([objectDataClass.globalFeedType isEqualToString:@"Editorial"])
+            {
+                UILabel *lblSeperaterLine = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 133, screenSize.width-17, 0.5)];
+                [cell addSubview:lblSeperaterLine];
+                lblSeperaterLine.backgroundColor = [UIColor lightGrayColor];
+                
+                newsPostTimeNew.frame = CGRectMake(0.0, 0.0, 150, 15);
+
+                UILabel * lblEditorialCategory = [[UILabel alloc] init];
+                [secondView addSubview:lblEditorialCategory];
+                [lblEditorialCategory setFont: [UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+                lblEditorialCategory.text = [[[feeds objectAtIndex:indexPath.row] objectForKey:@"category"] uppercaseString];
+                [lblEditorialCategory setTextColor:[UIColor colorWithRed:183.0/255.0  green:183.0/255.0 blue:183.0/255.0 alpha:1.0f]];
+                lblEditorialCategory.textAlignment= NSTextAlignmentRight;
+                
+                lblDiscription = [[UILabel alloc] init];//14.0, 108.0, 260.0, 30.0)
+                lblDiscription.numberOfLines = 2;
+                lblDiscription.textColor = [UIColor colorWithRed:127.0/255.0  green:127.0/255.0 blue:127.0/255.0 alpha:1.0f];
+                [lblDiscription setFont:[UIFont fontWithName:@"PTSerif-Regular" size:12.0]];
+                
+                NSAttributedString *htmlString = [[NSAttributedString alloc] initWithData:[[[feeds objectAtIndex:indexPath.row] objectForKey:@"Description"] dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: [NSNumber numberWithInt:NSUTF8StringEncoding]} documentAttributes:nil error:nil];
+                
+                lblDiscription.text = [htmlString string];
+                [secondView addSubview:lblDiscription];
+                
+                
+                UIImageView *imgEditorial = [[UIImageView alloc] initWithFrame:CGRectMake(screenSize.width - 134, 0, 100.0, 100)];
+                
+                imgEditorial.contentMode = UIViewContentModeScaleToFill; //UIViewContentModeScaleAspectFill
+                imgEditorial.clipsToBounds = YES;
+                
+                if (mediaURL)
+                {
+                    newsTitleNew.frame = CGRectMake(0.0, 17.0, 160, 40);
+                    lblDiscription.frame = CGRectMake(0.0, 65.0, 170, 35.0);
+                    lblEditorialCategory.frame = CGRectMake(screenSize.width-310, 0, 150, 15.0);
+                    [imgEditorial sd_setImageWithURL:[NSURL URLWithString:mediaURL] placeholderImage:[UIImage imageNamed:@"PlaceHolder@2x.png"]];
+                    [secondView addSubview: imgEditorial];
+                }
+                else
+                {
+                    newsTitleNew.frame = CGRectMake(0.0, 17.0, screenSize.width-34, 40);
+                    lblDiscription.frame = CGRectMake(0.0, 65.0, screenSize.width-34, 35.0);
+                    lblEditorialCategory.frame = CGRectMake(screenSize.width-184, 0, 150, 15.0);
+                   
+                    
+                }
+            }
+        
     }
-        
-    DLog(@"image url -- %@",testing);
+
+    
 
     return cell;
     
@@ -1324,26 +1365,26 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     }
     
     if ([objectDataClass.globalFeedType isEqualToString:@"Photo Gallery"]) { // For Showing TYPE PHOTO..
-        NSMutableArray * PhotoUrl = [[NSMutableArray alloc] init];
         
         
         
-        PhotoGallery * obj_photo = [[PhotoGallery alloc] initWithNibName:@"PhotoGallery" bundle:nil];
         
-        PhotoUrl = [feeds objectAtIndex:indexPath.row]; //[feeds [indexPath.row]objectForKey:@"Mediaitems"];
+        PhotoUrl = [[feeds objectAtIndex:indexPath.row] valueForKey:@"Mediaitems"];
         
-        
-        
-        obj_photo.gatheredDict = [PhotoUrl copy];
-        obj_photo.transferedArray = [PhotoUrl copy];
-        DLog(@"photo url--%@",obj_photo.transferedArray);
-        
-        
-     //   detailsView_Object.getimageURl= imageURlForWebView;
-      //  detailsView_Object.getImageURls_Dict = [MediaURl copy];  // test_url[indexPath.row];
-        [self.navigationController pushViewController:obj_photo animated:YES];
-        
-               
+        if ([PhotoUrl count] > 0 ) {
+            
+            
+            PhotoGallery * obj_photo = [[PhotoGallery alloc] initWithNibName:@"PhotoGallery" bundle:nil];
+            PhotoUrl = [feeds objectAtIndex:indexPath.row]; //[feeds [indexPath.row]objectForKey:@"Mediaitems"];
+            obj_photo.gatheredDict = [PhotoUrl copy];
+            obj_photo.mediaDetailDict = [PhotoUrl copy];
+            [self presentViewController:obj_photo animated:YES completion:nil];
+            
+        }else{
+            
+            
+            
+        }
         
     }else if ([objectDataClass.globalFeedType isEqualToString:@"Video Gallery"]){
     
@@ -1363,7 +1404,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     
     DetailsViewController * detailsView_Object=[[DetailsViewController alloc] initWithNibName:@"DetailsViewController" bundle:nil];
-    NSIndexPath *indexPath1 = [self.tableView indexPathForSelectedRow];
+    NSIndexPath *indexPath1 = [self.uploadTableView indexPathForSelectedRow];
     detailsView_Object.allDataArray = [feeds copy];
     
    
@@ -1436,9 +1477,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadCategoryAPI {
     
-    [self beginRefreshingTableView];
     
-    NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/menu/GetMenuCategories?source=%@",@"SkagitTimes"];
+    [self beginRefreshingTableView];
+        NSString* urlString = [NSString stringWithFormat:@"%@%@/menu/GetMenuCategories?source=%@" ,kBaseURL,kAPI,@"SkagitTimes"];   
     DLog(@"url string service otp--%@",urlString);
     
         
@@ -1450,9 +1491,16 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             NSArray *json = [Utility cleanJsonToObject:responseObject];
             
+            
+            
+            [self.view setUserInteractionEnabled:YES];
+            [spinner removeSpinner];
+
             if (json.count>0)
             {
                
+
+
                 NSMutableDictionary *jsonDict= [[NSMutableDictionary alloc] init];
                 
                 
@@ -1460,9 +1508,15 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     
                     objectDataClass.globalFeedType=[[[json objectAtIndex:0]valueForKey:@"FeedsItem"][0]valueForKey:@"Type"];
                     
+                    tempStringFeedType=objectDataClass.globalFeedType;
+
                     firstFeedItemId  = [[[[json objectAtIndex:0] valueForKey:@"FeedsItem"] objectAtIndex:0] valueForKey:@"Id_Feed"];
                     
                     objectDataClass.globalcompleteCategory = [json mutableCopy];
+                    
+                    objectDataClass.globalSubCategory = [[[[json objectAtIndex:0] valueForKey:@"FeedsItem"] objectAtIndex:0] valueForKey:@"Name"];
+                    objectDataClass.globalCategory = [NSString stringWithFormat:@"%@",[json objectAtIndex:0][@"Menu"][@"MainCategory"]];
+
                     
                     [jsonDict setObject:@"YTliMzYyYTktMWMyZC00NTc0LWE4NWMtN2JkMTA2YjAyMGQ3" forKey:@"sessionId"];
                     [jsonDict setObject:[objectDataClass.globalcompleteCategory objectAtIndex:0][@"Menu"][@"MainCategory"] forKey:@"contentId"];
@@ -1482,11 +1536,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 [sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
                     
                 }
-                
+
+
                 [self callServicesInQueue]; // call webservice in queue
 
                 
             } else {
+                
+                
                 
                 UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Not found data from server." preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1494,6 +1551,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
                 [errorAlert addAction:errorAction];
                 [self presentViewController:errorAlert animated:YES completion:nil];
+                
+
                 
             }
             
@@ -1505,12 +1564,14 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             [self.view setUserInteractionEnabled:YES];
             [self.refreshControl endRefreshing];
 
-            UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
             }];
             
             [errorAlert addAction:errorAction];
             [self presentViewController:errorAlert animated:YES completion:nil];
+            
+
             
         }];
 
@@ -1524,26 +1585,52 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     homeFeedServiceCallComplete = YES;
     
-    //if ([Utility connected] == YES) {
+       NSString* urlString;
         
-        NSString* urlString;
-        if (objectDataClass.globalFeedID)
+        if ([objectDataClass.globalCategory isEqualToString:@"Breaking News"])
         {
-            urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",objectDataClass.globalFeedID,@"SkagitTimes"];
-            DLog(@"url with feed id %@",urlString);
+            //ht tp://prngapi.cloudapp.net/api/BreakingNews?feedid=23&&source=SkagitTimes
+            
+            
+            
+            urlString = [NSString stringWithFormat:@"%@%@/BreakingNews?feedid=%@&source=%@",kBaseURL,kAPI,objectDataClass.globalFeedID,@"SkagitTimes"];
+                         
+            
+            NSLog(@"url with feed id %@",urlString);
             
         }
         else
         {
-            
-            urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/GetRssFeed?feedid=%@&source=%@",firstFeedItemId,@"SkagitTimes"];
-            
-            
-            DLog(@"url string home--%@",urlString);
-            
-        }
+        
+            if (objectDataClass.globalFeedID)
+            {
+                
+                
+                urlString = [NSString stringWithFormat:@"%@%@/%@/%@?feedid=%@&source=%@",kBaseURL,kAPI,kRssFeed,kGetRssFeed,objectDataClass.globalFeedID,@"SkagitTimes" ];
+                             
+                
+                NSLog(@"url with feed id %@",urlString);
+                
+            }
+            else
+            {
+                
+               
+                
+                urlString = [NSString stringWithFormat:@"%@%@/%@/%@?feedid=%@&source=%@",kBaseURL,kAPI,kRssFeed,kGetRssFeed,firstFeedItemId,@"SkagitTimes"];
+                
+                             
+                             
+                
+                NSLog(@"url string home--%@",urlString);
+                
+            }
 
-        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+        }
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+
+        [manager.requestSerializer setValue:@"PoshMobile" forHTTPHeaderField:@"User-Agent"];
+        
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
            
             DLog(@"JSON: %@", responseObject);
@@ -1560,9 +1647,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 if ([[json valueForKey:@"items"] isKindOfClass:[NSArray class]]) {
                     
                     
-                    feeds= [json valueForKey:@"items"] ;
+                    feeds= [json valueForKey:@"items"];
                     
-                    [tableView reloadData];
+//                    [[NSUserDefaults standardUserDefaults]setValue:feeds forKey:@"feesArray"];
+//                    [[NSUserDefaults standardUserDefaults]synchronize];
+                    
+                    [self.uploadTableView reloadData];
 
                     DLog(@"new feed are --%@",feeds);
                     
@@ -1628,24 +1718,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
         
-        //  [picker dismissViewControllerAnimated:YES completion:NULL];
-        
-      //  handleView = YES ;
-        
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
-            
-        }
-        
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
+
         
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
@@ -1653,43 +1726,22 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
         
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
+        [videoData writeToFile:tempPath atomically:NO];
         DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
-        if (isBrowserTapped)
-        {
-            
-        }
-        
-        
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:YES];
-            
-        }else{
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
-             uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-             uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:YES];
-            
-        }
-        
+
+        UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
+        uploadV.receivedPath = tempPath;
+        uploadV.ReceivedURl =videoURL;
+        uploadV.fileNameforVideo = [self generateUniqueNameVideo];
+        [self.navigationController pushViewController:uploadV animated:NO];
         
         [picker dismissViewControllerAnimated:YES completion:nil];
         [self.view setNeedsLayout];
@@ -1723,14 +1775,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
-    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
-    
-    
-    
-    NSString *documentsDirectory;
-    for (int i=0; i<[pathArray count]; i++) {
-        documentsDirectory =[pathArray objectAtIndex:i];
-    }
+//    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+//    NSString *documentsDirectory;
+//    for (int i=0; i<[pathArray count]; i++) {
+//        documentsDirectory =[pathArray objectAtIndex:i];
+//    }
     
     //Gaurav's logic
     
@@ -1743,6 +1792,13 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     //mohit logic
     
     fileName = [NSString stringWithFormat:@"%lu.png",(NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
+    
+    
+    
+    //
+    
+    
+    // NSString *documentsDirectory = [pathArray objectAtIndex:0];
     
     localUrl =  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:fileName];//[documentsDirectory stringByAppendingPathComponent:fileName];
     NSLog (@"File Path = %@", localUrl);
@@ -1766,28 +1822,22 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     Nav_valueToPhoto =YES;
     
   //  handleView = YES ;
-    CGSize size = [[UIScreen mainScreen]bounds].size;
-    
-                if (size.height==480) {
-    
-                    UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-                    uploadP.transferedImageData =data;
-                    uploadP.transferPhotoUniqueName = captureduniqueName;
-                    uploadP.navigateValue = Nav_valueToPhoto;
-                    uploadP.transferFileURl =localUrl;
-                    [self.navigationController pushViewController:uploadP animated:YES];
-    
-                }else{
-    
+       
                     UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
                     uploadP.transferedImageData =data;
                     uploadP.transferPhotoUniqueName = captureduniqueName;
                     uploadP.navigateValue = Nav_valueToPhoto;
                     uploadP.transferFileURl =localUrl;
-                    [self.navigationController pushViewController:uploadP animated:YES];
+                    [self.navigationController pushViewController:uploadP animated:NO];
                     
-                }
+              
     
+    
+   
+    
+  //  [self.scrollView_Photo setScrollEnabled:YES];
+    // [self.scrollView_Photo setContentSize:CGSizeMake(320, 600)];
+   // [self.scrollView_Photo setContentOffset:CGPointMake(5, 5) animated:YES];
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.view setNeedsLayout];
     
@@ -1797,12 +1847,17 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(NSString *)generateUniqueNameVideo{
     
     
+    // NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    //NSString *finalUnique= [NSString stringWithFormat:@"Video_%.0f.mp4", time];
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyyMMdd_HHmmss"];
     
     NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
     
+    // int randomValue = arc4random() % 1000;
+    //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUniqueVideo = [NSString stringWithFormat:@"Video_%@.mp4",dateString];
     
     return finalUniqueVideo;
@@ -1819,18 +1874,28 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     [picker dismissViewControllerAnimated:YES completion:NULL];
   
+   // [picker dismissViewControllerAnimated:<#(BOOL)#> completion:<#^(void)completion#>];
+    
     [self.view setNeedsLayout];
     
+  
+    
 }
+
+
 
 #pragma mark - Image Picker Controller delegate methods   ends ...
 
 -(NSString *)generateUniqueName{
     
+    //  NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    // NSString *finalUnique= [NSString stringWithFormat:@"Photo_%.0f.jpg", time];
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd_HHmmss"];
     NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
-    
+    // int randomValue = arc4random() % 1000;
+    //  NSString *unique = [NSString stringWithFormat:@"%@%d",dateString,randomValue];
     finalUnique = [NSString stringWithFormat:@"Photo_%@.jpg",dateString];
     DLog(@"unique name --%@",finalUnique);
     return finalUnique;
@@ -1873,6 +1938,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         [self.view endEditing:YES];
         if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
             
+            /*  UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Message!" message:@"Camera is not present!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+             [alert show];
+             */
+            
             UIAlertController *DoNothing_alrt = [UIAlertController alertControllerWithTitle:@"Message!" message:@"Camera is not present!" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
                 // action.,.........
@@ -1906,6 +1975,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         || (controller == nil))
         return NO;
     
+    
+    
     UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
     cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
     cameraUI.cameraDevice=UIImagePickerControllerCameraDeviceRear;
@@ -1917,6 +1988,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     cameraUI.delegate = self;
     
     [self presentViewController:cameraUI animated:NO completion:nil];
+    
     
     int64_t delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -2014,8 +2086,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     }]];
     [alert show];
 }
-
-
 
 
 

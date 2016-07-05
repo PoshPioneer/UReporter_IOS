@@ -54,12 +54,6 @@
     
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    
-    //self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
-    
-    
-}
 
 - (void)didReceiveMemoryWarning
 {

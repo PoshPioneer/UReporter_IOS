@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
@@ -16,15 +16,27 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q1V-il-4yH">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eOz-K8-N82">
+                    <rect key="frame" x="0.0" y="64" width="320" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="R1i-4U-gNa"/>
+                        <constraint firstAttribute="width" constant="320" id="ysp-VI-biG"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="highlightedColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q1V-il-4yH">
                     <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="old.png" translatesAutoresizingMaskIntoConstraints="NO" id="61d-JR-v4f">
+                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="old.png" translatesAutoresizingMaskIntoConstraints="NO" id="61d-JR-v4f">
                             <rect key="frame" x="100" y="12" width="119" height="27"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8w-4b-UMf">
                             <rect key="frame" x="282" y="9" width="30" height="30"/>
-                            <state key="normal" title="hfg" image="ShareIcons-01.png">
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <state key="normal" backgroundImage="ShareIcons-1">
                                 <color key="titleColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
@@ -44,26 +56,52 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <tabBar contentMode="scaleToFill" fixedFrame="YES" barStyle="black" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QKA-lt-49A">
+                <tabBar contentMode="scaleToFill" barStyle="black" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QKA-lt-49A">
                     <rect key="frame" x="0.0" y="519" width="320" height="49"/>
                     <color key="backgroundColor" red="0.86384662830000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="0.0" colorSpace="calibratedRGB"/>
                     <items>
-                        <tabBarItem title="" image="video.png" id="klb-aD-azu"/>
-                        <tabBarItem tag="1" title="" image="camera.png" id="G1e-MK-iGa"/>
-                        <tabBarItem tag="2" title="" image="mic.png" id="GKA-C8-rZm"/>
-                        <tabBarItem tag="3" title="" image="edit25x25.png" id="YOC-72-YLh"/>
+                        <tabBarItem title="" image="video" id="klb-aD-azu"/>
+                        <tabBarItem tag="1" title="" image="camera" id="G1e-MK-iGa"/>
+                        <tabBarItem tag="2" title="" image="mic" id="GKA-C8-rZm"/>
+                        <tabBarItem tag="3" title="" image="textedit" id="YOC-72-YLh"/>
                     </items>
                     <color key="tintColor" red="1" green="0.21356323029999999" blue="0.30417676300000002" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="barTintColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="0.0" colorSpace="calibratedRGB"/>
+                    <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="selectedImageTintColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.93201179940000001" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <outlet property="delegate" destination="-1" id="nu9-hn-hs3"/>
                     </connections>
                 </tabBar>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xsE-Gn-3xJ">
+                    <rect key="frame" x="0.0" y="515" width="320" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="320" id="1f1-5m-V5G"/>
+                        <constraint firstAttribute="height" constant="1" id="zkJ-xl-dEr"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="highlightedColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="eOz-K8-N82" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0hg-Zz-CqT"/>
+                <constraint firstItem="QKA-lt-49A" firstAttribute="top" secondItem="xsE-Gn-3xJ" secondAttribute="bottom" constant="3" id="2gX-mE-Jbj"/>
+                <constraint firstAttribute="bottom" secondItem="q1V-il-4yH" secondAttribute="bottom" constant="504" id="3lG-g7-Zej"/>
+                <constraint firstItem="eOz-K8-N82" firstAttribute="top" secondItem="q1V-il-4yH" secondAttribute="bottom" id="4ns-yS-DgZ"/>
+                <constraint firstAttribute="trailing" secondItem="xsE-Gn-3xJ" secondAttribute="trailing" id="J3Z-Uu-dZu"/>
+                <constraint firstItem="q1V-il-4yH" firstAttribute="leading" secondItem="QKA-lt-49A" secondAttribute="leading" id="JeK-g1-M1X"/>
+                <constraint firstAttribute="bottom" secondItem="QKA-lt-49A" secondAttribute="bottom" id="V9P-cK-hts"/>
+                <constraint firstItem="xsE-Gn-3xJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ZkV-Gy-Y31"/>
+                <constraint firstItem="q1V-il-4yH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="c07-lq-70p"/>
+                <constraint firstItem="q1V-il-4yH" firstAttribute="trailing" secondItem="eOz-K8-N82" secondAttribute="trailing" id="icB-FK-rNl"/>
+                <constraint firstItem="q1V-il-4yH" firstAttribute="leading" secondItem="eOz-K8-N82" secondAttribute="leading" id="kL5-LZ-xg2"/>
+                <constraint firstAttribute="trailing" secondItem="eOz-K8-N82" secondAttribute="trailing" id="osp-wO-Wf1"/>
+                <constraint firstItem="q1V-il-4yH" firstAttribute="trailing" secondItem="QKA-lt-49A" secondAttribute="trailing" id="qIY-YU-h65"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <point key="canvasLocation" x="630" y="367"/>
@@ -80,11 +118,11 @@
     </objects>
     <resources>
         <image name="Arrow45x45.png" width="45" height="45"/>
-        <image name="ShareIcons-01.png" width="30" height="30"/>
-        <image name="camera.png" width="25" height="25"/>
-        <image name="edit25x25.png" width="25" height="25"/>
-        <image name="mic.png" width="25" height="25"/>
+        <image name="ShareIcons-1" width="30" height="30"/>
+        <image name="camera" width="25" height="25"/>
+        <image name="mic" width="25" height="25"/>
         <image name="old.png" width="239" height="55"/>
-        <image name="video.png" width="25" height="25"/>
+        <image name="textedit" width="25" height="25"/>
+        <image name="video" width="25" height="25"/>
     </resources>
 </document>

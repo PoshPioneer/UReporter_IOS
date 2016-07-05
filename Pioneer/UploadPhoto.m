@@ -70,8 +70,19 @@ NSMutableData *responseData;
     
     SyncManager *sync;
     CLLocationManager *locationManager;
+    AppDelegate *app;
+    CGSize size ;
+    
+    UITextField * StreetTxt;
+    UITextField * cityTxt;
+    UITextField * StateTxt;
+    UITextField * PincodeTxt;
+    int locationStatus;
+    NSString *myLocationAddress;
+    CGSize sizeOfSubview;
 
-   
+    
+    
 }
 @end
 @implementation UploadPhoto
@@ -109,65 +120,98 @@ NSMutableData *responseData;
 }
 
 
--(void)checkCategoryData {
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
-        
-        DLog(@"quite empty!!!!");
-        // [app getCategory];
-        
-        DLog(@"coming!");
-    }else{
-        
-        lbl_output_category.userInteractionEnabled=YES ;
-        [self CallMethodForPicker];
-        [timerCheck invalidate];
-        
-    }
-    
-    
-}
+//-(void)checkCategoryData {
+//    
+//   app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
+//        
+//        NSLog(@"quite empty!!!!");
+//        // [app getCategory];
+//        
+//        NSLog(@"coming!");
+//    }else{
+//        
+//        lbl_output_category.userInteractionEnabled=YES ;
+//        [timerCheck invalidate];
+//        
+//    }
+//    
+
+
 
 - (void)viewDidLoad{
     
     [super viewDidLoad];
     
+    sizeOfSubview=[[UIScreen mainScreen]bounds].size;
+
+    app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
     objectDataClass = [DataClass getInstance];
     
     PhotocollectedDict = [NSMutableDictionary dictionary];
     
-    
+    size = [[UIScreen mainScreen]bounds].size;
     sync = [[SyncManager alloc] init];
     sync.delegate = self;
 
-
     img_ForSuccess_Unsuccess.userInteractionEnabled = YES;
-
     photoDataDictionary=[NSMutableDictionary dictionary];
     
-    [lbl_output_category setUserInteractionEnabled:NO];
-    timerCheck = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkCategoryData) userInfo:nil repeats:YES];
+    [capturedImage setImage:[UIImage imageWithData:transferedImageData]];
+    localUrl = transferFileURl;
+    mainImage = [[UIImage alloc] initWithData:transferedImageData];
+    data =transferedImageData;
+    
+    
+    
+    
+    if (tempArray == NULL) {
+        
+        checkUserComingFrom=TRUE;
+    }
+    
+    else {
+        
+        [self.view setNeedsLayout];
+        
+        txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
+        txt_View.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
+        // id categoryID = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"] ;
+        lbl_finalPicker_Selected.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
+        //UIImage *image = [[UIImage alloc] initWithData:data];
+        transferImageData = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"transferImage"];
+        // mainImage = [UIImage initWithData:transferImageData];
+        mainImage = [[UIImage alloc] initWithData:transferImageData];
+        localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
+        
+        lbl_output_category.text=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"categoryName"];
+        
+        NSLog(@"local url--%@",localUrltesting);
+        [capturedImage setImage:[UIImage imageWithData:transferImageData]];
+        
+        handleView = YES ;
+    }
+    
+    
+    
     
     
     segment_Outlet.selectedSegmentIndex=-1;
     segment_Outlet.layer.cornerRadius=2.0;
 	segment_Outlet.tintColor =[UIColor redColor];
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    DLog(@"id's  are =====%@",app.id_CategoryArray);
-    DLog(@"names are =====%@",app.categoryNameArray);
-    
     tabBarController.delegate = self;
+    [self CallMethodForPicker];
 
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
+
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:1]];
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
 
     // working .....
     LocalDataHandleArray=[[NSMutableArray alloc]init];
@@ -203,69 +247,6 @@ NSMutableData *responseData;
         
     }
 
-    [capturedImage setImage:[UIImage imageWithData:transferedImageData]];
-    localUrl = transferFileURl;
-    mainImage = [[UIImage alloc] initWithData:transferedImageData];
-    data =transferedImageData;
-    if (tempArray == NULL) {
-   
-          checkUserComingFrom=TRUE;
-    }
-    
-    else {
-        
-    
-        
-//DLog(@"collected data from review view --%@",tempArray);
-        [self.view setNeedsLayout];
-        
-    txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
-    txt_View.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
-    id categoryID = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"] ;
-    lbl_finalPicker_Selected.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
-        //UIImage *image = [[UIImage alloc] initWithData:data];
-        transferImageData = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"transferImage"];
-       // mainImage = [UIImage initWithData:transferImageData];
-        mainImage = [[UIImage alloc] initWithData:transferImageData];
-        localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-        DLog(@"local url--%@",localUrltesting);
-        [capturedImage setImage:[UIImage imageWithData:transferImageData]];
-
-        
-    DLog(@"category value--%@",categoryID);
-    if ([categoryID isEqualToString: @"1"]) {
-        
-        lbl_output_category.text = @"Politics";
-        categoryId_String= categoryID;
-        
-    }else if ([categoryID isEqualToString:@"2"]){
-        
-        lbl_output_category.text =@"Sports";
-        categoryId_String= categoryID;
-        
-        
-        
-    }else if ([categoryID isEqualToString:@"3"]){
-        
-        lbl_output_category.text =@"Games";
-        categoryId_String =categoryID;
-        
-    }else if ([categoryID isEqualToString:@"4"]){
-        lbl_output_category.text =@"Movie";
-        categoryId_String= categoryID;
-        
-    
-    }
-
-        handleView = YES ;
-        
-        
-}
-    
-    
-    
-    
- 
     
     
     
@@ -278,7 +259,7 @@ NSMutableData *responseData;
     photoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
 
     [self.scrollView_Photo setScrollEnabled:YES];
-    [self.scrollView_Photo setContentSize:CGSizeMake(320, 700)];
+   // [self.scrollView_Photo setContentSize:CGSizeMake(size.width, 750)];
     
     
     
@@ -299,8 +280,9 @@ NSMutableData *responseData;
     DLog(@"viewDidLayoutSubviews called.");
     // 12 August code .
     
-    
-    if (!handleView)
+    [self.scrollView_Photo setContentSize:CGSizeMake(size.width, 600)];
+
+    if (!handleView) 
     {
         // photo is not taken !!!!!
    
@@ -359,16 +341,12 @@ NSMutableData *responseData;
                                 
                                 lbl_selected_File_Outlet.text= @"Selected file";
                                 
+                            
                             }
+                        
                         }
-                        
-                        
                     }
-
-
     }
-    
-    
   }
 
 #pragma mark --
@@ -401,30 +379,24 @@ NSMutableData *responseData;
 }
 
 
--(void)doItResize:(NSString *)hideAndShow{
-    
-   // segment_Outlet.selectedSegmentIndex=-1;
-
-    DLog(@"doItResize called.");
-    
-    int  increment_Decrement = 0;
+-(void) doItResize:(NSString *) hideAndShow
+{
     
     NSString *hide_Show = hideAndShow;
     
-    if ([hide_Show isEqualToString:@"show"]) {
-        
-        increment_Decrement=+56;
+    if ([hide_Show isEqualToString:@"show"])
+    {
         
         [lbl_selected_File_Outlet setHidden:NO];
         [img_View_Selected_File_Outlet setHidden:NO];
         [lbl_finalPicker_Selected setHidden:NO];
         [cut_Sec setHidden:NO];
 
-        
-    }else{
+    }
+    else
+    {
         lbl_finalPicker_Selected.text=nil;
         mainImage=nil;
-        increment_Decrement=-56;
         [lbl_selected_File_Outlet setHidden:YES];
         [img_View_Selected_File_Outlet setHidden:YES];
         [lbl_finalPicker_Selected setHidden:YES];
@@ -432,8 +404,6 @@ NSMutableData *responseData;
 
     }
     
- 
-
 }
 
 
@@ -546,7 +516,6 @@ NSMutableData *responseData;
 }
 
 
-
 #pragma mark - Image Picker Controller delegate methods   starts ...
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -556,68 +525,27 @@ NSMutableData *responseData;
         
         [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
         
-        //  [picker dismissViewControllerAnimated:YES completion:NULL];
-        
-        //  handleView = YES ;
-        
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
-            
-        }
-        
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
+       
         
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
-        
         videoData = [NSData dataWithContentsOfURL:videoURL];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
+        [videoData writeToFile:tempPath atomically:NO];
+
         
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
-        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
-        
-        if (isBrowserTapped)
-        {
-            
-        }
-        
-        
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
-            
-        }else{
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
-            
-        }
-        
+        UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
+        uploadV.receivedPath = tempPath;
+        uploadV.ReceivedURl =videoURL;
+        uploadV.fileNameforVideo = [self generateUniqueNameVideo];
+        [self.navigationController pushViewController:uploadV animated:NO];
         
         [picker dismissViewControllerAnimated:YES completion:nil];
         [self.view setNeedsLayout];
@@ -628,56 +556,43 @@ NSMutableData *responseData;
     }else{
     
     // for Photo..
-        
-        
-    checkUserComingFrom= TRUE;
+        checkUserComingFrom= TRUE;
     
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
     
-    UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
-    
-    if (info[UIImagePickerControllerEditedImage ]) {
+        if (info[UIImagePickerControllerEditedImage ]) {
         
-        chosenImage =info[UIImagePickerControllerEditedImage];
+            chosenImage =info[UIImagePickerControllerEditedImage];
         
-    }else{
+        }else{
         
         chosenImage =info[UIImagePickerControllerOriginalImage];
 
     }
     
-    
-    
     mainImage = chosenImage;
     data = UIImagePNGRepresentation(mainImage);
-    DLog(@"converted data--%@",data);
+   // DLog(@"converted data--%@",data);
     
-//   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-//    DLog(@"imagepath==================== %@",localUrl);
     
     if(isCameraClicked)
     {
         UIImageWriteToSavedPhotosAlbum(mainImage,  nil,  nil, nil);
         
-        
     }
+
     
-   // DLog(@"image is ========%@",mainImage);
-    
-   // DLog(@"info==============%@",info);
-    
-    //New chamges
-    
-UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
-    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+  //  NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
     
     
     
-    NSString *documentsDirectory;
-    for (int i=0; i<[pathArray count]; i++) {
-        documentsDirectory =[pathArray objectAtIndex:i];
-    }
+//    NSString *documentsDirectory;
+//    for (int i=0; i<[pathArray count]; i++) {
+//        documentsDirectory =[pathArray objectAtIndex:i];
+//    }
     
     
     DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
@@ -704,41 +619,23 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     [myData writeToFile:localUrl atomically:YES];
     
     // Now you can use filePath as path of your image. For retrieving the image back from the path
-    UIImage *imageFromFile = [UIImage imageWithContentsOfFile:localUrl];
+   // UIImage *imageFromFile = [UIImage imageWithContentsOfFile:localUrl];
     
     
     [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
     [[NSUserDefaults standardUserDefaults]synchronize];
-    //[picker dismissViewControllerAnimated:YES completion:NULL];
+        
+        
     DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
     
     handleView = YES ;
     
     [capturedImage setImage:[UIImage imageWithData:data]];
 
-    
-//    if (IS_OS_8_OR_LATER) {
-//        [picker.view removeFromSuperview] ;
-//        [picker removeFromParentViewController] ;
-//        
-//    }else{
     [self.scrollView_Photo setScrollEnabled:YES];
-   // [self.scrollView_Photo setContentSize:CGSizeMake(320, 600)];
-    [self.scrollView_Photo setContentOffset:CGPointMake(5, 5) animated:YES];
-        [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
     [self.view setNeedsLayout];
-  //  }
-   
-    
-//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-//
-//     AppDelegate *appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//     [appDel showIt];
-//     shouldHideStatusBar = NO;
-//     [self prefersStatusBarHidden];
-//    [self.view setNeedsLayout];
-//    
-//#endif
+
     }
     
 }
@@ -832,7 +729,6 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     [toolbar setItems:[NSArray arrayWithObjects:buttonflexible,buttonDone, nil]];
     lbl_output_category .inputAccessoryView = toolbar;
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     [lbl_output_category setItemList:[NSArray arrayWithArray:[app.categoryNameArray objectAtIndex:0]]];
     
@@ -843,19 +739,20 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     [segment_Outlet setUserInteractionEnabled:NO];
     [cut_Sec setUserInteractionEnabled:NO];
-    [lbl_output_category setUserInteractionEnabled:NO];
+   // [lbl_output_category setUserInteractionEnabled:NO];
     [txt_Title setUserInteractionEnabled:NO];
     [txt_View setUserInteractionEnabled:NO];
 }
 
--(void)doneClicked:(UIBarButtonItem*)button
-{
+-(void)doneClicked:(UIBarButtonItem*)button {
+    
+    
     [self.view endEditing:YES];
     //isPickerTapped = NO ;
     
     [segment_Outlet setUserInteractionEnabled:YES];
     [cut_Sec setUserInteractionEnabled:YES];
-    [lbl_output_category setUserInteractionEnabled:YES];
+    //[lbl_output_category setUserInteractionEnabled:YES];
     [txt_Title setUserInteractionEnabled:YES];
     [txt_View setUserInteractionEnabled:YES];
 
@@ -1009,8 +906,10 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 {
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    {
+        [locationManager requestAlwaysAuthorization];
+    }
     [locationManager startUpdatingLocation];
 }
 
@@ -1027,7 +926,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
-            without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            /*without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
             without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
             UITextField *txtLocation = [without_Address textFieldAtIndex:0];
             txtLocation.delegate     = self;
@@ -1035,7 +934,10 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
             txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
             [txtLocation setPlaceholder:@"Location"];
             [self.view endEditing:YES];
-            [without_Address show];
+            [without_Address show];*/
+            locationStatus=0;
+            [self createCustomUiField:locationStatus];
+
             
             
         }
@@ -1044,7 +946,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     else {
         
         
-            without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            /*without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
             without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
             UITextField *txtLocation = [without_Address textFieldAtIndex:0];
             txtLocation.delegate     = self;
@@ -1052,7 +954,10 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
             txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
             [txtLocation setPlaceholder:@"Location"];
             [self.view endEditing:YES];
-            [without_Address show];
+            [without_Address show];*/
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+
             
        
     }
@@ -1116,7 +1021,32 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     checkStr = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
     
-    [self createCustomUiField];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"LocationCheck"] isEqualToString:@"LocationOn"]) {
+        
+        
+        locationStatus=1;
+        [self createCustomUiField:locationStatus];
+
+        
+        
+    }else{
+        
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+        
+//        without_Address = [[UIAlertView alloc]initWithTitle:@"Unable to get current Location." message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+//        without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
+//        UITextField *txtLocation = [without_Address textFieldAtIndex:0];
+//        txtLocation.delegate     = self;
+//        txtLocation.text         = @"";
+//        txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
+//        [txtLocation setPlaceholder:@"Location"];
+//        [self.view endEditing:YES];
+//        [without_Address show];
+
+        
+        
+    }
 }
 
 -(void)syncFailure:(NSError*) error
@@ -1140,7 +1070,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     }else{
         
         
-        [self createCustomUiField];
+        // [self createCustomUiField];
         
     }
     
@@ -1315,33 +1245,58 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     //for gradient.........
 
+//    [self.view setAlpha:0.4];
+//    [self.view setUserInteractionEnabled:NO];
+//    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+//    [self.view addSubview:self.circular_Progress_View];
+//    self.circular_Progress_View.thicknessRatio = 0.111111;
+//    self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
+//    self.circular_Progress_View.innerBackgroundColor=[UIColor lightGrayColor];
+//
+//    self.circular_Progress_View.progressFillColor=[UIColor redColor];
+//    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
+//    [self.circular_Progress_View addSubview:percentSignLabel];
+//    percentSignLabel.text = @"%";
+//    percentSignLabel.textColor = [UIColor whiteColor];
+//    percentSignLabel.font = [UIFont systemFontOfSize:25];
+//    [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
+
+
+    float circular_Progress_Viewwidth = (sizeOfSubview.width * 54)/100;
+    float circular_Progress_Viewheight = (sizeOfSubview.height * 23.7)/100;
+    
     [self.view setAlpha:0.4];
     [self.view setUserInteractionEnabled:NO];
-    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+    self.circular_Progress_View.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -circular_Progress_Viewwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -circular_Progress_Viewheight/2), circular_Progress_Viewwidth, circular_Progress_Viewheight);
+    
+    //circular_Progress_View.backgroundColor = [UIColor lightGrayColor];
+    
     [self.view addSubview:self.circular_Progress_View];
     self.circular_Progress_View.thicknessRatio = 0.111111;
     self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
     self.circular_Progress_View.innerBackgroundColor=[UIColor lightGrayColor];
-
+    
     self.circular_Progress_View.progressFillColor=[UIColor redColor];
-    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
-    [self.circular_Progress_View addSubview:percentSignLabel];
+    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake((circular_Progress_View.frame.size.width *63.9)/100, (circular_Progress_View.frame.size.height*41)/100, (circular_Progress_View.frame.size.width *14.5)/100, (circular_Progress_View.frame.size.width *14.5)/100)];
     percentSignLabel.text = @"%";
     percentSignLabel.textColor = [UIColor whiteColor];
     percentSignLabel.font = [UIFont systemFontOfSize:25];
+    
+    [self.circular_Progress_View addSubview:percentSignLabel];
     [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
 
-
-
+    
+    
      NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
      NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
    
-    //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
-    NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken]];
+    
+    NSString * urlstring = [NSString stringWithFormat:@"%@%@/%@?id=%@&token=%@",kBaseURL,kAPI,kblobs,[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],[GlobalStuff generateToken]];
+    
     DLog(@"photo url- --%@",urlstring);
     
     
-    NSURL *url = [NSURL URLWithString:urlstring];//[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
+    NSURL *url = [NSURL URLWithString:urlstring];
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
      cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1414,7 +1369,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         self.circular_Progress_View.progress = progress;
         UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
         [self.circular_Progress_View addSubview:percentSignLabel];
-        percentSignLabel.text = @"%";
+       // percentSignLabel.text = @"%";
         percentSignLabel.textColor = [UIColor whiteColor];
         percentSignLabel.font = [UIFont systemFontOfSize:25];
         [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
@@ -1444,7 +1399,6 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         
         if (error==nil) {
             
-
             
             
             responseDataForRestOfTheDetailService =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
@@ -1475,7 +1429,6 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
    // __block  NSString *categoryId_String;
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         
@@ -1494,11 +1447,14 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
     
-    NSString * urlstring = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
+   
+    
+    NSString * urlstring = [NSString stringWithFormat:@"%@%@/CJDetails?token=%@",kBaseURL,kAPI,[GlobalStuff generateToken]];
     
     DLog(@"photo url --%@",urlstring);
     
-    NSURL * url = [NSURL URLWithString:urlstring]; //@"http://prngapi.cloudapp.net/api/CJDetails"];
+    
+    NSURL * url = [NSURL URLWithString:urlstring]; 
     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url
@@ -1510,24 +1466,14 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     NSMutableDictionary *headerDict = [NSMutableDictionary dictionary];
     NSMutableDictionary *dictionaryTemp = [NSMutableDictionary dictionary];
     
-    
-    ////////////////////////////////
-    // getting .....
-    NSString *  KEY_PASSWORD = @"com.toi.app.password";
-    NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    // getting ...
-    
-    ////////////////////////////////
-    
-    
-    
     [headerDict setValue:@"" forKey:@"DeviceId"];//idfv
     [headerDict setValue:@"" forKey:@"UserId"];  // user id is yet to set ....[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]
     [headerDict setValue:@"" forKey:@"Source"];
     
     [dictionaryTemp setValue:txt_Title.text forKey:@"Title"];
     [dictionaryTemp setValue:txt_View.text forKey:@"FullStory"];
-    [dictionaryTemp setValue:categoryId_String forKey:@"Id_Category"];    // picker view 's category.....
+    [dictionaryTemp setValue:categoryId_String forKey:@"Id_Category"];
+    // picker view 's category.....
     [dictionaryTemp setValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"] forKey:@"SubmittedBy"];         // user id need to get set here .
     [dictionaryTemp setValue:@"Submitted" forKey:@"JournalStatus"];
     [dictionaryTemp setValue:@"2" forKey:@"Id_MainCategory"];
@@ -1536,28 +1482,41 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     
     checkStr =    [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
     
-    if (!checkStr) {
-        // when it's empty!!!!!
+    if (locationStatus ==1) {
         
-        [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
+        if (!checkStr) {
+            // when it's empty!!!!!
+            
+            [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
+            
+        }else{
+            
+            // when it's not empty  (address is not empty!!!!)
+            NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
+            NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
+            if ([trimmedString isEqualToString:@""]) {
+                
+                // it's empty or contains only white spaces
+                [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
+                
+            }else{
+                
+                [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
+            }
+            
+        }
+
         
     }else{
         
-        // when it's not empty  (address is not empty!!!!)
-        NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
-        NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
-        if ([trimmedString isEqualToString:@""]) {
-            
-            // it's empty or contains only white spaces
-            [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
         
-        }else{
-            
-            [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
-        }
+        [dictionaryTemp setValue:myLocationAddress forKey:@"LocationDetails"];
         
     }
-
+    
+    
+    
+    
     DLog(@" subodh value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
     
     [finalDictionary setObject:headerDict forKey:@"header"];
@@ -1576,28 +1535,22 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                               error:&error]];
     
     
-    
-    /*
-     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-     cachePolicy:NSURLRequestUseProtocolCachePolicy
-     timeoutInterval:300];
-     */
-
+   
     
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
-                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           DLog(@"Response:%@ %@\n", response, error);
+                                                       completionHandler:^(NSData *data1, NSURLResponse *response, NSError *error) {
+                                                           NSLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                            {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               DLog(@"final photo o/p is  ==== %@",text);
+//                                                               NSLog(@"final photo o/p is  ==== %@",text);
                                                                
                                                                NSError *jsonError;
-                                                               NSArray *array = [NSJSONSerialization JSONObjectWithData:data
+                                                               NSArray *array = [NSJSONSerialization JSONObjectWithData:data1
                                                                                                                 options:kNilOptions
                                                                                                                   error:&jsonError];
                                                                
-                                                               DLog(@"array is ====%@",array);
+                                                               NSLog(@"array is ====%@",array);
                                                                
                                                                
                                                                /*
@@ -1614,7 +1567,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                 */
                                                                
                                                                NSString *strId = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorId"]];
-                                                               NSString *strMessage = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorMessage"]];
+//                                                               NSString *strMessage = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorMessage"]];
 
                                                                if ([strId isEqualToString:@"114"]) {
                                                                    
@@ -1638,12 +1591,12 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    
                                                                    
                                                                    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-                                                                [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+                                                                [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
                                                                    NSString *date=[dateFormatter stringFromDate:[NSDate date]];
-//                                                                   DLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
+//                                                                   NSLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
                                                                    
                                                                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                                                                   [formatter setDateFormat:@"hh:mm a"];
+                                                                   [formatter setDateFormat:@"hh:mm:ss"];
                                                                    NSString *time=[formatter stringFromDate:[NSDate date]];
                                                                    
                                                                    if([app.myFinalArray count]==0){
@@ -1667,10 +1620,31 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    
                                                                    
                                                                    
-                                                                   [photoDataDictionary setValue:[NSString stringWithFormat:@"%@",localUrl] forKey:@"imagePath"];
+                                                                 //  [photoDataDictionary setValue:[NSString stringWithFormat:@"%@",localUrl] forKey:@"imagePath"];
+                                                                   
+                                                                   if (!checkUserComingFrom) {
+                                                                       
+                                                                       [photoDataDictionary setValue:localUrltesting forKey:@"imagePath"];
+                                                                       [photoDataDictionary setValue:transferImageData forKey:@"transferImage"];
+                                                                       
+                                                                       
+                                                                       // user cptured image....
+                                                                   }else{
+                                                                       
+                                                                       [photoDataDictionary setValue:localUrl forKey:@"imagePath"];
+                                                                       [photoDataDictionary setValue:data forKey:@"transferImage"];
+                                                                       
+                                                                       // user does not....
+                                                                   }
+
+                                                                   
+                                                                   
+                                                                   
+                                                                   
+                                                                   
                                                                    [photoDataDictionary setValue: date forKey:@"Date"];
                                                                    [photoDataDictionary setValue:time forKey:@"Time"];
-                                                                   DLog(@"photo url--%@",[photoDataDictionary valueForKey:@"imagePath"]);
+                                                                   NSLog(@"photo url--%@",[photoDataDictionary valueForKey:@"imagePath"]);
                                                                    if([app.myFinalArray count]<15){
                                                                    
                                                                    [app.myFinalArray addObject:photoDataDictionary];
@@ -1683,48 +1657,28 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                                    [[NSUserDefaults standardUserDefaults]synchronize];
                                                                    
                                                                    
-                                                                   DLog(@"MyArray is ===== %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]);
-
-                                                                   
-                                                                   
-//                                                                //   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:[NSString stringWithFormat:@"%@",[[array valueForKey:@"data"] valueForKey:@"ErrorMessage"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                                                                   [alert show];
                                                                    ok_For_Success_Outlet.tag=1;
-                                                                   CGSize size = [[UIScreen mainScreen]bounds].size;
                                                                    
-                                                                   if (size.height==480) {
-                                                                       [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success3.5.png"]];
-                                                                       UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(126.0, 227.0, 115.0, 38.0)];
-                                                                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                       [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                       btnUpload .clipsToBounds = YES;
-                                                                       [btnUpload.layer setCornerRadius:4.5];
-                                                                       [self.selectedView.layer setCornerRadius:4.0];
                                                                        
-                                                                       [view_ForSuccess_Unsuccess addSubview:self.selectedView];
-                                                                       [self.selectedView addSubview:btnUpload];
-                                                                       
-                                                                       
-                                                                   }else{
-                                                                       [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
-                                                                       UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(86.0, 241.0, 115.0, 38.0)];
-                                                                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                       [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                       btnUpload .clipsToBounds = YES;
-                                                                       [btnUpload.layer setCornerRadius:4.5];
-                                                                       [self.selectedView.layer setCornerRadius:4.0];
-                                                                       
-                                                                       [view_ForSuccess_Unsuccess addSubview:self.selectedView];
-                                                                       [self.selectedView addSubview:btnUpload];
-                                                                       
-                                                                   }
+                       [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
+                   UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake((self.selectedView.frame.size.width *15)/100, (self.selectedView.frame.size.height *84)/100, (self.selectedView.frame.size.width *25.9)/100, (self.selectedView.frame.size.height *12)/100)];
+                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
+                       [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
+                       btnUpload .clipsToBounds = YES;
+                       [btnUpload.layer setCornerRadius:4.5];
+                       [self.selectedView.layer setCornerRadius:4.0];
+                                                                   
+                                                                   
+                                                                   self.view_ForSuccess_Unsuccess.frame = self.view.frame;
+                                                                   [view_ForSuccess_Unsuccess addSubview:self.selectedView];
+                                                                   [self.selectedView addSubview:btnUpload];
                                                                    [self.view addSubview:self.view_ForSuccess_Unsuccess];
                                                                    
                                                                    
                                                                }else{
                                                                    
                                                                    
-                                                                   DLog(@"gaurav kestwal");
+                                                                   NSLog(@"gaurav kestwal");
                                                                    isItFirstService=2;
                                                                    try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Error While uploading image" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                                                                    [try_AgainInternet_Check show];
@@ -1740,7 +1694,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
                                                            }else {
                                                                
                                                                // if not successfull............
-                                                               DLog(@"gaurav kestwal2");
+                                                               NSLog(@"gaurav kestwal2");
 
                                                                isItFirstService=2;
                                                                try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -2020,36 +1974,17 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         }*/else if (type ==3){
             
             
-        /*    CGSize size = [[UIScreen mainScreen]bounds].size;
-            
-            if (size.height==480) {
-                
-                UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView3.5" bundle:nil];
-                [self.navigationController pushViewController:uploadP animated:NO];
-                
-            }else{
-                
-                UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView" bundle:nil];
-                [self.navigationController pushViewController:uploadP animated:NO];
-                
-            }*/
             RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
             [self.navigationController pushViewController:recordview  animated:YES];
 
             
         }else if (type==4){
           
-          CGSize size = [[UIScreen mainScreen]bounds].size;
           
-          if (size.height==480) {
-          UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-          [self.navigationController pushViewController:text animated:NO];
-          
-          }else{
           UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
           [self.navigationController pushViewController:text animated:NO];
           
-          }
+          
     }
 }
 
@@ -2240,106 +2175,173 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 
 #pragma mark -- Adding custom labels, textfield and buttons
 
--(void)createCustomUiField {
-    
+-(void)createCustomUiField :(int)locationStatusLocal{
     // creting a custom view which will be like a alertview....
     
-    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(8.0, 129.0, 304.0, 322.0)];
+    
+    float customAlertwidth = (sizeOfSubview.width * 95)/100;
+    float customAlertheight = (sizeOfSubview.height * 56.6)/100;
+    
+    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -customAlertwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -customAlertheight/2), customAlertwidth, customAlertheight)];
+
+    //self.view.center = customAlertView.center;
     [customAlertView setBackgroundColor: [UIColor whiteColor]];
     customAlertView.clipsToBounds = YES;
     [customAlertView.layer setCornerRadius:4.5];
     
     
     // creating a custom label ....
-    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 17.0, 196.0, 21.0)];
-    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Light" size:18.0]];
+   // UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake(43.0, 30.0, 210, 22.0)];
+    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*14)/100, (customAlertView.frame.size.height*9.3)/100, (customAlertView.frame.size.width*69)/100, (customAlertView.frame.size.height*6.8)/100)];
+
+    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:20.0]];
     confirmLocationlabel.text = @"Confirm your location";
     [confirmLocationlabel setTextAlignment:NSTextAlignmentCenter];
+    [confirmLocationlabel setTextColor:[UIColor grayColor]];
     
     // for location logo..
-    UIImageView * locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    UIImageView * locationImage;// = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    
+    UILabel * enteredLocation = [[UILabel alloc] init];
+    
+    
+    enteredLocation.numberOfLines =3;
+    //enteredLocation.adjustsFontSizeToFitWidth = YES;
+    //enteredLocation.lineBreakMode = NSLineBreakByWordWrapping;
+    
+   /*
+    if (locationStatusLocal ==1) {
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+        //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
+        [enteredLocation setFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)];
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
+        enteredLocation.text = checkStr;
+    }else{
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70, 30.0, 30.0)];
+        [enteredLocation setFrame:CGRectMake(25.0, 45, 250.0, 80.0)];
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+        enteredLocation.text = @"Location auto capturing is off.";
+        
+    }
+    */
+    
+    if (locationStatusLocal ==1) {
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*19.8)/100, 30.0, 30.0)];
+        //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*24.9)/100)];
+        
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = checkStr;
+    }else{
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*26.8)/100, 30.0, 30.0)];
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*25.9)/100)];
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = @"Location auto capturing is off.";
+        
+    }
+
+    
     [locationImage setContentMode:UIViewContentModeScaleAspectFill];
     [locationImage setImage:[UIImage imageNamed:@"location01@2x.jpg"]];
     
     
-    // label for showing location....
-    UILabel * enteredLocation = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)];
-    [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-    
-    enteredLocation.numberOfLines =3;
-    enteredLocation.adjustsFontSizeToFitWidth = YES;
-    enteredLocation.lineBreakMode = NSLineBreakByWordWrapping;
-    
-    enteredLocation.text = checkStr;
-    [enteredLocation setTextAlignment:NSTextAlignmentLeft];
+    [enteredLocation setTextAlignment:NSTextAlignmentCenter];
     
     // custom label
     
-    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 138.0, 288.0, 23.0)];
-    [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
-    incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
-    incorrectLocationLabel.adjustsFontSizeToFitWidth = YES;
-    [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*37.8)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*14)/100)];
+    
+    incorrectLocationLabel.numberOfLines=2;
     
     
+    if (locationStatusLocal == 1) {
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
+        incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+        
+    }else{
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+        incorrectLocationLabel.text  =  @"Please enter the location details of your news/story.";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentLeft];
+        [incorrectLocationLabel setTextColor:[UIColor grayColor]];
+        incorrectLocationLabel.numberOfLines=2;
+        
+        
+    }
     
+    
+    // incorrectLocationLabel.adjustsFontSizeToFitWidth = YES;
     
     
     //custom textfield for Streets
     
-    UITextField * StreetTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 179.0, 279.0, 30.0)];
+   // StreetTxt = [[MYTextField alloc] initWithFrame:CGRectMake(8.0, 179.0, 279.0, 30.0)];
+    StreetTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*55.7)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*9.3)/100)];
     [StreetTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StreetTxt setTextAlignment:NSTextAlignmentLeft];
-    StreetTxt.placeholder = @"  Street";
+    StreetTxt.placeholder = @"Street";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StreetTxt.layer.borderWidth =1.0;
     StreetTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StreetTxt.delegate =self;
+    //StreetTxt.delegate =self;
     
     
     //custom textfield for city....
     
-    UITextField * cityTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 222.0, 97.0, 30.0)];
+   // cityTxt = [[MYTextField alloc] initWithFrame:CGRectMake(8.0, 222.0, 97.0, 30.0)];
+    
+    cityTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
+    
     [cityTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [cityTxt setTextAlignment:NSTextAlignmentLeft];
-    cityTxt.placeholder = @"  City";
+    cityTxt.placeholder = @"City";
     [cityTxt setBorderStyle:UITextBorderStyleNone];
     cityTxt.layer.borderWidth =1.0;
     cityTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    cityTxt.delegate =self;
-    
+    //cityTxt.delegate =self;
     
     //custom textfield for state
     
-    UITextField * StateTxt = [[UITextField alloc] initWithFrame:CGRectMake(115.0, 222.0, 83.0, 30.0)];
+    StateTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*34)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
+    //StateTxt = [[MYTextField alloc] initWithFrame:CGRectMake(115.0, 222.0, 83.0, 30.0)];
     [StateTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StateTxt setTextAlignment:NSTextAlignmentLeft];
-    StateTxt.placeholder = @"  State";
+    StateTxt.placeholder = @"State";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StateTxt.layer.borderWidth =1.0;
     StateTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StateTxt.delegate =self;
-    
+   // StateTxt.delegate =self;
     //custom textfield for Pincode
     
-    UITextField * PincodeTxt = [[UITextField alloc] initWithFrame:CGRectMake(205.0, 222.0, 83.0, 30.0)];
+   // PincodeTxt = [[MYTextField alloc] initWithFrame:CGRectMake(205.0, 222.0, 83.0, 30.0)];
+    PincodeTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*65.8)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
     [PincodeTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [PincodeTxt setTextAlignment:NSTextAlignmentLeft];
-    PincodeTxt.placeholder = @" Pincode";
+    PincodeTxt.placeholder = @"Pincode";
     [PincodeTxt setBorderStyle:UITextBorderStyleNone];
     PincodeTxt.layer.borderWidth =1.0;
     PincodeTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    PincodeTxt .delegate =self;
+    //PincodeTxt.delegate= self;
     
     
     //custom button with action..
     
-    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake(92.0, 272.0, 120.0, 40.0)];
+   // UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake(92.0, 272.0, 120.0, 40.0)];
+    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*30.2)/100, (customAlertView.frame.size.height*84.7)/100, (customAlertView.frame.size.width*39.4)/100, (customAlertView.frame.size.height*12.4)/100)];
+
     [submitButton setBackgroundImage:[UIImage imageNamed:@"Submit btn 640X1136.png"] forState:UIControlStateNormal];
     [submitButton addTarget:self action:@selector(submitButtonTap) forControlEvents:UIControlEventTouchUpInside];
     submitButton.clipsToBounds = YES;
     [submitButton.layer setCornerRadius:4.0];
-
     
     
     //Adding all custom labels and tetxfield to subview...
@@ -2354,7 +2356,10 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     [customAlertView addSubview:PincodeTxt];
     [customAlertView addSubview:submitButton];
     
+    
 }
+
+
 - (void) textFieldDidBeginEditing:(UITextField *)textField {
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
     textField.leftView = paddingView;
@@ -2380,28 +2385,42 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 -(void)submitButtonTap {
     
     DLog(@"submit tapped");
-    [visualEffectView removeFromSuperview];
-    [customAlertView removeFromSuperview];
     
     // NSString *server = [[NSUserDefaults standardUserDefaults]stringForKey:@"connection_Internet"];
     
-    if ([Utility connected] == YES) {
+    if (locationStatus==1) {
+        
+        [visualEffectView removeFromSuperview];
+        [customAlertView removeFromSuperview];
 
-    [self  sendphoto_ToServer];
-    
-    }else {
+       [self  sendphoto_ToServer];
+        //[self sendRestOfThePhotoDATA:responseDataForRestOfTheDetailService];
+       
         
-        UIAlertController *DoNothing_alrt = [UIAlertController alertControllerWithTitle:@"Alert!" message:@"Internet connection is not available.\n Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
-            
-            
-        }];
-        [DoNothing_alrt addAction:doNothingAction];
-        [self presentViewController:DoNothing_alrt  animated:YES completion:nil];
+    }else{
         
+        if([StreetTxt.text length]==0 || [cityTxt.text length]==0 || [StateTxt.text length]==0 ||[PincodeTxt.text length]==0){
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Location cannot be empty,all fields are mandatory." message:@"Please enter a valid location." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction * actionAlert = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction* alert){
+                
+                
+            }];
+            [alert addAction:actionAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }else{
+            
+            myLocationAddress=[NSString stringWithFormat:@"%@, %@, %@, %@",StreetTxt.text,cityTxt.text, StateTxt.text, PincodeTxt.text];
+            [visualEffectView removeFromSuperview];
+            [customAlertView removeFromSuperview];
+
+            [self  sendphoto_ToServer];
+            //[self sendRestOfThePhotoDATA:responseDataForRestOfTheDetailService];
+
+            
+        }
     }
-    
-    
 }
 
 #pragma mark -- SubmitForeReview...
@@ -2435,7 +2454,7 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     } else {
         
         
-        
+        categoryId_String=[self sendCategoryId:lbl_output_category.text];
         
         
         
@@ -2455,23 +2474,12 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 //        }];
         
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
         NSString *date=[dateFormatter stringFromDate:[NSDate date]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"hh:mm a"];
+        [formatter setDateFormat:@"hh:mm:ss"];
         NSString *time=[formatter stringFromDate:[NSDate date]];
-        
-        /*if ([objectDataClass.globalSubmitArray count]==0) {
-            
-            objectDataClass.globalSubmitArray = [[NSMutableArray alloc] init];
-        }
-        else {
-            
-            // do nothing..
-            
-        }
-        */
         
         
         
@@ -2481,10 +2489,17 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         [PhotocollectedDict setValue:categoryId_String forKey:@"Id_Category"];    // picker view 's category.....
         [PhotocollectedDict setValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"] forKey:@"SubmittedBy"];         // user id need to get set here .
         [PhotocollectedDict setValue:@"Submitted" forKey:@"JournalStatus"];
+        
+        [PhotocollectedDict setValue:lbl_output_category.text forKey:@"categoryName"];
+        
+        [PhotocollectedDict setValue:@"" forKey:@""];
+        
         [PhotocollectedDict setValue:@"2" forKey:@"Id_MainCategory"];
       //  [collectedDict setValue:Id_BlobFromService forKey:@"Id_Blob"];
         [PhotocollectedDict setValue:date forKey:@"Date"];
+        
         [PhotocollectedDict setValue:time forKey:@"Time"];
+        
         [PhotocollectedDict setValue:@"PHOTO" forKey:@"Type"];
         [PhotocollectedDict setValue:localUrl forKey:@"fileURl"];
         [PhotocollectedDict setValue:finalUnique forKey:@"uniqueName"];
@@ -2526,15 +2541,15 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
             
             if (tempArray ==nil) {
                 
-                [LocalDataHandleArray addObject:PhotocollectedDict];
-                
+               // [LocalDataHandleArray addObject:PhotocollectedDict];
+                 [LocalDataHandleArray insertObject:PhotocollectedDict atIndex:0];
                 
             }else{
                 
                 
                 [LocalDataHandleArray removeObjectAtIndex:objectDataClass.globalIndexSelection];
-                [LocalDataHandleArray addObject:PhotocollectedDict];
-                
+                //[LocalDataHandleArray addObject:PhotocollectedDict];
+                 [LocalDataHandleArray insertObject:PhotocollectedDict atIndex:0];
             }
             
             
@@ -2554,7 +2569,8 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Message" message:@"Your information has been saved for later submission." preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * alertAction = [UIAlertAction  actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             
-            [self.navigationController popViewControllerAnimated:YES]; 
+            NSArray *array = [self.navigationController viewControllers];
+            [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
             
         }];
         
@@ -2564,6 +2580,30 @@ UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     } // if END....
 
 
+}
+
+
+
+-(NSString*)sendCategoryId :(NSString*)textFieldText{
+    
+    
+    NSString *tempCategoryId;
+    for (int index=0; index <app.final_Id_Array.count; index++) {
+        
+        NSString *tempString=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Name"];
+        
+        if ([tempString isEqualToString:textFieldText]) {
+            
+            tempCategoryId=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Id_Category"];
+            return tempCategoryId;
+            
+        }else{
+            
+            // nothing...
+        }
+    }
+    
+    return NULL;
 }
 
 

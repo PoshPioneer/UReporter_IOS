@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
@@ -9,12 +9,13 @@
                 <outlet property="audioTabBar" destination="fQd-BW-91g" id="X3S-ON-Gdv"/>
                 <outlet property="iOutlet" destination="EiW-Ct-mrE" id="qpa-hc-MBE"/>
                 <outlet property="photoTabBar" destination="kTX-gY-5Qz" id="SMt-Xo-Dpb"/>
-                <outlet property="show_temperature" destination="9NS-XX-fIu" id="x9Y-dY-Gmz"/>
+                <outlet property="show_temperature" destination="865-hb-WFo" id="VoD-vr-WSO"/>
                 <outlet property="tabBarController" destination="i6R-ac-K0a" id="DiC-vl-Uej"/>
-                <outlet property="tableView" destination="hCT-uS-vzD" id="0Lf-1H-JEZ"/>
                 <outlet property="textTabBar" destination="aGi-QN-osb" id="n6x-Q0-rYz"/>
+                <outlet property="uploadTableView" destination="hCT-uS-vzD" id="Sfd-Nf-Zxg"/>
                 <outlet property="videoTabBar" destination="Zvs-aS-C4G" id="tEQ-kb-ftg"/>
                 <outlet property="view" destination="1" id="3"/>
+                <outlet property="wetherIconImage" destination="dhi-kZ-8Mx" id="ihh-VC-l0T"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -35,83 +36,142 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w60-NS-3fQ">
-                            <rect key="frame" x="0.0" y="3" width="50" height="39"/>
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="50" id="R70-ig-MXw"/>
-                                <constraint firstAttribute="height" constant="39" id="cny-5e-ztI"/>
+                                <constraint firstAttribute="width" constant="44" id="R70-ig-MXw"/>
+                                <constraint firstAttribute="height" constant="44" id="cny-5e-ztI"/>
                             </constraints>
-                            <state key="normal" image="reveal-icon.png">
+                            <state key="normal" image="reveal-icon">
                                 <color key="titleColor" red="0.98978061868686873" green="0.98978061868686873" blue="0.98978061868686873" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
                                 <action selector="Slider_Tapped:" destination="-1" eventType="touchUpInside" id="rNd-ZL-0P6"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="characterWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9NS-XX-fIu">
-                            <rect key="frame" x="280" y="16" width="32" height="21"/>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="old.png" translatesAutoresizingMaskIntoConstraints="NO" id="913-f1-Ke4">
-                            <rect key="frame" x="241" y="8" width="119" height="27"/>
+                            <rect key="frame" x="240" y="8" width="119" height="27"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="27" id="VqD-Zj-2Ij"/>
                                 <constraint firstAttribute="width" constant="119" id="bGU-7l-zsR"/>
                             </constraints>
                         </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dhi-kZ-8Mx">
+                            <rect key="frame" x="527" y="2" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="Er5-tx-4H4"/>
+                                <constraint firstAttribute="width" constant="40" id="pnf-OI-EqR"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="865-hb-WFo">
+                            <rect key="frame" x="559" y="7" width="40" height="30"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="pgv-k2-eZf"/>
+                                <constraint firstAttribute="width" constant="40" id="xBn-Lq-KlI"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
-                    <color key="backgroundColor" red="0.078431372549019607" green="0.078431372549019607" blue="0.078431372549019607" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstItem="913-f1-Ke4" firstAttribute="centerX" secondItem="oUr-Ew-sgL" secondAttribute="centerX" id="22o-9j-jtY"/>
+                        <constraint firstItem="913-f1-Ke4" firstAttribute="centerX" secondItem="oUr-Ew-sgL" secondAttribute="centerX" constant="-0.5" id="22o-9j-jtY"/>
                         <constraint firstAttribute="height" constant="44" id="7Qf-wn-mU7"/>
+                        <constraint firstAttribute="bottom" secondItem="865-hb-WFo" secondAttribute="bottom" constant="7" id="9Wu-xS-Adr"/>
                         <constraint firstItem="913-f1-Ke4" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="top" constant="8" id="B6c-86-ApG"/>
                         <constraint firstItem="w60-NS-3fQ" firstAttribute="leading" secondItem="oUr-Ew-sgL" secondAttribute="leading" id="BIW-ih-fQX"/>
-                        <constraint firstItem="w60-NS-3fQ" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="top" constant="3" id="OaF-Nf-DxS"/>
-                        <constraint firstAttribute="bottom" secondItem="w60-NS-3fQ" secondAttribute="bottom" constant="2" id="qKd-gz-5Q2"/>
+                        <constraint firstItem="865-hb-WFo" firstAttribute="leading" secondItem="dhi-kZ-8Mx" secondAttribute="trailing" constant="-8" id="EmW-JI-EAg"/>
+                        <constraint firstItem="w60-NS-3fQ" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="top" id="OaF-Nf-DxS"/>
+                        <constraint firstAttribute="bottom" secondItem="dhi-kZ-8Mx" secondAttribute="bottom" constant="2" id="Z76-Fu-Jze"/>
+                        <constraint firstAttribute="trailing" secondItem="865-hb-WFo" secondAttribute="trailing" constant="1" id="bcf-We-fdd"/>
+                        <constraint firstItem="865-hb-WFo" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="top" constant="7" id="p9A-dj-oI3"/>
+                        <constraint firstAttribute="bottom" secondItem="w60-NS-3fQ" secondAttribute="bottom" id="qKd-gz-5Q2"/>
+                        <constraint firstItem="dhi-kZ-8Mx" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="top" constant="2" id="v6B-ON-bow"/>
                     </constraints>
                 </view>
-                <tabBar contentMode="scaleToFill" barStyle="black" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6R-ac-K0a">
-                    <rect key="frame" x="0.0" y="551" width="600" height="49"/>
-                    <color key="backgroundColor" red="0.86384662828947367" green="0.078431372549019607" blue="0.078431372549019607" alpha="0.0" colorSpace="calibratedRGB"/>
-                    <items>
-                        <tabBarItem title="" image="video.png" id="Zvs-aS-C4G"/>
-                        <tabBarItem tag="1" title="" image="camera.png" id="kTX-gY-5Qz"/>
-                        <tabBarItem tag="2" title="" image="mic.png" id="fQd-BW-91g"/>
-                        <tabBarItem tag="3" title="" image="edit25x25.png" id="aGi-QN-osb"/>
-                    </items>
-                    <color key="tintColor" red="1" green="0.21356323029999999" blue="0.30417676300000002" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="barTintColor" red="0.078431372549019607" green="0.078431372549019607" blue="0.078431372549019607" alpha="0.0" colorSpace="calibratedRGB"/>
-                    <color key="selectedImageTintColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.93201179940000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="e8E-56-opq"/>
-                    </connections>
-                </tabBar>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hCT-uS-vzD">
-                    <rect key="frame" x="8" y="64" width="584" height="487"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="wyn-pd-Mzb"/>
                         <outlet property="delegate" destination="-1" id="soB-6y-6SZ"/>
                     </connections>
                 </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yiF-sn-A6J">
+                    <rect key="frame" x="0.0" y="64" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="RAN-ot-q0h"/>
+                        <constraint firstAttribute="width" constant="600" id="ZBu-Yj-sXJ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <tabBar contentMode="scaleToFill" barStyle="black" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6R-ac-K0a">
+                    <rect key="frame" x="0.0" y="551" width="600" height="49"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <items>
+                        <tabBarItem title="" image="video" id="Zvs-aS-C4G"/>
+                        <tabBarItem tag="1" title="" image="camera" id="kTX-gY-5Qz"/>
+                        <tabBarItem tag="2" title="" image="mic" id="fQd-BW-91g"/>
+                        <tabBarItem tag="3" title="" image="textedit" id="aGi-QN-osb"/>
+                    </items>
+                    <color key="tintColor" red="1" green="0.21356323029999999" blue="0.30417676300000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="selectedImageTintColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.93201179940000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="e8E-56-opq"/>
+                    </connections>
+                </tabBar>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUf-TA-AqK">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="4Ut-l9-Rok"/>
+                        <constraint firstAttribute="width" constant="600" id="z03-JG-2kz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMH-hp-1GO">
+                    <rect key="frame" x="0.0" y="550" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="GnE-fd-Vgg"/>
+                        <constraint firstAttribute="width" constant="600" id="RGD-Px-yXI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="highlightedColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                </label>
             </subviews>
-            <color key="backgroundColor" red="0.81568627450980391" green="0.81568627450980391" blue="0.81568627450980391" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="hCT-uS-vzD" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="2bu-OR-xmS"/>
-                <constraint firstAttribute="trailing" secondItem="hCT-uS-vzD" secondAttribute="trailing" constant="8" id="4yM-Y2-wjE"/>
+                <constraint firstItem="hCT-uS-vzD" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="2bu-OR-xmS"/>
+                <constraint firstAttribute="trailing" secondItem="hCT-uS-vzD" secondAttribute="trailing" id="4yM-Y2-wjE"/>
+                <constraint firstItem="yiF-sn-A6J" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="5Ce-nX-TqM"/>
                 <constraint firstAttribute="trailing" secondItem="i6R-ac-K0a" secondAttribute="trailing" id="6lu-AW-yRW"/>
-                <constraint firstAttribute="trailing" secondItem="oUr-Ew-sgL" secondAttribute="trailing" id="CPp-aQ-NiV"/>
+                <constraint firstAttribute="trailing" secondItem="tUf-TA-AqK" secondAttribute="trailing" id="Dgh-cn-gIj"/>
                 <constraint firstItem="i6R-ac-K0a" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="E8D-GE-Ph6"/>
+                <constraint firstAttribute="trailing" secondItem="yiF-sn-A6J" secondAttribute="trailing" id="FTm-Il-LZI"/>
                 <constraint firstItem="i6R-ac-K0a" firstAttribute="top" secondItem="hCT-uS-vzD" secondAttribute="bottom" id="LTE-Qj-StQ"/>
+                <constraint firstItem="i6R-ac-K0a" firstAttribute="top" secondItem="bMH-hp-1GO" secondAttribute="bottom" id="MtO-Jx-r5V"/>
                 <constraint firstItem="hCT-uS-vzD" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="bottom" id="X0d-VS-r5f"/>
                 <constraint firstItem="oUr-Ew-sgL" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="ZP9-ys-6Uv"/>
+                <constraint firstItem="yiF-sn-A6J" firstAttribute="top" secondItem="oUr-Ew-sgL" secondAttribute="bottom" id="iNK-m9-U5s"/>
+                <constraint firstAttribute="trailing" secondItem="oUr-Ew-sgL" secondAttribute="trailing" id="nCF-xl-8xu"/>
+                <constraint firstItem="tUf-TA-AqK" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="nJk-Xw-2t4"/>
+                <constraint firstItem="tUf-TA-AqK" firstAttribute="top" secondItem="1" secondAttribute="top" id="nPx-eF-5sQ"/>
+                <constraint firstAttribute="trailing" secondItem="bMH-hp-1GO" secondAttribute="trailing" id="oXf-ps-qpX"/>
                 <constraint firstAttribute="bottom" secondItem="i6R-ac-K0a" secondAttribute="bottom" id="pa7-Vu-npY"/>
                 <constraint firstItem="oUr-Ew-sgL" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="vEB-VB-NoH"/>
+                <constraint firstItem="bMH-hp-1GO" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="wPR-hs-D65"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
-            <point key="canvasLocation" x="599" y="434"/>
+            <point key="canvasLocation" x="531" y="377"/>
         </view>
         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="FVV-q3-CQ2">
             <rect key="frame" x="0.0" y="0.0" width="21" height="21"/>
@@ -194,12 +254,12 @@
         </viewController>
     </objects>
     <resources>
-        <image name="camera.png" width="25" height="25"/>
-        <image name="edit25x25.png" width="25" height="25"/>
+        <image name="camera" width="25" height="25"/>
         <image name="main_setting.png" width="31" height="31"/>
-        <image name="mic.png" width="25" height="25"/>
+        <image name="mic" width="25" height="25"/>
         <image name="old.png" width="239" height="55"/>
-        <image name="reveal-icon.png" width="22" height="17"/>
-        <image name="video.png" width="25" height="25"/>
+        <image name="reveal-icon" width="32" height="32"/>
+        <image name="textedit" width="25" height="25"/>
+        <image name="video" width="25" height="25"/>
     </resources>
 </document>

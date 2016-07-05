@@ -12,5 +12,6 @@
 
 @synthesize feedID;
 @synthesize status;
+@synthesize subCategory;
 
 @end

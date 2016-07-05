@@ -27,10 +27,12 @@
     webViewStatic.delegate  = self;
     objectDataClass =[DataClass getInstance];
     
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    
+    [super viewWillAppear:animated];
+
     checklodeView=NO;
     DLog(@"static link --%@",staticlink);
     //if ([Utility connected] == YES) {
@@ -39,6 +41,7 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy
                                          timeoutInterval:300];
         [webViewStatic loadRequest:request];
+
 
 }
 - (void)didReceiveMemoryWarning {
@@ -51,7 +54,7 @@
     if (!checklodeView) {
         
         checklodeView=YES;
-        [self.view setUserInteractionEnabled:NO];
+        //[self.view setUserInteractionEnabled:NO];
         spinner=[SpinnerView loadSpinnerIntoView:self.view];
         
 
@@ -81,6 +84,8 @@
 }
 -(void)viewWillDisappear:(BOOL)animated {
     
+    [super viewWillDisappear:animated];
+
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
     

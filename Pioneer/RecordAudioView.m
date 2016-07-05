@@ -167,6 +167,10 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 
 
 -(void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+
+    objectDataClass.checkForAudioCurrentCaptureOrNot=false;
     record_Timer_Outlet.text=@"00:00";
     
 
@@ -186,7 +190,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
     
     UIView *statusBarView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 20)];
-    statusBarView.backgroundColor  = [UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
+    statusBarView.backgroundColor  = [UIColor whiteColor];//[UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
     //UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [self.view addSubview:statusBarView];
     
@@ -240,7 +244,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     
     if (error)
     {
-        DLog(@"error: %@", [error localizedDescription]);
+        NSLog(@"error: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }
@@ -288,46 +292,63 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 }
 
 - (IBAction)back_Tapped:(id)sender {
-    NSArray *array = [self.navigationController viewControllers];
     
-    DLog(@" Text content from array is :  %@",array);
-
-    [audioPlayer stop];
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    app.uniqueNameForLableAudio=lbl_finalPicker_Selected.text;
-    timerCountInt=0;
-
-   // [self dismissViewControllerAnimated:YES completion:nil];
-    [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
+    if ([lbl_finalPicker_Selected.text isEqualToString:@""]) {
+        
+        // do nothing...
+    }else{
+    
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Are you sure you want to cancel this news submission?" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction * alertAction = [UIAlertAction  actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            
+            NSArray *array = [self.navigationController viewControllers];
+            
+            DLog(@" Text content from array is :  %@",array);
+            
+            [audioPlayer stop];
+            AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            app.uniqueNameForLableAudio=lbl_finalPicker_Selected.text;
+            timerCountInt=0;
+            
+            // [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
+            
+        }];
+        UIAlertAction* cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     [alert dismissViewControllerAnimated:YES completion:nil];
+                                     
+                                 }];
+        
+         [alert addAction:cancel];
+        [alert addAction:alertAction];
+       
+        
+        [self presentViewController:alert animated:YES completion:nil];
+        
+    }
+   
 
 }
 
 - (IBAction)back_audio_view_btn:(id)sender {
     [audioPlayer stop];
     [finalDoneTimer invalidate];
-    CGSize size = [[UIScreen mainScreen]bounds].size;
     
-    if (size.height==480) {
-        
-        UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView3.5" bundle:nil];
-        [audioPlayer stop];
-        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        app.uniqueNameForLableAudio=lbl_finalPicker_Selected.text;
-        timerCountInt=0;
-
-        [self.navigationController pushViewController:uploadP animated:NO];
-        
-    }else{
-        
         UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView" bundle:nil];
-        [audioPlayer stop];
         AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
         app.uniqueNameForLableAudio=lbl_finalPicker_Selected.text;
         timerCountInt=0;
+    
+    objectDataClass.checkForAudioCurrentCaptureOrNot=true;
 
         [self.navigationController pushViewController:uploadP animated:NO];
         
-    }
+   
 
 //    [play_Audio_Outlet setBackgroundImage:[UIImage imageNamed:@"@Play@2x.png"] forState:UIControlStateNormal];
 
@@ -470,7 +491,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 - (IBAction)play_audio_btn:(id)sender {
 //    [self stopRecording_Method];
     //[play_Audio_Outlet setUserInteractionEnabled:NO];
-    DLog(@"Play clicked");
+    NSLog(@"Play clicked");
     if([audioPlayer isPlaying]){
         
         
@@ -628,21 +649,21 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 (AVAudioPlayer *)player
                                 error:(NSError *)error
 {
-    DLog(@"Decode Error occurred");
+    NSLog(@"Decode Error occurred");
 }
 
 -(void)audioRecorderDidFinishRecording:
 (AVAudioRecorder *)recorder
                           successfully:(BOOL)flag
 {
-    DLog(@"Stopped");
+    NSLog(@"Stopped");
 }
 
 -(void)audioRecorderEncodeErrorDidOccur:
 (AVAudioRecorder *)recorder
                                   error:(NSError *)error
 {
-    DLog(@"Encode Error occurred");
+    NSLog(@"Encode Error occurred");
 }
 
 
@@ -666,12 +687,17 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
 
 -(void)resetbuttonTapped {
 
+    AppDelegate* app=(AppDelegate* )[[UIApplication sharedApplication]delegate];
+    
     timerCountInt=0;
-
+    
     [darkLable setHidden:YES];
     [lightLabel setHidden:YES];
     
     [audioPlayer stop];
+    [audioRecorder stop];
+    app.recordedData=nil;
+    
     checkForPlay =NO;
     check= NO;
     [timer invalidate];
@@ -681,10 +707,7 @@ NSString *letterForAudio = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
     [back_To_Home_Outlet setHidden:YES];
     record_Timer_Outlet.text=@"00:00";
     lbl_finalPicker_Selected.text=@"";
-    //[reset_Everything setHidden:YES];
     [start_End_Recording_Outlet setHidden:NO];
-  //  [self stopRecording_Method];
-    
 }
 
 

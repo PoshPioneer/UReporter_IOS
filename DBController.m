@@ -29,7 +29,7 @@
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
 	NSString *documentsDir = [paths objectAtIndex:0];
-    DLog(@"Datapath=%@",documentsDir);
+    NSLog(@"Datapath=%@",documentsDir);
 	return [documentsDir stringByAppendingPathComponent:@"PioneerDB"];
 }
 
@@ -69,9 +69,10 @@
 			sqlite3_finalize(begin_statement);
             
             DLog(@"Exitsing data, Update Please");
-                    NSString *updateSQL = [NSString stringWithFormat:@"UPDATE Like set feedID ='%@',status = '%@' WHERE feedID = ?",
+                    NSString *updateSQL = [NSString stringWithFormat:@"UPDATE Like set feedID ='%@',status = '%@',subCategory = '%@' WHERE feedID = ?",
                                            key.feedID,
-                                           key.status
+                                           key.status,
+                                           key.subCategory
                                         ];
                       //update the 'to be updated' buddies
                     const char *upd_client_tooth_sql = [updateSQL UTF8String];
@@ -164,7 +165,7 @@
 
     
     
-    if (sqlite3_prepare_v2(database, "SELECT feedID,status from Like where feedID= ?", -1, &statement, NULL) == SQLITE_OK ) {
+    if (sqlite3_prepare_v2(database, "SELECT feedID,status,subCategory from Like where feedID= ?", -1, &statement, NULL) == SQLITE_OK ) {
         sqlite3_bind_text(statement, 1,[key UTF8String],-1,SQLITE_TRANSIENT);
         if (sqlite3_step(statement) == SQLITE_ROW)  {
             LikeDetail  *info = [[LikeDetail alloc] init];
@@ -174,7 +175,7 @@
             
             char *feedID = (char *)sqlite3_column_text(statement, 0);
             char *status = (char *)sqlite3_column_text(statement, 1);
-           
+            char *subCategory = (char *)sqlite3_column_text(statement, 2);
             
                 // Set all the attributes of the Entity
             
@@ -182,6 +183,8 @@
             
             info.status = (status) ? [NSString stringWithUTF8String:status] : @"";
             
+            info.subCategory = (subCategory) ? [NSString stringWithUTF8String:subCategory] : @"";
+   
             
                 // Add the entity to the products array
             [p_info addObject:info];
@@ -210,6 +213,80 @@
         }
 	return p_info;
 }
+
+
++(NSMutableArray*)getAllLike_Info:(NSString *)key
+{
+    NSMutableArray *p_info = [[NSMutableArray alloc] init];
+    
+    sqlite3 *database;
+    
+    if(sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK)
+    {
+        
+        const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
+        if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
+        {
+            //NSLog(@"foreign key enabled");
+            
+            sqlite3_stmt *statement;
+            
+            
+             if (sqlite3_prepare_v2(database, "SELECT feedID,status,subCategory from Like where subCategory= ?", -1, &statement, NULL) == SQLITE_OK ) {
+                  sqlite3_bind_text(statement, 1,[key UTF8String],-1,SQLITE_TRANSIENT);
+            
+            
+                while(sqlite3_step(statement)==SQLITE_ROW)
+                {
+                    
+                    LikeDetail  *info = [[LikeDetail alloc] init];
+                    
+                    // The second parameter is the column index (0 based) in
+                    // the result set.
+                    
+                    char *feedID = (char *)sqlite3_column_text(statement, 0);
+                    char *status = (char *)sqlite3_column_text(statement, 1);
+                    char *subCategory = (char *)sqlite3_column_text(statement, 2);
+                    
+                    
+                    // Set all the attributes of the Entity
+                    
+                    info.feedID = (feedID) ? [NSString stringWithUTF8String:feedID] : @"";
+                    
+                    info.status = (status) ? [NSString stringWithUTF8String:status] : @"";
+                    
+                    info.subCategory = (subCategory) ? [NSString stringWithUTF8String:subCategory] : @"";
+                    
+                    // Add the entity to the products array
+                    
+                    [p_info addObject:info];
+                    
+                    
+                }
+            
+                sqlite3_finalize(statement);
+            
+            
+            }
+        }
+        else
+        {
+            //NSLog(@"foreign key not enabled");
+        }
+        
+        sqlite3_close(database);
+        //NSLog(@"sqlite3_close executed");
+    }
+    else
+    {
+        sqlite3_close(database);
+        //NSLog(@"sqlite3_close executed");
+        
+    }	
+    return p_info;
+    
+}
+
 
 /*
 +(NSMutableArray*)getAllUser_Info{
@@ -392,7 +469,7 @@
                 
             const char *sql;
             
-            sql = "insert into Like(feedID,status) values (?,?)";
+            sql = "insert into Like(feedID,status,subCategory) values (?,?,?)";
             
             sqlite3_stmt *statement;
             if (sqlite3_prepare_v2(database, sql, -1, &statement, NULL) != SQLITE_OK) {
@@ -403,10 +480,9 @@
             
             sqlite3_bind_text(statement, 1, [pro.feedID UTF8String],-1,SQLITE_TRANSIENT);
             sqlite3_bind_text(statement, 2, [pro.status UTF8String],-1,SQLITE_TRANSIENT);
+            sqlite3_bind_text(statement, 3, [pro.subCategory UTF8String],-1,SQLITE_TRANSIENT);
+     
                 
-            
-            
-            
             success = sqlite3_step(statement);
             
             if (success != SQLITE_DONE)
@@ -456,84 +532,6 @@
 	
 	return userSaved;
 }
-
-#pragma mark - get Data from database
-
-+(NSMutableArray*)getAllLike_Info
-{
-    NSMutableArray *p_info = [[NSMutableArray alloc] init];
-    
-    sqlite3 *database;
-	
-	if(sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK)
-        {
-		
-		const char *enableForeignKeySQL="PRAGMA foreign_keys = ON";
-		if(sqlite3_exec(database, enableForeignKeySQL, NULL, NULL, NULL)==SQLITE_OK)
-            {
-                //DLog(@"foreign key enabled");
-			
-			sqlite3_stmt *statement;
-			
-			
-            const char *sql;
-            
-                // The array of products that we will create
-            
-            
-            sql = "SELECT * from Like";
-            
-			if(sqlite3_prepare_v2(database, sql, -1, &statement, NULL) != SQLITE_OK)
-				NSAssert1(0, @"Error while creating getUserWithUsername statement. '%s'", sqlite3_errmsg(database));
-			
-			
-			while(sqlite3_step(statement)==SQLITE_ROW)
-                {
-                    
-                LikeDetail  *info = [[LikeDetail alloc] init];
-                
-                    // The second parameter is the column index (0 based) in
-                    // the result set.
-                
-                char *feedID = (char *)sqlite3_column_text(statement, 0);
-                char *status = (char *)sqlite3_column_text(statement, 1);
-              
-                
-                // Set all the attributes of the Entity
-                
-                info.feedID = (feedID) ? [NSString stringWithUTF8String:feedID] : @"";
-                
-                info.status = (status) ? [NSString stringWithUTF8String:status] : @"";
-                
-                // Add the entity to the products array
-                    
-                [p_info addObject:info];
-                
-                
-                }
-			
-			sqlite3_finalize(statement);
- 	
-			
-            }
-		else
-            {
-                //DLog(@"foreign key not enabled");
-            }
-		
-		sqlite3_close(database);
-            //DLog(@"sqlite3_close executed");
-        }
-	else
-        {
-		sqlite3_close(database);
-            //DLog(@"sqlite3_close executed");
-		
-        }	
-	return p_info;
- 
-}
-
 #pragma mark - update Data from database
 /*
 +(BOOL)updateEvalution_Info:(EvalutionForm *)key

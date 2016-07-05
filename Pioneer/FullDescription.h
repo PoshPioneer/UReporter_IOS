@@ -12,23 +12,14 @@
 
 
 @interface FullDescription : UIViewController
-@property (strong, nonatomic) IBOutlet UILabel *lblTitle;
-@property (strong, nonatomic) IBOutlet UITextView *txtDescription;
 
+
+// Actions
 - (IBAction)btnBackTo_tapped:(id)sender;
 
+// Outlets 
 @property (weak, nonatomic) IBOutlet UILabel *showTemperature;
-
-@property (weak, nonatomic) IBOutlet UIImageView *testing_Imageview;
-
 @property(strong,nonatomic)NSDictionary * receivedArray;
-
-
-@property (weak, nonatomic) IBOutlet UILabel *lbl_Time;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_CategoryType;
-
-@property (weak, nonatomic) IBOutlet UIButton *videoPlayIcon;
-- (IBAction)videoPlayClicked:(id)sender;
 
 
 

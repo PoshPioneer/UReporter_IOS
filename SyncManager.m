@@ -23,16 +23,16 @@
 -(void) serviceCall:(NSString*)url withParams:(NSDictionary*) params {
     
    
-    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager POST:url parameters:params progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        DLog(@"JSON: %@", responseObject);
+        NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
          [self.delegate syncSuccess:json];
       
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        DLog(@"Error: %@", error);
+        NSLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
     
@@ -44,17 +44,17 @@
 -(void) putServiceCall:(NSString*)url withParams:(NSDictionary*) params {
     
     
-    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager PUT:url parameters:params success:^(NSURLSessionTask *task, id responseObject){
         
-        DLog(@"JSON: %@", responseObject);
+        NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         [self.delegate syncSuccess:json];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        DLog(@"Error: %@", error);
+        NSLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
 
@@ -67,18 +67,18 @@
 -(void) getServiceCall:(NSString*)url withParams:(NSDictionary*) params {
     
     
-    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [manager GET:url parameters:params progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
-        DLog(@"JSON: %@", responseObject);
+        NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
         [self.delegate syncSuccess:json];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
-        DLog(@"Error: %@", error);
+        NSLog(@"Error: %@", error);
         [self.delegate syncFailure:error];
     }];
     

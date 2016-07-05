@@ -27,11 +27,6 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewWillAppear:(BOOL)animated {
-
-    DLog(@"copied link url --%@",sharingLink);
-    
-}
 
 
 - (IBAction)backTapped:(id)sender {
@@ -78,12 +73,7 @@
     
     NSString *link = sharingLink;
     NSString *emailTitle = @"Test Email";
-    // Email
-    NSString *messageBody = [NSString stringWithFormat:@"<a href=%@></a>",link];
-                             // @"http://www.google.com";
-
-    
-    
+   
     // To address
     NSArray *toRecipents = [NSArray arrayWithObject:@""];
     

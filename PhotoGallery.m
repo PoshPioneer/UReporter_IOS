@@ -12,56 +12,68 @@
 
 @interface PhotoGallery (){
     
-    UIScrollView *scrollView;
     UIPageControl *pageControl;
+    NSMutableArray *all_Image_urls;
     
+    NSAttributedString *decodedString;
+    CGSize screenSize;
+    
+    
+    
+    UILabel *lblDescription;
+    UILabel *lblTime;
+    UILabel *lblWriter;
+    UIScrollView *scrollView;
+    iCarousel *icarousel;
+    NSString *htmlString;
+
+
 }
 
 @end
-
 @implementation PhotoGallery
-@synthesize transferedArray,gatheredDict;
-
-
+@synthesize mediaDetailDict,gatheredDict;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
-    DataClass *obj = [DataClass getInstance];
-    
-    if (obj.globalCounter == 0 )
-    {
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil) {
-            
-            
-            
-            UIAlertController *  alert  = [UIAlertController alertControllerWithTitle:@"" message:@"You've read all the free articles for this month." preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Subscribe" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                
-                //do something when click button
-                
-                SubscribeVC *subscribeObj = [[SubscribeVC alloc] initWithNibName:@"SubscribeVC" bundle:nil];
-                [self.navigationController pushViewController:subscribeObj animated:YES];
-                
-                
-            }];
-            [alert addAction:okAction];
-            
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                
-                [self.navigationController popViewControllerAnimated:YES];
-                
-                //do something when click button
-            }];
-            [alert addAction:cancelAction];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
-    
+    screenSize =[[UIScreen mainScreen]bounds].size;
 
-    // Do any additional setup after loading the view from its nib.
+    
+    // ScrollView Initialization
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,60, screenSize.width,screenSize.height)];
+    [self.view addSubview:scrollView];
+    
+    icarousel = [[iCarousel alloc]initWithFrame:CGRectMake(0, 80, screenSize.width, screenSize.height*.34)];
+    [scrollView addSubview:icarousel];
+    
+    // Description Labe initialization
+    lblDescription = [[UILabel alloc] init];
+    [scrollView addSubview:lblDescription];
+    [lblDescription setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
+    lblDescription.numberOfLines = 0;
+   // [self.view setBackgroundColor: [self colorWithHexString:@"FFFFFF"]]
+    lblDescription.textColor = [UIColor colorWithRed:221.0/255.0 green:221.0/255.0 blue:221.0/255.0 alpha:1];
+    
+    
+    // Time Label
+    lblTime = [[UILabel alloc] init];
+    [scrollView addSubview:lblTime];
+    [lblTime setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+    lblTime.numberOfLines = 0;
+    lblTime.textColor = [UIColor colorWithRed:162.0/255.0 green:162.0/255.0 blue:162.0/255.0 alpha:1];
+    
+    // Writer Label
+    
+    lblWriter = [[UILabel alloc]init];
+    [scrollView addSubview:lblWriter];
+    [lblWriter setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+    lblWriter.numberOfLines = 0;
+    lblWriter.textAlignment = NSTextAlignmentRight;
+    lblWriter.textColor = [UIColor colorWithRed:162.0/255.0 green:162.0/255.0 blue:162.0/255.0 alpha:1];
+    
+    // Image Url Array
+    all_Image_urls = [[NSMutableArray alloc] init];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -71,199 +83,145 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     
-   // DLog(@"trnasfer array --%@",transferedArray);
-   // DLog(@"images url --%@",gatheredDict);
-//    
-//    UIImageView * photo = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 65.0, 300.0, 400.0)];
-//    photo.contentMode  = UIViewContentModeScaleAspectFit;
-//    //  [photo sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[transferedArray objectAtIndex:0] valueForKey:@"media:content"]]]];
-    // [photo sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[gatheredDict valueForKey:@"url2"]]]];
-    
-   // NSArray * tempArray = [transferedArray valueForKey:@"Mediaitems"];
-  //  DLog(@"temp array--%lu",(unsigned long)[tempArray count]);
- 
-    
+    [super viewWillAppear:animated];
+
     [self loadImages];
     
+    if ([[mediaDetailDict valueForKey:@"Mediaitems"] count]==0) {
+        
+    } else{
+         _pageNumberLabel.text = [NSString stringWithFormat:@"%d of %ld",1,[all_Image_urls count]];
+    }
+    
+    
+    // Call carousel delegates
+    icarousel.delegate=self;
+    icarousel.dataSource =self;
+    icarousel.pagingEnabled=YES;
+    icarousel.type=iCarouselTypeLinear;
+    icarousel.pagingEnabled = YES;
+    
 }
+
+
 -(void) loadImages {
+        getImage_Array = [NSMutableArray new];
+        for (int i=0; i<[[mediaDetailDict valueForKey:@"Mediaitems"] count]; i++) {
+        [all_Image_urls addObject:[[mediaDetailDict valueForKey:@"Mediaitems"][i]valueForKey:@"url"]];
+    }
     
-    
-    [self.view setUserInteractionEnabled:NO];
-    spinner=[SpinnerView loadSpinnerIntoView:self.view];
-    getImage_Array = [NSMutableArray new];
-    
-    // DLog(@"description after navigating --%@",self.getDescriptionString);
-    
-    NSMutableArray *all_Image_urls = [[transferedArray valueForKey:@"Mediaitems"]valueForKey:@"url"];
-    DLog(@"all urls--%@",all_Image_urls);
+   
+}
+
+
+#pragma mark - Carousel Delegates
+
+- (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel{
     
     if (all_Image_urls.count==0) {
-        
-        kNumberOfPages = 1;
-        
+        return 1;
     }else{
-        
-        kNumberOfPages = all_Image_urls.count;
-
-        
+        return all_Image_urls.count;
     }
     
-    // NSArray *allKeys =[gatheredDict allKeys];
-    
-    
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64,320,400)];//(0,0,320,460)
-    [self.view addSubview:scrollView];
-    //scrollView.backgroundColor=[UIColor redColor];
-    // a page is the width of the scroll view
-    scrollView.pagingEnabled = YES;
-    scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * kNumberOfPages, scrollView.frame.size.height);
-    //scrollView.showsHorizontalScrollIndicator = NO;
-    scrollView.showsVerticalScrollIndicator = NO;
-    scrollView.scrollsToTop = NO;
-    scrollView.delegate = self;
-    
-    pageControl.numberOfPages = kNumberOfPages;
-    pageControl.currentPage = 0;
-    
-    
-    //
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        
-        //if ([Utility connected] == YES) {
-            
-            for (int i = 0; i< kNumberOfPages; i++) {
-                
-                
-                // NSString *ImageURL = [all_Image_urls valueForKey:[NSString stringWithFormat:@"url%d",i+1]]; //self.getimageURl;
-                
-                
-                if (all_Image_urls.count==0) {
-                    
-                    UIImage *tempImage = [UIImage imageNamed:@"PlaceHolder@2x.png"];
-                    
-                    [getImage_Array addObject:tempImage];
-
-                    
-                }else{
-                    
-                    NSString *ImageURL = [all_Image_urls objectAtIndex:i];
-                    DLog(@"image url -- %@",ImageURL);
-
-                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
-                    //self.newsImage_ImgView.image = [UIImage imageWithData:imageData];
-                    //converted_Image =imageData;
-                    UIImage *tempImage = [UIImage imageWithData:imageData];
-                    
-                    [getImage_Array addObject:tempImage];
-
-                    
-                }
-                
-            }
-
-            
-        /*}else{
-            
-            
-           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
-            
-
-        }*/
-        [self loadScrollViewWithPage:0];
-        [self loadScrollViewWithPage:1];
-        
-    });
-    
-    
-    
     
 }
 
-- (void)loadScrollViewWithPage:(int)page {
-    if (page < 0) return;
-    if (page >= kNumberOfPages) return;
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(nullable UIView *)view{
     
+    UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, (screenSize.height*34)/100)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, (screenSize.height*34)/100)];
     
-   // if ([Utility connected] == YES) {
-        
-        
-        
-        UIImageView *imageView =[[UIImageView alloc] init];
-        //imageView.backgroundColor = [UIColor yellowColor];
-        // add the image view to the scroll view
-        CGRect frame = scrollView.frame;
-        frame.origin.x = frame.size.width * page;
-        frame.origin.y = 0;
-        imageView.frame = frame;
-        
-        [imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [scrollView addSubview:imageView];
-        
-        imageView.image = getImage_Array[page];
-        
-        /*
-    }else{
-        
-        
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert!" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
-            
-            
-        }];
-        [alert addAction:doNothingAction];
-        [self presentViewController:alert  animated:YES completion:nil];
+    if ([[mediaDetailDict valueForKey:@"Mediaitems"] count]==0) {
+        imageView.image=[UIImage imageNamed:@"PlaceHolder@2x.png"];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [imageView setClipsToBounds:YES];
+        [tempView addSubview:imageView];
     }
-*/
+    else{
+        [imageView sd_setImageWithURL:[NSURL URLWithString:[all_Image_urls objectAtIndex:index]]];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [imageView setClipsToBounds:YES];
+        [tempView addSubview:imageView];
+        
+        NSLog(@"%ld",(long)index+1);
+        
+        // _pageNumberLabel.text = [NSString stringWithFormat:@"%ld of %ld",(long)index+1,[all_Image_urls count]];
+        
+        htmlString = [[mediaDetailDict valueForKey:@"Mediaitems"][0]valueForKey:@"description"];
+        NSLog(@"Media Item %@",mediaDetailDict);
+        
+        decodedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,NSCharacterEncodingDocumentAttribute:@(NSUTF8StringEncoding)} documentAttributes:nil error:nil];
+        
+        lblDescription.text = [decodedString string];
+        
+        CGFloat expectedLabelSize = [self heightForText:[decodedString string] font:lblDescription.font withinWidth:screenSize.width -40];
+        lblDescription.frame = CGRectMake(20,icarousel.frame.origin.y + icarousel.frame.size.height + 45,screenSize.width -40, expectedLabelSize);
+        [lblDescription sizeToFit];
+        lblWriter.text = [NSString stringWithFormat:@"%@",[[mediaDetailDict valueForKey:@"Mediaitems"][0] valueForKey:@"credit"]].uppercaseString;
+        lblTime.text=[NSString stringWithFormat:@"%@",[mediaDetailDict valueForKey:@"pubDate"]].uppercaseString;
+        lblWriter.frame = CGRectMake(screenSize.width-120, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, 100, 60);
+        lblTime.frame = CGRectMake(20, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, 159, 60);
+        scrollView.contentSize = CGSizeMake(screenSize.width, lblWriter.frame.size.height+ lblWriter.frame.origin.y + 60);
+    }
     
+   
+    return tempView;
+}
+
+
+
+- (void)carouselCurrentItemIndexDidChange:(iCarousel *)objcarousel{
+    int index = (int)objcarousel.currentItemIndex;
+    _pageNumberLabel.text = [NSString stringWithFormat:@"%ld of %ld",(long)index+1,[all_Image_urls count]];
+    NSLog(@"%d",index);
     
-    [self.view setUserInteractionEnabled:YES];
-    [spinner removeSpinner];
+    htmlString = [[mediaDetailDict valueForKey:@"Mediaitems"][index]valueForKey:@"description"];
     
-    //sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[testArray objectAtIndex:0]
+    decodedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,NSCharacterEncodingDocumentAttribute:@(NSUTF8StringEncoding)} documentAttributes:nil error:nil];
+        lblDescription.text = [decodedString string];
+    lblWriter.text = [NSString stringWithFormat:@"%@",[[mediaDetailDict valueForKey:@"Mediaitems"][index] valueForKey:@"credit"]].uppercaseString;
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)sender {
-    
-    // We don't want a "feedback loop" between the UIPageControl and the scroll delegate in
-    // which a scroll event generated from the user hitting the page control triggers updates from
-    // the delegate method. We use a boolean to disable the delegate logic when the page control is used.
-    
-    // Switch the indicator when more than 50% of the previous/next page is visible
-    CGFloat pageWidth = scrollView.frame.size.width;
-    int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    pageControl.currentPage = page;
-    
-    // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)
-    
-    [self loadScrollViewWithPage:page - 1];
-    [self loadScrollViewWithPage:page];
-    [self loadScrollViewWithPage:page + 1];
-    
-    // A possible optimization would be to unload the views+controllers which are no longer visible
+- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value{
+    if(option == iCarouselOptionSpacing){
+        return value*1.1;
+    }
+    return value;
 }
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
+
+#pragma mark - IBActions
+
+- (IBAction)shareBtn:(UIButton *)sender {
+    NSArray * activityItems = @[[NSString stringWithFormat:@"%@",[mediaDetailDict valueForKey:@"Link"]]];
+    NSArray * applicationActivities = nil;
+    NSArray * excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeMessage];
     
-    //pageControlUsed = NO;
+    UIActivityViewController * activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:applicationActivities];
+    activityController.excludedActivityTypes = excludeActivities;
     
-    
+    [self presentViewController:activityController animated:YES completion:nil];
     
     
 }
 
-- (IBAction)back_Tapped:(id)sender {
-    
-    NSArray *array = [self.navigationController viewControllers];
-    
-    DLog(@"Photo gallery from array is :  %@",array);
-    
-    [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
-    
+- (IBAction)closeBtn:(UIButton *)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+# pragma mark - private methods
+// Dynamic Height according to Text
+-(CGFloat)heightForText:(NSString*)text font:(UIFont*)font withinWidth:(CGFloat)width {
+    CGSize size = [text sizeWithAttributes:@{NSFontAttributeName:font}];
+    CGFloat area = size.height * size.width;
+    CGFloat height = roundf(area / width);
+    return ceilf(height / font.lineHeight) * font.lineHeight;
+}
+
+
+
 
 
 @end

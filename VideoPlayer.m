@@ -62,7 +62,9 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    DLog(@"gatherede video url--%@",gatheredVideoURl);
+    [super viewWillAppear:animated];
+
+    NSLog(@"gatherede video url--%@",gatheredVideoURl);
     
     NSString * mediaURL= [[[gatheredVideoURl valueForKey:@"Mediaitems"] objectAtIndex:0] valueForKey:@"url"] ;
     
@@ -88,7 +90,7 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    DLog(@"Photo gallery from array is :  %@",array);
+    NSLog(@"Photo gallery from array is :  %@",array);
     
     [moviePlayerController stop];
     [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];

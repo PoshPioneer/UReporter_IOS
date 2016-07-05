@@ -24,92 +24,144 @@
     BOOL checkingAudio_Video;
     NSString* audioUrl;
     
+    
     //MPMoviePlayerController *theMoviPlayer;
+    
+    
+    // By Pushpank
+    
+    UILabel *lblTitle;
+    CGSize screenSize;
+    UIScrollView *scrollView;
+    UILabel *lblSubmittedTime;
+    UILabel *lblCategory;
+    UIImageView *imageView;
+    UILabel *lblDescription;
+    UIButton *btnVideoPlay;
+
+    
 }
 
 @end
 
 @implementation FullDescription
-@synthesize txtDescription;
-@synthesize lblTitle,receivedArray,testing_Imageview,lbl_CategoryType,lbl_Time,videoPlayIcon;
+@synthesize receivedArray;
 
 #pragma mark - viewDidLoad
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    DLog(@"receieved array--%@",receivedArray);
+    screenSize =[[UIScreen mainScreen] bounds].size;
     
+    // initialize scroll view
+
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,64, screenSize.width,screenSize.height )];
+    [self.view addSubview:scrollView];
+
+    // initialize title label
+
+    lblTitle = [[UILabel alloc] init];
+    lblTitle.frame = CGRectMake(8,10,screenSize.width-16,60);
+    lblTitle.numberOfLines = 2;
+    lblTitle.adjustsFontSizeToFitWidth = YES;
+    lblTitle.lineBreakMode = NSLineBreakByWordWrapping;
+    [lblTitle setBackgroundColor:[UIColor clearColor]];
+    [lblTitle setFont:[UIFont fontWithName:@"Helvetica Neue Bold" size:15.0]];
+    lblTitle.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:lblTitle];
+    
+    
+    // initialize time label
+    
+    lblSubmittedTime = [[UILabel alloc] init];
+//    lblSubmittedTime.frame = CGRectMake(8,lblTitle.bounds.origin.y + lblTitle.frame.size.height +5,screenSize.width*0.28,screenSize.height*0.049);
+    
+      lblSubmittedTime.frame = CGRectMake(8,lblTitle.bounds.origin.y + lblTitle.frame.size.height +5,screenSize.width*0.90,screenSize.height*0.049);
+    lblSubmittedTime.adjustsFontSizeToFitWidth = YES;
+    lblSubmittedTime.lineBreakMode = NSLineBreakByWordWrapping;
+    [lblSubmittedTime setBackgroundColor:[UIColor clearColor]];
+    lblSubmittedTime.textAlignment = NSTextAlignmentLeft;
+    [scrollView addSubview:lblSubmittedTime];
+    
+    
+    
+
+
+    // initialize category label
+    
+    lblCategory = [[UILabel alloc] init];
+    lblCategory.frame = CGRectMake(200,lblTitle.bounds.origin.y + lblTitle.frame.size.height +5,screenSize.width*0.28,screenSize.height*0.049);
+    lblCategory.adjustsFontSizeToFitWidth = YES;
+    lblCategory.lineBreakMode = NSLineBreakByWordWrapping;
+    [lblCategory setBackgroundColor:[UIColor clearColor]];
+    lblCategory.textAlignment = NSTextAlignmentRight;
+    [scrollView addSubview:lblCategory];
+    
+    // initialize imageView
+    
+    imageView = [[UIImageView alloc] init];
+
+    // initialize Description Label
+
+    lblDescription = [[UILabel alloc] init];
+    [scrollView addSubview:lblDescription];
+   [lblDescription setFont:[UIFont fontWithName:@"Helvetica Neue" size:16.0]];
+    lblDescription.numberOfLines = 0;
+    lblDescription.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
+    [lblDescription sizeToFit];
+
+    // initialize play video Button
+    btnVideoPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     objectDataClass = [DataClass getInstance];
     // Do any additional setup after loading the view from its nib.
+    
     app=(AppDelegate*)[[UIApplication sharedApplication]delegate];
     
     
+    lblTitle.text=[receivedArray valueForKey:@"Title"];
+    lblDescription.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
+    NSString *trimmedDescription = [[receivedArray valueForKey:@"FullStory"] stringByTrimmingCharactersInSet:
+                               [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    lblDescription.text = trimmedDescription;
+    lblSubmittedTime.text = [receivedArray valueForKey:@"Date"];
+    lblCategory.text = [receivedArray valueForKey:@"CategoryName"];
     
+    CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -16];
+
+    
+    // Show for Category
     
     if ([[receivedArray valueForKey:@"Type"] isEqualToString:@"PHOTO"]) {
+        imageView.contentMode =UIViewContentModeScaleAspectFit;
+        [imageView setClipsToBounds:YES];
+        imageView.frame = CGRectMake(8,lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +80,screenSize.width-16,180);
+        [scrollView addSubview:imageView];
         
-        [videoPlayIcon setHidden:YES];
-        lblTitle.text=[receivedArray valueForKey:@"Title"];
-        txtDescription.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        //txtDescription.text=[receivedArray valueForKey:@"FullStory"];
-        
-        UITextView * txtNewDescription = [[UITextView alloc] initWithFrame:CGRectMake(12.0, 343.0, 298.0, 211.0)];
-        txtNewDescription.textColor =[UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        txtNewDescription.editable =NO;
-        txtNewDescription.selectable =NO;
-        [txtNewDescription setFont:[UIFont fontWithName:@"Helvetica Neue" size:16.0]];
-        txtNewDescription.text =[receivedArray valueForKey:@"FullStory"];
-        txtNewDescription.backgroundColor =[UIColor clearColor];
-        [self.view addSubview:txtNewDescription];
-        
-        lbl_Time.text = [receivedArray valueForKey:@"Time"];
-        lbl_CategoryType.text = [receivedArray valueForKey:@"CategoryName"];
-    NSString * path = [receivedArray valueForKey:@"imagePath"];
-    
-    DLog(@"path%@",path);
-    
-    DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
-    NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
-    UIImage * myImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:fullPath]];
-   
-    [testing_Imageview setImage:myImage];
+         lblDescription.frame = CGRectMake(8,imageView.frame.origin.y + imageView.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+            NSString * path = [receivedArray valueForKey:@"imagePath"];
+        NSLog(@"path%@",path);
+        NSLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
+        //NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
+        NSData * ImageData = [receivedArray valueForKey:@"transferImage"];
+        UIImage * myImage = [UIImage imageWithData:ImageData];
+        [imageView setImage:myImage];
+         scrollView.contentSize = CGSizeMake(screenSize.width,lblDescription.bounds.origin.y+lblDescription.frame.size.height+430);
         
     }
+    
     else if ([[receivedArray valueForKey:@"Type"] isEqualToString:@"VIDEO"]){
-        
-        [videoPlayIcon setHidden:NO];
-        
-        lblTitle.text=[receivedArray valueForKey:@"Title"];
-        txtDescription.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        [txtDescription setFont:[UIFont fontWithName:@"Helvetica Neue" size:20.0]];
-        //txtDescription.text=[receivedArray valueForKey:@"FullStory"];
-        lbl_Time.text = [receivedArray valueForKey:@"Time"];
-        lbl_CategoryType.text = [receivedArray valueForKey:@"CategoryName"];
-        
-        
-        
-        UITextView * txtNewDescription = [[UITextView alloc] initWithFrame:CGRectMake(12.0, 343.0, 298.0, 211.0)];
-        txtNewDescription.textColor =[UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        txtNewDescription.editable =NO;
-        txtNewDescription.selectable =NO;
-        [txtNewDescription setFont:[UIFont fontWithName:@"Helvetica Neue" size:16.0]];
-        txtNewDescription.text =[receivedArray valueForKey:@"FullStory"];
-         txtNewDescription.backgroundColor =[UIColor clearColor];
-        [self.view addSubview:txtNewDescription];
-        
-        
-        [testing_Imageview setHighlighted:YES];
-        //NSURL *vedioURL= [receivedArray valueForKey:@"videoPath"];
-        
+        imageView.frame = CGRectMake(8,lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +80,screenSize.width-16,180);
+        btnVideoPlay.frame = CGRectMake(8,lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +80,screenSize.width-16,180);
+        [scrollView addSubview:imageView];
+        lblDescription.frame = CGRectMake(8,imageView.frame.origin.y + imageView.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+        [scrollView addSubview:btnVideoPlay];
+        [btnVideoPlay setImage:[UIImage imageNamed:@"play-icon@2x"] forState:UIControlStateNormal];
+        [btnVideoPlay addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+        [imageView setHighlighted:YES];
         NSString *fullpath=[receivedArray valueForKey:@"videoPath"];
         NSString *videoPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],fullpath.lastPathComponent];
-        
-        
-               DLog(@" video path%@",videoPath);
-        
-      
-        
-        NSURL *videoURL = [NSURL fileURLWithPath:videoPath];
+               NSLog(@" video path%@",videoPath);
+                NSURL *videoURL = [NSURL fileURLWithPath:videoPath];
         globalVideoUrl= videoURL;
         
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
@@ -117,68 +169,29 @@
         NSError *error = NULL;
         CMTime time = CMTimeMake(1, 65);
         CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-        DLog(@"error==%@, Refimage==%@", error, refImg);
+        NSLog(@"error==%@, Refimage==%@", error, refImg);
         UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
-       
-        [testing_Imageview setImage:FrameImage];
-        
-        
-        
+        [imageView setImage:FrameImage];
+       scrollView.contentSize = CGSizeMake(screenSize.width,lblDescription.bounds.origin.y+lblDescription.frame.size.height+430);
     }
     
     else if ([[receivedArray valueForKey:@"Type"] isEqualToString:@"TEXT"]) {
-
+        lblDescription.frame = CGRectMake(8.0, lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +100, 298.0, expectedLabelSize);
+        scrollView.contentSize = CGSizeMake(screenSize.width,lblDescription.bounds.origin.y+lblDescription.frame.size.height+430);
         
-        
-        [testing_Imageview setHidden:YES];
-        [videoPlayIcon setHidden:YES];
-        [txtDescription setHidden:YES];
-        lblTitle.text=[receivedArray valueForKey:@"Title"];
-        lbl_Time.text = [receivedArray valueForKey:@"Time"];
-        lbl_CategoryType.text = [receivedArray valueForKey:@"CategoryName"];
-       
-        UITextView * txtDescriptionAudio =[[UITextView alloc] initWithFrame:CGRectMake(8.0, 147.0, 298.0, 400.0)];
-         txtDescriptionAudio.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        [txtDescriptionAudio setFont:[UIFont fontWithName:@"Helvetica Neue" size:16.0]];
-        
-        NSString *trimmedString = [[receivedArray valueForKey:@"FullStory"] stringByTrimmingCharactersInSet:
-                                   [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-       // txtDescriptionAudio.text = [receivedArray valueForKey:@"FullStory"];
-        
-        txtDescriptionAudio.text=trimmedString;
-        
-        txtDescriptionAudio.editable=NO;
-        txtDescriptionAudio.selectable =NO;
-        [txtDescriptionAudio setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:txtDescriptionAudio];
-       
-        
-        
-        
-    }else if ([[receivedArray valueForKey:@"Type"] isEqualToString:@"AUDIO"]) {
-        
-        [videoPlayIcon setHidden:NO];
-        
+    }
+    else if ([[receivedArray valueForKey:@"Type"] isEqualToString:@"AUDIO"]) {
+        imageView.frame = CGRectMake(8,lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +80,screenSize.width-16,180);
+        [scrollView addSubview:imageView];
+        lblDescription.frame = CGRectMake(8,imageView.frame.origin.y + imageView.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+        btnVideoPlay.frame = CGRectMake(8,lblSubmittedTime.bounds.origin.y + lblSubmittedTime.frame.size.height +80,screenSize.width-16,180);
+        [btnVideoPlay setImage:[UIImage imageNamed:@"play-icon@2x"] forState:UIControlStateNormal];
+        [scrollView addSubview:btnVideoPlay];
+        [btnVideoPlay addTarget:self action:@selector(playAudio) forControlEvents:UIControlEventTouchUpInside];
+        [imageView setHighlighted:YES];
         checkingAudio_Video = YES;
-        
-        lblTitle.text=[receivedArray valueForKey:@"Title"];
-        txtDescription.textColor = [UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-       // txtDescription.text=[receivedArray valueForKey:@"FullStory"];
-        lbl_Time.text = [receivedArray valueForKey:@"Time"];
-        lbl_CategoryType.text = [receivedArray valueForKey:@"CategoryName"];
         audioUrl = [receivedArray valueForKey:@"AudioPath"];
-        
-        
-        UITextView * txtNewDescription = [[UITextView alloc] initWithFrame:CGRectMake(12.0, 343.0, 298.0, 211.0)];
-        txtNewDescription.textColor =[UIColor colorWithRed:65.0/255.0 green:65.0/255.0 blue:65.0/255.0 alpha:1.0];
-        txtNewDescription.editable =NO;
-        txtNewDescription.selectable =NO;
-        [txtNewDescription setFont:[UIFont fontWithName:@"Helvetica Neue" size:16.0]];
-        txtNewDescription.text =[receivedArray valueForKey:@"FullStory"];
-         txtNewDescription.backgroundColor =[UIColor clearColor];
-        [self.view addSubview:txtNewDescription];
-        
+       scrollView.contentSize = CGSizeMake(screenSize.width,lblDescription.bounds.origin.y+lblDescription.frame.size.height+430);
     }
 }
 
@@ -193,58 +206,47 @@
 }
 
 
-
-
--(void)viewWillAppear:(BOOL)animated {
-    
-   // self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
-    
-   // DLog(@"received array --%@",receivedArray);
-    
-}
-
 #pragma mark - IBActionBack
 
 - (IBAction)btnBackTo_tapped:(id)sender {
-   // [controller.moviePlayer stop];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 //playing video on button click
 
-- (IBAction)videoPlayClicked:(id)sender {
-    if (checkingAudio_Video == YES) {
-     
-        //app.yourFileURL
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            PlayRecordedAudio * playaudio = [[PlayRecordedAudio alloc] initWithNibName:@"PlayRecordedAudio3.5" bundle:nil];
-            app.yourFileURL =  [NSURL fileURLWithPath:audioUrl];;
-            [self.navigationController pushViewController:playaudio animated:YES];
-            
-            
-        }else{
-            
-            PlayRecordedAudio * playaudio = [[PlayRecordedAudio alloc] initWithNibName:@"PlayRecordedAudio" bundle:nil];
-            app.yourFileURL =[NSURL fileURLWithPath:audioUrl];
-            [self.navigationController pushViewController:playaudio animated:YES];
-            
-        }
+-(void)playVideo {
 
-        
-    }else{
-    
-    
-    
     AVPlayer *player = [AVPlayer playerWithURL:globalVideoUrl];
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
-    
     playerViewController.player = player;
     playerViewController.showsPlaybackControls=YES;
     [playerViewController.player play];//Used to Play On start
     [self presentViewController:playerViewController animated:YES completion:nil];
-    }
+
 }
+
+
+
+-(void)playAudio{
+
+    if (checkingAudio_Video == YES) {
+        //app.yourFileURL
+        
+            PlayRecordedAudio * playaudio = [[PlayRecordedAudio alloc] initWithNibName:@"PlayRecordedAudio" bundle:nil];
+            app.yourFileURL =[NSURL fileURLWithPath:audioUrl];
+            [self.navigationController pushViewController:playaudio animated:YES];
+            
+    }
+
+}
+
+// Calculate label Height according to Text
+
+-(CGFloat)heightForText:(NSString*)text font:(UIFont*)font withinWidth:(CGFloat)width {
+    CGSize size = [text sizeWithAttributes:@{NSFontAttributeName:font}];
+    CGFloat area = size.height * size.width;
+    CGFloat height = roundf(area / width);
+    return ceilf(height / font.lineHeight) * font.lineHeight;
+}
+
 @end

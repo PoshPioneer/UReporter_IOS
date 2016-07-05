@@ -12,5 +12,6 @@
 
 @property (strong,nonatomic) NSString *feedID;
 @property(strong,nonatomic) NSString *status;
+@property(strong,nonatomic) NSString *subCategory;
 
 @end

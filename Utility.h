@@ -13,3 +13,8 @@
 + (BOOL)connected;
 // subbbbbbb
 @end
+
+
+// 6331a79f5d8d5131945abb3cbcdfe24aeb16ae75
+
+// 9930690a91c73d95c5cf1d1a0998ba5d0c3a97cd
