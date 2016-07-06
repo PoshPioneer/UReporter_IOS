@@ -139,7 +139,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 - (void)beginRefreshingTableView {
     
-   /* [self.refreshControl beginRefreshing];
+   [self.refreshControl beginRefreshing];
     
     if (self.uploadTableView.contentOffset.y == 0) {
         
@@ -151,7 +151,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }];
         
-    }*/
+    }
 }
 
 -(void) handleServiceCallCompletion
@@ -229,7 +229,10 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)loadWeather:(NSString*)cityNameFromLatandLong {
     
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
-        NSString *urlString = [[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/weather?cityname=%@",[cityNameFromLatandLong copy]] copy];
+    
+        cityNameFromLatandLong = [cityNameFromLatandLong stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        NSString *urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/weather?cityname=%@",cityNameFromLatandLong];
+    
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
             NSLog(@"JSON weather: %@", responseObject);
@@ -412,11 +415,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             }
         }
         
-        //[self.refreshControl endRefreshing];
+        [self.refreshControl endRefreshing];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"Error: %@", error);
-        //[self.refreshControl endRefreshing];
+        [self.refreshControl endRefreshing];
         [self handleServiceCallCompletion];
     }];
 
@@ -615,7 +618,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     
- __block  NSString *cityName;
+ 
     DLog(@"didUpdateToLocation: %@", newLocation);
    
     
@@ -628,9 +631,13 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         
         CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
        
-        cityName= myPlacemark.subAdministrativeArea;
-        //[self loadWeather:cityName];
-
+        NSString *cityName = myPlacemark.subAdministrativeArea;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            DLog(@"inside main thread!");
+            [self loadWeather:cityName];
+        });
+        
         locationManager = nil;
         [locationManager stopUpdatingLocation];
 
@@ -815,7 +822,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             StaticLinkView * staticObj = [[StaticLinkView alloc] initWithNibName:@"StaticLinkView" bundle:nil];
             staticObj.staticlink = objectDataClass.globalstaticLink;
             objectDataClass.globalFeedType=tempStringFeedType;
-	    //staticObj.previousMenuIndex = self.previousRSSSectionIndex;
+            staticObj.previousMenuIndex = self.previousRSSSectionIndex;
 
             [self.navigationController pushViewController:staticObj animated:YES];
             
@@ -839,7 +846,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }
         else{
-            //self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
+            
+            self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
             DataClass *obj = [DataClass getInstance];
             
                 tempStringFeedType=objectDataClass.globalFeedType;
@@ -856,8 +864,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 if ([objectDataClass.globalCategory isEqualToString:@"Breaking News"]) {
                     //ht tp://prngapi.cloudapp.net/api/BreakingNews?feedid=23&&source=SkagitTimes
 
-                  
-                    
                     urlString = [NSString stringWithFormat:@"%@%@/BreakingNews?feedid=%@&source=%@",kBaseURL,kAPI,objectDataClass.globalFeedID,@"SkagitTimes" ];
                     
                     NSLog(@"url with feed id %@",urlString);
@@ -902,7 +908,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     NSLog(@"JSON: %@", responseObject);
                     NSDictionary *json = [Utility cleanJsonToObject:responseObject];
                     [self.view setUserInteractionEnabled:YES];
-                    [spinner removeSpinner];
+                    [self.refreshControl endRefreshing];
                     if (json)
                     {
                         
@@ -952,7 +958,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     [self presentViewController:errorAlert animated:YES completion:nil];
 
                     [self.view setUserInteractionEnabled:YES];
-                    //[self.refreshControl endRefreshing];
+                    [self.refreshControl endRefreshing];
                     
                 }];
                 
@@ -1481,7 +1487,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
             [self.view setUserInteractionEnabled:YES];
-            //[self.refreshControl endRefreshing];
+            [self.refreshControl endRefreshing];
 
             if (json.count>0)
             {
@@ -1548,7 +1554,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             DLog(@"Error: %@", error);
             
             [self.view setUserInteractionEnabled:YES];
-            //[self.refreshControl endRefreshing];
+            [self.refreshControl endRefreshing];
 
             UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1673,11 +1679,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
             }
             
-            //[self.refreshControl endRefreshing];
+            [self.refreshControl endRefreshing];
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
             DLog(@"Error: %@", error);
-            //[self.refreshControl endRefreshing];
+            [self.refreshControl endRefreshing];
             [self handleServiceCallCompletion];
            
 
