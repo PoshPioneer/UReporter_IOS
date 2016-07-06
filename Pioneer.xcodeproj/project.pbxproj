@@ -19,6 +19,8 @@
 		285D5AAB1C63807100447E68 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 285D5AAA1C63807100447E68 /* images.png */; };
 		289670AB1D0543BC0096E365 /* MYTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 289670AA1D0543BC0096E365 /* MYTextField.m */; };
 		28E576571C63699000FDAB88 /* del.png in Resources */ = {isa = PBXBuildFile; fileRef = 28E576561C63699000FDAB88 /* del.png */; };
+		3792C2381D2C76EB00F9CD08 /* PHCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 3792C2351D2C76EB00F9CD08 /* PHCachingURLProtocol.m */; };
+		3792C2391D2C76EB00F9CD08 /* PHHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3792C2371D2C76EB00F9CD08 /* PHHTTPSessionManager.m */; };
 		410A37761B79B37000A96DF0 /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 410A37751B79B37000A96DF0 /* IQDropDownTextField.m */; };
 		414B737A1B8EFBD7007640B7 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 414B73771B8EFBD7007640B7 /* Main_iPad.storyboard */; };
 		414B737B1B8EFBD7007640B7 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 414B73781B8EFBD7007640B7 /* Main_iPhone.storyboard */; };
@@ -310,6 +312,10 @@
 		289670AA1D0543BC0096E365 /* MYTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTextField.m; sourceTree = "<group>"; };
 		28E576561C63699000FDAB88 /* del.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = del.png; sourceTree = "<group>"; };
 		2FD052D08D68B5B7B585F2D2 /* Pods-Pioneer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.release.xcconfig"; sourceTree = "<group>"; };
+		3792C2341D2C76EB00F9CD08 /* PHCachingURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHCachingURLProtocol.h; sourceTree = "<group>"; };
+		3792C2351D2C76EB00F9CD08 /* PHCachingURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHCachingURLProtocol.m; sourceTree = "<group>"; };
+		3792C2361D2C76EB00F9CD08 /* PHHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHHTTPSessionManager.h; sourceTree = "<group>"; };
+		3792C2371D2C76EB00F9CD08 /* PHHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHHTTPSessionManager.m; sourceTree = "<group>"; };
 		410A37741B79B37000A96DF0 /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
 		410A37751B79B37000A96DF0 /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
 		414B73771B8EFBD7007640B7 /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
@@ -773,6 +779,10 @@
 		4F1502041CD3ACE800D5B35B /* WSManager */ = {
 			isa = PBXGroup;
 			children = (
+				3792C2341D2C76EB00F9CD08 /* PHCachingURLProtocol.h */,
+				3792C2351D2C76EB00F9CD08 /* PHCachingURLProtocol.m */,
+				3792C2361D2C76EB00F9CD08 /* PHHTTPSessionManager.h */,
+				3792C2371D2C76EB00F9CD08 /* PHHTTPSessionManager.m */,
 				4F1502051CD3AD0A00D5B35B /* SyncManager.h */,
 				4F1502061CD3AD0A00D5B35B /* SyncManager.m */,
 			);
@@ -1786,11 +1796,13 @@
 				DB257EBD1987F0AB00C56A14 /* IQActionSheetPickerView.m in Sources */,
 				4F30FE2E1C719206000AE8BC /* CustomCell.m in Sources */,
 				4FF4C0281C92C92F00CE4E36 /* submitCell.m in Sources */,
+				3792C2381D2C76EB00F9CD08 /* PHCachingURLProtocol.m in Sources */,
 				4F6DD09A1CA93F170002E43A /* NSString+FontAwesome.m in Sources */,
 				DB69CD2A198250C2006DE6A9 /* ViewController.m in Sources */,
 				4FF524B91C9939F500629FF1 /* ChildView.m in Sources */,
 				ADDE78F21C05BCF400A3D2B4 /* ReporterEntry.m in Sources */,
 				DB257ED31988330D00C56A14 /* RecordAudioView.m in Sources */,
+				3792C2391D2C76EB00F9CD08 /* PHHTTPSessionManager.m in Sources */,
 				4FB95FA41C6C6B7B00E87F15 /* CCKFNavDrawer.m in Sources */,
 				4FE0700E1C80838A0051DB89 /* DataClass.m in Sources */,
 				283FBB141C64B0F600351FDD /* SWRevealViewController.m in Sources */,

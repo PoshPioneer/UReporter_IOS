@@ -128,7 +128,7 @@
         NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
         DLog(@"URL===%@",urlString);
         
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
           DLog(@"JSON: %@", responseObject);
           NSDictionary *json = [Utility cleanJsonToObject:responseObject];

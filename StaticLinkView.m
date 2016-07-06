@@ -111,9 +111,9 @@
     [self.view setUserInteractionEnabled:YES];
     [spinner removeSpinner];
 
-    if(self.previousMenuIndex >= 0) {
-        objectDataClass.sectionIndex = self.previousMenuIndex;
-    }
+    //if(self.previousMenuIndex >= 0) {
+    //    objectDataClass.sectionIndex = self.previousMenuIndex;
+    //}
     
     [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
     

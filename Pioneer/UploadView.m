@@ -133,30 +133,25 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)callServicesInQueue
 {
-    
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self beginRefreshingTableView];
-        });
-        
-         [self checkUserAlreadyAvailableService];
-         [self loadHomeFeed];
+    [self checkUserAlreadyAvailableService];
+    [self loadHomeFeed];
 }
 
 - (void)beginRefreshingTableView {
     
-    [self.refreshControl beginRefreshing];
+   /* [self.refreshControl beginRefreshing];
     
-    if (self.tableView.contentOffset.y == 0) {
+    if (self.uploadTableView.contentOffset.y == 0) {
         
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^(void){
             
-            self.tableView.contentOffset = CGPointMake(0, -self.refreshControl.frame.size.height);
+            self.uploadTableView.contentOffset = CGPointMake(0, -self.refreshControl.frame.size.height);
             
         } completion:^(BOOL finished){
             
         }];
         
-    }
+    }*/
 }
 
 -(void) handleServiceCallCompletion
@@ -168,11 +163,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.view setUserInteractionEnabled:YES];
-            [self.refreshControl endRefreshing];
             
         });
         
     }
+    
 }
 
 - (void)viewDidLoad
@@ -195,7 +190,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:self.refreshControl];
+    [self.uploadTableView addSubview:self.refreshControl];
     
     
     tabBarController.delegate = self;
@@ -214,8 +209,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
     [self loadApiAndCheckInternet];
     
-    self.previousRSSSectionIndex = 0;
-    objectDataClass.sectionIndex = self.previousRSSSectionIndex;
+    //self.previousRSSSectionIndex = 0;
+    //objectDataClass.sectionIndex = self.previousRSSSectionIndex;
 
 }
 
@@ -233,12 +228,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
 -(void)loadWeather:(NSString*)cityNameFromLatandLong {
     
-    
-    //cityNameFromLatandLong=@"London";
-   
-    
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-        [manager GET:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/weather?cityname=%@",cityNameFromLatandLong] parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+        NSString *urlString = [[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/weather?cityname=%@",[cityNameFromLatandLong copy]] copy];
+        [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
         {
             NSLog(@"JSON weather: %@", responseObject);
             NSDictionary *json = [Utility cleanJsonToObject:responseObject];
@@ -367,13 +359,13 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 {
 
     checkUserAlreadyAvailableServiceCallComplete = YES;
-    
+    [self beginRefreshingTableView];
     
     
     NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?deviceId=&source=&token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
     NSLog(@"URL===%@",urlString);
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
         NSDictionary *json = [Utility cleanJsonToObject:responseObject];
@@ -420,10 +412,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             }
         }
         
+        //[self.refreshControl endRefreshing];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         NSLog(@"Error: %@", error);
-        
+        //[self.refreshControl endRefreshing];
         [self handleServiceCallCompletion];
     }];
 
@@ -596,15 +589,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
                 UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
-                [self.navigationController pushViewController:text animated:YES
-                
+            [self.navigationController pushViewController:text animated:YES];
             
-
-            
-            
-            
-            
-        }else if (type ==5){
+        } else if (type ==5){
             
             Setting_Screen *setting=[[Setting_Screen alloc]initWithNibName:@"Setting_Screen" bundle:nil];
             [self.navigationController pushViewController:setting animated:YES];
@@ -642,7 +629,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
        
         cityName= myPlacemark.subAdministrativeArea;
-        [self loadWeather:cityName];
+        //[self loadWeather:cityName];
 
         locationManager = nil;
         [locationManager stopUpdatingLocation];
@@ -828,7 +815,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             StaticLinkView * staticObj = [[StaticLinkView alloc] initWithNibName:@"StaticLinkView" bundle:nil];
             staticObj.staticlink = objectDataClass.globalstaticLink;
             objectDataClass.globalFeedType=tempStringFeedType;
-	    staticObj.previousMenuIndex = self.previousRSSSectionIndex;
+	    //staticObj.previousMenuIndex = self.previousRSSSectionIndex;
 
             [self.navigationController pushViewController:staticObj animated:YES];
             
@@ -852,7 +839,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
         }
         else{
-            self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
+            //self.previousRSSSectionIndex = (NSUInteger)selectionIndex;
             DataClass *obj = [DataClass getInstance];
             
                 tempStringFeedType=objectDataClass.globalFeedType;
@@ -903,7 +890,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                         
                     }
                 }
-                AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+                PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
                 
@@ -965,7 +952,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                     [self presentViewController:errorAlert animated:YES completion:nil];
 
                     [self.view setUserInteractionEnabled:YES];
-                    [self.refreshControl endRefreshing];
+                    //[self.refreshControl endRefreshing];
                     
                 }];
                 
@@ -1478,7 +1465,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 -(void)loadCategoryAPI {
     
     
-    [self beginRefreshingTableView];
+    //[self beginRefreshingTableView];
         NSString* urlString = [NSString stringWithFormat:@"%@%@/menu/GetMenuCategories?source=%@" ,kBaseURL,kAPI,@"SkagitTimes"];   
     DLog(@"url string service otp--%@",urlString);
     
@@ -1494,7 +1481,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             
             
             [self.view setUserInteractionEnabled:YES];
-            [spinner removeSpinner];
+            //[self.refreshControl endRefreshing];
 
             if (json.count>0)
             {
@@ -1556,13 +1543,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 
             }
             
-            [self.refreshControl endRefreshing];
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
             DLog(@"Error: %@", error);
             
             [self.view setUserInteractionEnabled:YES];
-            [self.refreshControl endRefreshing];
+            //[self.refreshControl endRefreshing];
 
             UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
@@ -1627,8 +1613,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             }
 
         }
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
+    
+    [self beginRefreshingTableView];
         [manager.requestSerializer setValue:@"PoshMobile" forHTTPHeaderField:@"User-Agent"];
         
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
@@ -1686,9 +1673,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
             }
             
+            //[self.refreshControl endRefreshing];
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
             DLog(@"Error: %@", error);
+            //[self.refreshControl endRefreshing];
             [self handleServiceCallCompletion];
            
 
