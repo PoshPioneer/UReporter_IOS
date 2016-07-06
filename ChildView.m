@@ -42,6 +42,11 @@
 
     UIImageView *imgGradient;
     SyncManager *sync;
+    
+    UILabel *lblTime;
+    UILabel *lblCategory;
+    LikeDetail *obj;
+    NSMutableArray * allMediaItemsArray;
 }
 
 @end
@@ -69,6 +74,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+   obj = [LikeDetail new];
+
     screenSize =[[UIScreen mainScreen] bounds].size;
     // Do any additional setup after loading the view from its nib.
     
@@ -78,16 +87,19 @@
     
     // initialize scroll view
     
-    srlView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0, screenSize.width,screenSize.height)];
+    srlView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0, screenSize.width,screenSize.height-50)];
     [self.view addSubview:srlView];
    
     // initialize description label
 
     lblDescription = [[UILabel alloc] init];
     [srlView addSubview:lblDescription];
-    [lblDescription setFont:[UIFont fontWithName:@"Roboto-Bold" size:14.0]];
+    [lblDescription setFont:[UIFont fontWithName:@"PTSerif-Regular" size:14.0]];
+    //[lblDescription setFont:[UIFont fontWithName:@"Roboto-Bold" size:14.0]];
     lblDescription.numberOfLines = 0;
-    lblTitle.lineBreakMode = NSLineBreakByCharWrapping;
+    lblDescription.textColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1];
+    lblDescription.textAlignment=NSTextAlignmentLeft;
+    lblDescription.lineBreakMode = NSLineBreakByWordWrapping;
     // initialize like button
 
     likeButton = [[UIButton alloc]init];
@@ -112,9 +124,9 @@
     
     lblAuthorName = [[UILabel alloc] init];
     [srlView addSubview:lblAuthorName];
-    lblAuthorName.textColor = [UIColor blueColor];
+    lblAuthorName.textColor = [UIColor blackColor];
     [lblAuthorName setBackgroundColor:[UIColor clearColor]];
-    [lblAuthorName setFont:[UIFont fontWithName:@"Roboto-Bold" size:18.0]];//author
+    [lblAuthorName setFont:[UIFont fontWithName:@"Roboto-Regular" size:15.0]];
     lblAuthorName.lineBreakMode = NSLineBreakByWordWrapping;
     
     // initialize title label
@@ -125,15 +137,41 @@
     lblTitle.adjustsFontSizeToFitWidth = YES;
     lblTitle.lineBreakMode = NSLineBreakByWordWrapping;
     [lblTitle setBackgroundColor:[UIColor clearColor]];
-    [lblTitle setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+   [lblTitle setFont:[UIFont fontWithName:@"Roboto-Regular" size:19.0]];
+    lblTitle.textColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1];
+
+
+    
+    // initialize time label
+    
+    lblTime = [[UILabel alloc]init];
+    lblTime.adjustsFontSizeToFitWidth = YES;
+    lblTime.lineBreakMode = NSLineBreakByWordWrapping;
+    [lblTime setBackgroundColor:[UIColor clearColor]];
+    [lblTime setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+    lblTime.textColor = [UIColor colorWithRed:183.0/255.0 green:183.0/255.0 blue:183.0/255.0 alpha:1];
+
+    
+    
+    // initialize time label
+    
+    lblCategory = [[UILabel alloc]init];
+    lblCategory.adjustsFontSizeToFitWidth = YES;
+    lblCategory.lineBreakMode = NSLineBreakByWordWrapping;
+    [lblCategory setBackgroundColor:[UIColor clearColor]];
+    [lblCategory setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
+    lblCategory.textColor = [UIColor colorWithRed:183.0/255.0 green:183.0/255.0 blue:183.0/255.0 alpha:1];
+    lblCategory.textAlignment = NSTextAlignmentRight;
+
     
     objectDataClass = [DataClass getInstance];
     DLog(@"all data from array--%@",self.testArray);
     DLog(@"%lu",self.testArray.count);
+  
     
     openGallery = [[UIButton alloc] init];
     counterOFPages = [[UILabel alloc] init];
-  
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -145,32 +183,35 @@
 
 -(void)manageDB
 {
-    DLog(@"global index in child view--%ld",(long)pageIndex);
-    DLog(@"all urls in childview--%@",completeURLs);
-    DLog(@"all url in array --%@",self.completeURls_Array);
+//    DLog(@"global index in child view--%ld",(long)pageIndex);
+//    DLog(@"all urls in childview--%@",completeURLs);
+//    DLog(@"all url in array --%@",self.completeURls_Array);
     NSString *feedID = [self.testArray objectAtIndex:(long)pageIndex][@"guid"];
     NSArray * arrDB = [DBController getSingleLike_Info:feedID];
     if(arrDB.count >0)  {
-        LikeDetail *obj = [LikeDetail new];
+        
+        
+        
         obj = arrDB[0];
+        
         NSString *strStatus = obj.status;
         if ([strStatus isEqualToString:@"0"])
         {
-            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUp_new@2x.png"] forState:UIControlStateNormal];
+            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUpDisabled@2x.png"] forState:UIControlStateNormal];
             [likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
             likeButton.showsTouchWhenHighlighted =TRUE;
             
-            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDown_new@2x.png"] forState:UIControlStateNormal];
+            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDownDisabled@2x.png"] forState:UIControlStateNormal];
             [disLikeButton addTarget:self action:@selector(dislikeService) forControlEvents:UIControlEventTouchUpInside];
             disLikeButton.showsTouchWhenHighlighted =TRUE;
         }
         else if ([strStatus isEqualToString:@"1"])
         {
             [likeButton setUserInteractionEnabled:NO];
-            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUpDisabled@2x.png"] forState:UIControlStateNormal];
+            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUp_new@2x.png"] forState:UIControlStateNormal];//
             likeButton.showsTouchWhenHighlighted =TRUE;
             
-            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDown_new@2x.png"] forState:UIControlStateNormal];
+            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDownDisabled@2x.png"] forState:UIControlStateNormal];
             [disLikeButton addTarget:self action:@selector(dislikeService) forControlEvents:UIControlEventTouchUpInside];
             disLikeButton.showsTouchWhenHighlighted =TRUE;
             [disLikeButton setUserInteractionEnabled:YES];
@@ -179,12 +220,12 @@
         else if ([strStatus isEqualToString:@"2"])
         {
             
-            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUp_new@2x.png"] forState:UIControlStateNormal];
+            [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUpDisabled@2x.png"] forState:UIControlStateNormal];
             [likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
             likeButton.showsTouchWhenHighlighted =TRUE;
             [likeButton setUserInteractionEnabled:YES];
 
-            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDownDisabled@2x.png"] forState:UIControlStateNormal];
+            [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDown_new@2x.png"] forState:UIControlStateNormal];//
             disLikeButton.showsTouchWhenHighlighted =TRUE;
             [disLikeButton setUserInteractionEnabled:NO];
 
@@ -192,11 +233,11 @@
     }
     else
     {
-        [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUp_new@2x.png"] forState:UIControlStateNormal];
+        [likeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsUpDisabled@2x.png"] forState:UIControlStateNormal];
         [likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         likeButton.showsTouchWhenHighlighted =TRUE;
         
-        [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDown_new@2x.png"] forState:UIControlStateNormal];
+        [disLikeButton setBackgroundImage:[UIImage imageNamed:@"ThumbsDownDisabled@2x.png"] forState:UIControlStateNormal];
         [disLikeButton addTarget:self action:@selector(dislikeService) forControlEvents:UIControlEventTouchUpInside];
         disLikeButton.showsTouchWhenHighlighted =TRUE;
     }
@@ -212,11 +253,11 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    [super viewWillAppear:animated];
+
     [self manageDB];
-    
-    
-    NSMutableArray * allMediaItemsArray =[[NSMutableArray alloc] init];
+  
+    allMediaItemsArray =[[NSMutableArray alloc]init];
     allMediaItemsArray = [[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"Mediaitems"];
     DLog(@"all media count--%lu",(unsigned long)[allMediaItemsArray count]);
     NSString* textOnCounter = [NSString stringWithFormat:@"1/%lu",(unsigned long)allMediaItemsArray.count];
@@ -244,36 +285,44 @@
 
     lblTitle.text = [[[self.testArray objectAtIndex:(long)pageIndex]valueForKey:@"Title"] stringByTrimmingCharactersInSet:
                      [NSCharacterSet whitespaceCharacterSet]];
+    lblTitle.frame = CGRectMake(25,25,screenSize.width-50,60);
+    [srlView addSubview:lblTitle];
+    
+    lblTime.frame =CGRectMake(25, lblTitle.frame.origin.y + lblTitle.frame.size.height + 0, 100, 35);
+    [srlView addSubview:lblTime];
 
+    lblTime.text = [NSString stringWithFormat:@"%@",[[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"pubDate"] uppercaseString]];
+    
+    lblCategory.frame =CGRectMake(screenSize.width - 100, lblTitle.frame.origin.y + lblTitle.frame.size.height + 0, 75, 35);
+    [srlView addSubview:lblCategory];
+    lblCategory.text = [NSString stringWithFormat:@"%@",[[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"category"] uppercaseString]];
+    [lblCategory.text uppercaseString];
     
     if ([allMediaString length] ==0)
     {
+       
         
-        
-        lblTitle.frame = CGRectMake(8,10,screenSize.width-16,60);
-        [srlView addSubview:lblTitle];
-        
-        lblAuthorName.frame = CGRectMake(8,lblTitle.frame.origin.y + lblTitle.frame.size.height + 5,screenSize.width-16,20);
+       // lblAuthorName.frame = CGRectMake(8,lblTitle.frame.origin.y + lblTitle.frame.size.height + 13,screenSize.width-16,20);
 
         lblDescription.numberOfLines = 0; // allows label to have as many lines as needed
-        DLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
         
-        
-        CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -16];
+        CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -50];
                                     
-        DLog(@"height = %f",expectedLabelSize);
-        lblDescription.frame = CGRectMake(8,lblAuthorName.frame.origin.y + lblAuthorName.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+        NSLog(@"height = %f",expectedLabelSize);
+       // lblDescription.frame = CGRectMake(8,lblAuthorName.frame.origin.y + lblAuthorName.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+         lblDescription.frame = CGRectMake(25,lblTime.frame.origin.y + lblTime.frame.size.height + 10,screenSize.width - 50, expectedLabelSize);//25
         [lblDescription sizeToFit];
         
-        likeButton.frame = CGRectMake((screenSize.width*0.218), lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, (screenSize.width*0.15), (screenSize.height*0.088));
-        disLikeButton.frame=  CGRectMake((screenSize.width*0.625), lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, (screenSize.width*0.15), (screenSize.height*0.088));
-        srlView.contentSize = CGSizeMake(screenSize.width, lblDescription.frame.size.height+ lblDescription.frame.origin.y + 250);
+        likeButton.frame = CGRectMake(70, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 25, (screenSize.width*0.15), (screenSize.height*0.088));
+        disLikeButton.frame=  CGRectMake(screenSize.width - 70 - likeButton.frame.size.width, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 25, (screenSize.width*0.15), (screenSize.height*0.088));
+        srlView.contentSize = CGSizeMake(screenSize.width, likeButton.frame.size.height+ likeButton.frame.origin.y + 100);
         
         
     }
     else
     {
-        CGRect aRect = CGRectMake(8,8, screenSize.width-16,200);
+       
+        CGRect aRect = CGRectMake(0,lblTime.frame.origin.y + lblTime.frame.size.height + 10, screenSize.width,220);
         [imgMedia setFrame:aRect];
         imgMedia.contentMode = UIViewContentModeScaleAspectFill;
         [imgMedia setClipsToBounds:YES];
@@ -284,8 +333,7 @@
         NSString * tempURl = [convertingURLToImage valueForKey:@"url"];
         [imgMedia sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",tempURl]]];
        
-        
-        imgGradient.frame = CGRectMake(0, 0, imgMedia.frame.size.width,  imgMedia.frame.size.height);
+        imgGradient.frame = CGRectMake(0, lblTime.frame.origin.y + lblTime.frame.size.height + 25, imgMedia.frame.size.width,  imgMedia.frame.size.height);
         [imgMedia addSubview:imgGradient];
         
         openGallery.frame = aRect;
@@ -294,22 +342,26 @@
         [openGallery addTarget:self action:@selector(openGallery) forControlEvents:UIControlEventTouchUpInside];
         
         
-        lblTitle.frame=CGRectMake(8, imgMedia.frame.size.height-55, screenSize.width-16,55);
-        [imgMedia addSubview:lblTitle];
-        lblTitle.textColor = [UIColor whiteColor];
+       // lblTitle.frame=CGRectMake(8, imgMedia.frame.size.height-55, screenSize.width-16,55);
+       // [imgMedia addSubview:lblTitle];
+        //lblTitle.textColor = [UIColor whiteColor];
         
         
-        lblAuthorName.frame= CGRectMake(8, imgMedia.frame.origin.y + imgMedia.frame.size.height + 5,screenSize.width-16,20);
+       
+       
+        
+        
+//        lblAuthorName.frame= CGRectMake(8, imgMedia.frame.origin.y + imgMedia.frame.size.height + 10,screenSize.width-16,20);
 
         
         lblDescription.numberOfLines = 0; // allows label to have as many lines as needed
         DLog(@"Label's frame is: %@", NSStringFromCGRect(lblDescription.frame));
         
         
-        CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -16];
+        CGFloat expectedLabelSize = [self heightForText:trimmedDescription font:lblDescription.font withinWidth:screenSize.width -50];
         
         DLog(@"height = %f",expectedLabelSize);
-        lblDescription.frame = CGRectMake(8,lblAuthorName.frame.origin.y + lblAuthorName.frame.size.height + 5,screenSize.width -16, expectedLabelSize);
+        lblDescription.frame = CGRectMake(25,imgMedia.frame.origin.y + imgMedia.frame.size.height +25,screenSize.width -50, expectedLabelSize);
         [lblDescription sizeToFit];
         
 
@@ -320,9 +372,9 @@
         DLog(@"Author name=== %@",[[self.testArray objectAtIndex:(long)pageIndex] valueForKey:@"author"]);
         
         
-        likeButton.frame = CGRectMake((screenSize.width*0.218), lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, (screenSize.width*0.15), (screenSize.height*0.088));
-        disLikeButton.frame=  CGRectMake((screenSize.width*0.625), lblDescription.frame.size.height +  lblDescription.frame.origin.y + 5, (screenSize.width*0.15), (screenSize.height*0.088));
-        srlView.contentSize = CGSizeMake(screenSize.width,  lblDescription.frame.size.height+ lblDescription.frame.origin.y  + 250);
+        likeButton.frame = CGRectMake(70, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 25, (screenSize.width*0.15), (screenSize.height*0.088));
+        disLikeButton.frame=  CGRectMake(screenSize.width - 70 - likeButton.frame.size.width, lblDescription.frame.size.height +  lblDescription.frame.origin.y + 25, (screenSize.width*0.15), (screenSize.height*0.088));
+        srlView.contentSize = CGSizeMake(screenSize.width,  likeButton.frame.size.height+ likeButton.frame.origin.y  + 100);
 
         counterOFPages.frame = CGRectMake(10, 10, 50, 50);
         [imgMedia addSubview:counterOFPages];
@@ -365,6 +417,7 @@
     LikeDetail *likeObj = [LikeDetail new];
     likeObj.feedID = guid;
     likeObj.status = @"1";
+    likeObj.subCategory = objectDataClass.globalSubCategory;
     
     
     BOOL updateFlag = [DBController updateLike_Info:likeObj];
@@ -385,7 +438,8 @@
     
     DLog(@"data and header for otp verify is = %@",finalDictionary);
     
-    NSString *urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/ThumbsUp?Guid=%@",guid];
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@%@/%@/ThumbsUp?Guid=%@",kBaseURL,kAPI,kRssFeed, guid];
     NSString * encodedString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 
     
@@ -407,7 +461,8 @@
     LikeDetail *likeObj = [LikeDetail new];
     likeObj.feedID = guid;
     likeObj.status = @"2";
-    
+    likeObj.subCategory = objectDataClass.globalSubCategory;
+
     
     BOOL updateFlag = [DBController updateLike_Info:likeObj];
     DLog(@"%i",updateFlag);
@@ -421,7 +476,8 @@
     
     DLog(@"data and header for otp verify is = %@",finalDictionary);
     
-    NSString *urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/RssFeed/ThumbsDown?Guid=%@",guid];
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@%@/%@/ThumbsDown?Guid=%@",kBaseURL, kAPI,kRssFeed,guid];
     NSString * encodedString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 
     [sync putServiceCall:encodedString withParams:nil];
@@ -477,8 +533,8 @@
     gallery.transferedArray = [tempArray copy];
     gallery.gatheredDict = completeURLs;
     
-    
-    [self.navigationController pushViewController:gallery animated:YES];
+    [self presentViewController:gallery animated:YES completion:nil];
+    //[self.navigationController pushViewController:gallery animated:YES];
     
 
 }

@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.2</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -37,11 +37,9 @@
 	<array>
 		<string>fontawesome-webfont.ttf</string>
 		<string>RobotoTTF</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>location</string>
+		<string>ptserif.ttf</string>
+		<string>Mark Simonson - Proxima Nova Alt Condensed Light.otf</string>
+		<string>Mark Simonson - Proxima Nova Alt Condensed Bold.otf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main_iPhone</string>

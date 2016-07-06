@@ -80,8 +80,22 @@
 
     BOOL checkUserComingFrom;
     NSMutableArray *LocalDataHandleArray;
+    AppDelegate *app;
+    CGSize size;
 
+    UITextField * StreetTxt;
+    UITextField * cityTxt;
+    UITextField * StateTxt;
+    UITextField * PincodeTxt;
+    
+    int locationStatus;
+    NSString *myLocationAddress;
+    
+    
+    CGSize sizeOfSubview;
 
+    
+    
 }
 
 @end
@@ -121,30 +135,33 @@
 }
 
 
--(void)checkCategoryData {
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
-        
-        DLog(@"quite empty!!!!");
-        // [app getCategory];
-        
-        DLog(@"coming!");
-    }else{
-        
-        lbl_output_category.userInteractionEnabled=YES ;
-        [self CallMethodForPicker];
-        [timerCheck invalidate];
-        
-    }
-
-    
-}
+//-(void)checkCategoryData {
+//    
+//    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
+//        
+//        DLog(@"quite empty!!!!");
+//        // [app getCategory];
+//        
+//        DLog(@"coming!");
+//    }else{
+//        
+//        lbl_output_category.userInteractionEnabled=YES ;
+//        [timerCheck invalidate];
+//        
+//    }
+//
+//    
+//}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    sizeOfSubview=[[UIScreen mainScreen]bounds].size;
+
+    app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+    size = [[UIScreen mainScreen]bounds].size;
     letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     sync = [[SyncManager alloc] init];
@@ -161,8 +178,8 @@
     
     videoDataDictionary=[NSMutableDictionary dictionary];
     
-    [lbl_output_category setUserInteractionEnabled:NO];
-    timerCheck = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkCategoryData) userInfo:nil repeats:YES];
+   // [lbl_output_category setUserInteractionEnabled:YES];
+//    timerCheck = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkCategoryData) userInfo:nil repeats:YES];
     
     segment_Outlet.selectedSegmentIndex=-1;
     segment_Outlet.layer.cornerRadius=2.0;
@@ -177,15 +194,55 @@
     textTabBar.tag  = 4;
     
     [self.scrollView_Video setScrollEnabled:YES];
-    [self.scrollView_Video setContentSize:CGSizeMake(320, 700)];
+   // [self.scrollView_Video setContentSize:CGSizeMake(320, 780)];
+    [self CallMethodForPicker];
+    
+    
+    if (tempArray == NULL) {
+        
+        NSURL *videoURL = ReceivedURl;
+        videoData = [NSData dataWithContentsOfURL:videoURL];
+        
+    }
+    
+    else{
+        
+        //NSLog(@"collected data from review view --%@",tempArray);
+        [self.view setNeedsLayout];
+        
+        txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
+        txt_View.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
+        //id categoryID = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"] ;
+        lbl_finalPicker_Selected.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
+        transferedVideoData = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"videoData"];
+        videoData = transferedVideoData;
+        tempPath=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"fileURl"];
+        NSString * localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
+        lbl_output_category.text=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"categoryName"];
+        receivedPath=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"fileURl"];
+
+        NSLog(@"local url--%@",localUrltesting);
+        
+        
+        /// start.....
+        
+       // [videoDataImage setImage:[self fixOrientationForImage:thumbImageForView]];
+        
+        // [videoDataImage setImage:thumbImageForView];
+        
+        
+        handleView = YES ;
+        
+    }
     
 }
 
 -(void)viewWillAppear:(BOOL)animated{
 
-    
+    [super viewWillAppear:animated];
+
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:0]];
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
 
    // self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
     
@@ -201,7 +258,8 @@
     }else{
         
         LocalDataHandleArray=[[[NSUserDefaults standardUserDefaults]valueForKey:@"SubmitArray"] mutableCopy];
-        
+
+
     }
     
     // end.....
@@ -211,11 +269,12 @@
     [self doItResize:@"show"];
     
    
-    videoData = [NSData dataWithContentsOfFile:ReceivedURl];
-    DLog(@"received data from uploadview --%@",receivedPath);
+   // videoData = [NSData dataWithContentsOfFile:ReceivedURl];
+   // DLog(@"received data from uploadview --%@",receivedPath);
     tempPath = receivedPath;
     [self generateThumbnailFrompath];
-    DLog(@"received url --%@",ReceivedURl);
+    
+    NSLog(@"received url --%@",ReceivedURl);
    // DLog(@"converted path --%@", [NSData dataWithContentsOfFile:ReceivedURl]);
     
     segment_Outlet.tintColor =[UIColor colorWithRed:180.0/255.0 green:32.0/255.0 blue:33.0/255.0 alpha:1.0];
@@ -224,56 +283,6 @@
 
    // NSUInteger localSelection = objectDataClass.globalIndexSelection;
 
-    if (tempArray == NULL) {
-        
-        
-    }
-    
-    else{
-        
-        //DLog(@"collected data from review view --%@",tempArray);
-        [self.view setNeedsLayout];
-        
-        txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
-        txt_View.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
-        id categoryID = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"] ;
-        lbl_finalPicker_Selected.text = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
-        transferedVideoData = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"videoData"];
-        videoData = transferedVideoData;
-        
-        NSString * localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-        DLog(@"local url--%@",localUrltesting);
-        
-        
-        /// start.....
-        
-        [videoDataImage setImage:thumbImageForView];
-        
-        // end......
-        
-        DLog(@"category value--%@",categoryID);
-        if ([categoryID isEqualToString: @"1"]) {
-            lbl_output_category.text = @"Politics";
-            categoryId_String =categoryID;
-        }else if ([categoryID isEqualToString:@"2"]) {
-            lbl_output_category.text =@"Sports";
-            categoryId_String= categoryID;
-            
-            
-        }else if ([categoryID isEqualToString:@"3"]){
-            lbl_output_category.text =@"Games";
-            categoryId_String= categoryID;
-            
-        }else if ([categoryID isEqualToString:@"4"]){
-            lbl_output_category.text =@"Movie";
-            categoryId_String= categoryID;
-            
-        }
-        
-     handleView = YES ;
-    
-    }
-    
     
    // segment_Outlet.selectedSegmentIndex=-1;
 	// Set a tint color
@@ -288,9 +297,9 @@
     photoTabBar.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
 }
 
--(void)generateThumbnailFrompath {
+-(void)generateThumbnailFrompath{
     
-   // NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"videoPath"];
+    // NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"videoPath"];
     DLog(@" video path%@",tempPath);
     
     DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],tempPath.lastPathComponent]);
@@ -298,22 +307,37 @@
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],tempPath.lastPathComponent];
     
     NSURL *videoURL = [NSURL fileURLWithPath:fullPath];
+    ///var/mobile/Containers/Data/Application/C414839A-C936-423C-BB02-91A5ABBB3163/Documents/O8RiF86v.mp
     
-    /*  MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+    /*
+     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+     AVAssetImageGenerator *generateImg = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+     NSError *error = NULL;
+     CMTime time = CMTimeMake(1, 65);
+     CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
+     NSLog(@"error==%@, Refimage==%@", error, refImg);
      
-     UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-     
-     //Player autoplays audio on init
-     [player stop];*/
+     UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
+     [videoDataImage setImage:[self fixOrientationForImage:FrameImage]];
+     */
+    
+    
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
-    AVAssetImageGenerator *generateImg = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    NSError *error = NULL;
-    CMTime time = CMTimeMake(1, 65);
-    CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-    DLog(@"error==%@, Refimage==%@", error, refImg);
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    gen.appliesPreferredTrackTransform = YES;
+    CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+    NSError *error = nil;
+    CMTime actualTime;
     
-    UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
-    [videoDataImage setImage:FrameImage];
+    CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    UIImage *thumb = [[UIImage alloc] initWithCGImage:image];
+    [videoDataImage setImage:thumb];
+    
+    CGImageRelease(image);
+    
+    
+    
+    //  [videoDataImage setImage:FrameImage];
 }
 
 
@@ -331,7 +355,9 @@
 
 -(void)viewDidLayoutSubviews {
     
-    DLog(@"viewDidLayoutSubview");
+    [self.scrollView_Video setContentSize:CGSizeMake(size.width, 600)];
+    
+    NSLog(@"viewDidLayoutSubview");
     
     // 12 August code .
     
@@ -395,67 +421,8 @@
             
             
         }
-}
-    
-    
-    
-    
-// 12 August code
-    
-    
-   /*
-    
-    if (isPickerTapped) {
-    
-        isPickerTapped=NO;
-    
-        if (videoData==nil) {
-            [self doItResize:@"hide"];
-            DLog(@"photo is yet to be  taken!");
-            segment_Outlet.selectedSegmentIndex=-1;
 
-        }
-    
-    
-    }else{
-    
-        // NSString *server = [[NSUserDefaults standardUserDefaults]stringForKey:@"Video_Check"];
-        if (!server) {
-
-            [self doItResize:@"hide"];
-
-            DLog(@"video  is yet to be  taken!");
-           // segment_Outlet.selectedSegmentIndex=-1;
-            
-        }else{
-           // segment_Outlet.selectedSegmentIndex=-1;
-            //  when photo has been taken.....
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Video_Check"];
-            [[NSUserDefaults standardUserDefaults]synchronize];
-            
-            DLog(@"video has been taken!");
-            // [self doItResize:@"show"];
-            [lbl_selected_File_Outlet setHidden:NO];
-            [img_View_Selected_File_Outlet setHidden:NO];
-            [lbl_finalPicker_Selected setHidden:NO];
-            [cut_Sec setHidden:NO];
-            lbl_finalPicker_Selected.text=[self  generateUniqueName];
-
-            if (isBrowserTapped) {
-                
-                lbl_selected_File_Outlet.text= @"Selected file";
-                
-            }else{
-                lbl_selected_File_Outlet.text= @"Captured video";
-                
-            }
-
-        }
-        
     }
-    
-    */
-    
 }
 
 #pragma mark --
@@ -511,66 +478,15 @@
 }
 
 
-//
-//-(void)doItResize{
-//    
-//    ////////hiding //////////
-//    
-//    [lbl_selected_File_Outlet setHidden:YES];
-//    [img_View_Selected_File_Outlet setHidden:YES];
-//    [lbl_finalPicker_Selected setHidden:YES];
-//    [cut_Sec setHidden:YES];
-//    
-//    ////////hiding //////////
-//
-//    
-//    [image_Select_NewCategory setFrame: CGRectMake(image_Select_NewCategory.frame.origin.x, image_Select_NewCategory.frame.origin.y-50, image_Select_NewCategory.frame.size.width, image_Select_NewCategory.frame.size.height)];
-//    
-//    [image_Title_Outlet setFrame:CGRectMake(image_Title_Outlet.frame.origin.x, image_Title_Outlet.frame.origin.y-50, image_Title_Outlet.frame.size.width, image_Title_Outlet.frame.size.height)];
-//    
-//    [image_AddStory_Outlet setFrame:CGRectMake(image_AddStory_Outlet.frame.origin.x, image_AddStory_Outlet.frame.origin.y-50, image_AddStory_Outlet.frame.size.width, image_AddStory_Outlet.frame.size.height)];
-//    
-//    [btn_Reset_Outlet setFrame:CGRectMake(btn_Reset_Outlet.frame.origin.x, btn_Reset_Outlet.frame.origin.y-50, btn_Reset_Outlet.frame.size.width, btn_Reset_Outlet.frame.size.height)];
-//    
-//    [btn_Upload_Outlet setFrame:CGRectMake(btn_Upload_Outlet.frame.origin.x, btn_Upload_Outlet.frame.origin.y-50, btn_Upload_Outlet.frame.size.width, btn_Upload_Outlet.frame.size.height)];
-//    
-//    [lbl_AddStory_Outlet setFrame:CGRectMake(lbl_AddStory_Outlet.frame.origin.x, lbl_AddStory_Outlet.frame.origin.y-50, lbl_AddStory_Outlet.frame.size.width, lbl_AddStory_Outlet.frame.size.height)];
-//    
-//    [lbl_Title setFrame:CGRectMake(lbl_Title.frame.origin.x, lbl_Title.frame.origin.y-50, lbl_Title.frame.size.width, lbl_Title.frame.size.height)];
-//    
-//    [lbl_output_category setFrame:CGRectMake(lbl_output_category.frame.origin.x, lbl_output_category.frame.origin.y-50, lbl_output_category.frame.size.width, lbl_output_category.frame.size.height)];
-//    
-//    [btn_Selected_new_Category_Outlet setFrame:CGRectMake(btn_Selected_new_Category_Outlet.frame.origin.x, btn_Selected_new_Category_Outlet.frame.origin.y-50, btn_Selected_new_Category_Outlet.frame.size.width, btn_Selected_new_Category_Outlet.frame.size.height)];
-//    
-//    [lbl_Select_new_Category setFrame:CGRectMake(lbl_Select_new_Category.frame.origin.x, lbl_Select_new_Category.frame.origin.y-50, lbl_Select_new_Category.frame.size.width, lbl_Select_new_Category.frame.size.height)];
-//    
-//    [lbl_finalPicker_Selected setFrame:CGRectMake(lbl_finalPicker_Selected.frame.origin.x, lbl_finalPicker_Selected.frame.origin.y-50, lbl_finalPicker_Selected.frame.size.width, lbl_finalPicker_Selected.frame.size.height)];
-//    
-//    [txt_View setFrame:CGRectMake(txt_View.frame.origin.x, txt_View.frame.origin.y-50, txt_View.frame.size.width, txt_View.frame.size.height)];
-//    
-//    
-//    [txt_Title setFrame:CGRectMake(txt_Title.frame.origin.x, txt_Title.frame.origin.y-50, txt_Title.frame.size.width, txt_Title.frame.size.height)];
-//
-//    
-//    
-//    
-//}
 
 
 -(void)doItResize:(NSString *)hideAndShow{
-    
-   // segment_Outlet.selectedSegmentIndex=-1;
-    
-    int  increment_Decrement=0;
-    
+  
     NSString *hide_Show = hideAndShow;
-    
     if ([hide_Show isEqualToString:@"show"]) {
         
-        videoData = [NSData dataWithContentsOfFile:ReceivedURl];
-         lbl_finalPicker_Selected.text=fileNameforVideo;
-        increment_Decrement=+56;
-        
+       // videoData = [NSData dataWithContentsOfFile:ReceivedURl];
+        lbl_finalPicker_Selected.text=fileNameforVideo;
         [lbl_selected_File_Outlet setHidden:NO];
         [img_View_Selected_File_Outlet setHidden:NO];
         [lbl_finalPicker_Selected setHidden:NO];
@@ -579,10 +495,8 @@
         
     }else{
         
-        
         lbl_finalPicker_Selected.text=nil;
         videoData=nil;
-        increment_Decrement=-56;
         [lbl_selected_File_Outlet setHidden:YES];
         [img_View_Selected_File_Outlet setHidden:YES];
         [lbl_finalPicker_Selected setHidden:YES];
@@ -606,10 +520,8 @@
     NSArray *array = [self.navigationController viewControllers];
     
     DLog(@"Video content from array is :  %@",array);
-    
-    
+
     if ([lbl_output_category.text length]>0 || videoData !=nil  || [txt_Title.text length]>0 || [txt_View.text length]>0) {
-        
         
         goBackAlert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Are you sure you want to cancel this news submission?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
         [goBackAlert show];
@@ -619,7 +531,7 @@
         txt_Title.text=nil;
         lbl_finalPicker_Selected.text=nil;
         lbl_output_category.text=@"Choose Category";
-        videoData=nil;
+        videoData=nil; // testing video data
        // [self.navigationController popViewControllerAnimated:NO];
         [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
     }
@@ -639,7 +551,7 @@
     txt_Title.text=nil;
     lbl_finalPicker_Selected.text=nil;
     lbl_output_category.text=nil;
-    videoData=nil;
+    videoData=nil; //// testing video data
     
     segment_Outlet.selectedSegmentIndex=-1;
     
@@ -698,34 +610,6 @@
         [self StartUpdating];
 
         
-//        if (!checkStr) {
-//            
-//            without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location(city) for your news/story." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
-//            without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
-//            UITextField *txtLocation = [without_Address textFieldAtIndex:0];
-//            txtLocation.delegate     = self;
-//            txtLocation.text         = @"";
-//            txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
-//            [txtLocation setPlaceholder:@"Location"];
-//            [self.view endEditing:YES];
-//            [without_Address show];
-//
-//        }else{
-//            
-//          /*  with_Address = [[UIAlertView alloc]initWithTitle:@"Your current location" message:[NSString stringWithFormat:@"%@\n\nIf incorrect, please enter the location(city) for your news/story",checkStr] delegate:self cancelButtonTitle:@"Submit" otherButtonTitles:nil ,nil];
-//            with_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
-//            
-//            UITextField *txtLocation = [with_Address textFieldAtIndex:0];
-//            txtLocation.delegate     = self;
-//            txtLocation.text         = @"";
-//            txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
-//            [txtLocation setPlaceholder:@"Location"];
-//            [self.view endEditing:YES];
-//            [with_Address show];
-//            */
-//            
-//            [self createCustomUiField];
-//        }
         
     }
         
@@ -737,19 +621,6 @@
         
     }
 
-//    
-//    
-//    int temp=0;         // this is a temp var for checking purpose.......
-//    if (temp==0) {
-//        
-//        [self.view addSubview:CaptureOnLocation_View];
-//        
-//    }
-//    else{
-//        
-//        [self.view addSubview:current_Location_View];
-//        
-//            }
     
 }
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
@@ -847,7 +718,7 @@
             txt_Title.text=nil;
             lbl_finalPicker_Selected.text=nil;
             lbl_output_category.text=@"Choose Category";
-            videoData=nil;
+            videoData=nil; // testing video data
            // [self.navigationController popViewControllerAnimated:YES];
             
             [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
@@ -861,44 +732,7 @@
         [self.navigationController popToViewController:[array objectAtIndex:1] animated:NO];
 
         
-        /*
-        if (buttonIndex==0) {
-
-            // for first send service....
-                // cancel tapped.......
-                DLog(@"cancel_Tapped");
-                
-                ok_For_Success_Outlet.tag=2;
-                CGSize size = [[UIScreen mainScreen]bounds].size;
-                
-                if (size.height==480) {
-                    [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"unsuccess3.5.png"]];
-                    
-                    UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(102.0, 299.0, 115.0, 38.0)];
-                    
-                    
-                    [btnUpload setImage:[UIImage imageNamed:@"btn_ip5.png"] forState:UIControlStateNormal];
-                    [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                    
-                    // [button addTarget:self
-                    //     action:@selector(aMethod:)
-                    // forControlEvents:UIControlEventTouchUpInside];
-                    [view_ForSuccess_Unsuccess addSubview:btnUpload];
-                    
-                    
-                }else{
-                    [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"unsuccess.png"]];
-                    UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(103.0, 345.0, 115.0, 38.0)];
-                    [btnUpload setImage:[UIImage imageNamed:@"btn_ip5.png"] forState:UIControlStateNormal];
-                    [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                    
-                    [view_ForSuccess_Unsuccess addSubview:btnUpload];
-                }
-                
-                [self.view addSubview:self.view_ForSuccess_Unsuccess];
-         
-         */
-                
+        
         }else if (buttonIndex==1){
             
             if (isItFirstService==1) {
@@ -980,9 +814,16 @@
 
     //for gradient.........
     
+    float circular_Progress_Viewwidth = (sizeOfSubview.width * 54)/100;
+    float circular_Progress_Viewheight = (sizeOfSubview.height * 23.7)/100;
+    
     [self.view setAlpha:0.4];
     [self.view setUserInteractionEnabled:NO];
-    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+    self.circular_Progress_View.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -circular_Progress_Viewwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -circular_Progress_Viewheight/2), circular_Progress_Viewwidth, circular_Progress_Viewheight);
+
+//    [self.view setAlpha:0.4];
+//    [self.view setUserInteractionEnabled:NO];
+//    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
     [self.view addSubview:self.circular_Progress_View];
     self.circular_Progress_View.thicknessRatio = 0.111111;
     self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
@@ -995,12 +836,18 @@
     session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
     
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
-    NSString * urlString = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken]];
-    
-    DLog(@"video url--%@",urlString);
     
     
-    NSURL *url =[ NSURL URLWithString:urlString];//= [NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
+    
+    
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/%@?id=%@&token=%@",kBaseURL,kAPI,kblobs,[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],[GlobalStuff generateToken]];
+                            
+    
+    
+    NSLog(@"video url--%@",urlString);
+    
+    
+    NSURL *url =[ NSURL URLWithString:urlString];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1090,21 +937,49 @@
     
     //for gradient.........
     
+//    [self.view setAlpha:0.4];
+//    [self.view setUserInteractionEnabled:NO];
+//    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+//    [self.view addSubview:self.circular_Progress_View];
+//    self.circular_Progress_View.thicknessRatio = 0.111111;
+//    self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
+//    self.circular_Progress_View.innerBackgroundColor=[UIColor lightGrayColor];
+//    self.circular_Progress_View.progressFillColor=[UIColor redColor];
+//    
+//    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
+//    [self.circular_Progress_View addSubview:percentSignLabel];
+//    percentSignLabel.text = @"%";
+//    percentSignLabel.textColor = [UIColor whiteColor];
+//    percentSignLabel.font = [UIFont systemFontOfSize:25];
+//    [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
+    
+    
+    
+    
+    float circular_Progress_Viewwidth = (sizeOfSubview.width * 54)/100;
+    float circular_Progress_Viewheight = (sizeOfSubview.height * 23.7)/100;
+    
     [self.view setAlpha:0.4];
     [self.view setUserInteractionEnabled:NO];
-    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+    self.circular_Progress_View.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -circular_Progress_Viewwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -circular_Progress_Viewheight/2), circular_Progress_Viewwidth, circular_Progress_Viewheight);
+    
+    //circular_Progress_View.backgroundColor = [UIColor lightGrayColor];
+    
     [self.view addSubview:self.circular_Progress_View];
     self.circular_Progress_View.thicknessRatio = 0.111111;
     self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
     self.circular_Progress_View.innerBackgroundColor=[UIColor lightGrayColor];
-    self.circular_Progress_View.progressFillColor=[UIColor redColor];
     
-    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
-    [self.circular_Progress_View addSubview:percentSignLabel];
+    self.circular_Progress_View.progressFillColor=[UIColor redColor];
+    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake((circular_Progress_View.frame.size.width *63.9)/100, (circular_Progress_View.frame.size.height*41)/100, (circular_Progress_View.frame.size.width *14.5)/100, (circular_Progress_View.frame.size.width *14.5)/100)];
     percentSignLabel.text = @"%";
     percentSignLabel.textColor = [UIColor whiteColor];
     percentSignLabel.font = [UIFont systemFontOfSize:25];
+    
+    [self.circular_Progress_View addSubview:percentSignLabel];
     [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
+
+    
     
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -1112,11 +987,16 @@
     
     //timesgroupcrapi   http://timesgroupcrapi.cloudapp.net/api/UserDet
     
-    NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],@"&token=",[GlobalStuff generateToken] ];
+    
+    
+    
+    NSString * urlstring = [NSString stringWithFormat:@"%@%@/%@?id=%@&token=%@",kBaseURL,kAPI,kblobs,[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"],[GlobalStuff generateToken] ];
+                            
+    
     DLog(@"url video 2--%@",urlstring);
     
     
-    NSURL *url = [NSURL URLWithString:urlstring]; //[NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
+    NSURL *url = [NSURL URLWithString:urlstring];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1191,9 +1071,11 @@
         [progressView setHidden:NO];
        // [self.progressView setProgress:progress];
         self.circular_Progress_View.progress = progress;
-        UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
-        [self.circular_Progress_View addSubview:percentSignLabel];
+        UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake((circular_Progress_View.frame.size.width *63.9)/100, (circular_Progress_View.frame.size.height*41)/100, (circular_Progress_View.frame.size.width *14.5)/100, (circular_Progress_View.frame.size.width *14.5)/100)];
         percentSignLabel.text = @"%";
+        
+        [self.circular_Progress_View addSubview:percentSignLabel];
+       // percentSignLabel.text = @"%";
         percentSignLabel.textColor = [UIColor whiteColor];
         percentSignLabel.font = [UIFont systemFontOfSize:25];
         [self.circular_Progress_View bringSubviewToFront:percentSignLabel];
@@ -1246,21 +1128,7 @@
             
             [try_AgainInternet_Check show];
             
-            /*
-            ok_For_Success_Outlet.tag=2;
-            CGSize size = [[UIScreen mainScreen]bounds].size;
             
-            if (size.height==480) {
-                [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"unsuccess3.5.png"]];
-                
-                
-            }else{
-                [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"unsuccess.png"]];
-            }
-            
-            [self.view addSubview:self.view_ForSuccess_Unsuccess];
-             */
-             
             
         }
         
@@ -1285,7 +1153,6 @@
     
    // __block  NSString *categoryId_String;
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         
@@ -1304,12 +1171,14 @@
     
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
     
-    NSString * urlstring = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
+    
+    NSString * urlstring = [NSString stringWithFormat:@"%@%@/CJDetails?token=%@",kBaseURL,kAPI,[GlobalStuff generateToken]];
+                            
+    
     
     DLog(@"video url 3--%@",urlstring);
     
-    NSURL * url = [NSURL URLWithString:urlstring]; //@"http://prngapi.cloudapp.net/api/CJDetails"];
-    //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
+    NSURL * url = [NSURL URLWithString:urlstring];     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url
                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1319,14 +1188,7 @@
     NSMutableDictionary *headerDict = [NSMutableDictionary dictionary];
     NSMutableDictionary *dictionaryTemp = [NSMutableDictionary dictionary];
     
-    ///////////////////////////
-    // getting .....
-    NSString *  KEY_PASSWORD = @"com.toi.app.password";
-    NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    // getting ...
     
-    //////////////////////////
-
     [headerDict setValue:@"" forKey:@"DeviceId"];
     [headerDict setValue:@"" forKey:@"UserId"];  // user id is yet to set ....[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]
     [headerDict setValue:@"" forKey:@"Source"];
@@ -1341,25 +1203,34 @@
     
     checkStr =    [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
     
-    if (!checkStr) {
-        // when it's empty!!!!!
-        
-        [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
-        
-    }else{
-        
-        // when it's not empty (address is not empty !!!!!)
-        NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
-        NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
-        if ([trimmedString isEqualToString:@""]) {
+    if (locationStatus ==1) {
+        if (!checkStr) {
+            // when it's empty!!!!!
             
-            // it's empty or contains only white spaces
-            [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
+            [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
             
         }else{
             
-            [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
-        }
+            // when it's not empty (address is not empty !!!!!)
+            NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
+            NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
+            if ([trimmedString isEqualToString:@""]) {
+                
+                // it's empty or contains only white spaces
+                [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
+                
+            }else{
+                
+                [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
+            }
+
+        
+    }
+        
+    }else{
+        
+        [dictionaryTemp setValue:myLocationAddress forKey:@"LocationDetails"];
+
         
     }
     
@@ -1440,13 +1311,13 @@
                                                                  
                                                                  
                                                                  NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-                                                                [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+                                                                [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
                                                                  NSString *date=[dateFormatter stringFromDate:[NSDate date]];
 //                                                                 DLog(@"%@",[dateFormatter stringFromDate:[NSDate date]]);
                                                                  
                                                                  
                                                                  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                                                                 [formatter setDateFormat:@"hh:mm a"];
+                                                                 [formatter setDateFormat:@"hh:mm:ss"];
                                                                  NSString *time=[formatter stringFromDate:[NSDate date]];
                                                                  
                                                                  
@@ -1495,41 +1366,36 @@
                                                                
                                                                  ok_For_Success_Outlet.tag=1;
                                                                  
-                                                                 CGSize size = [[UIScreen mainScreen]bounds].size;
                                                                  
-                                                                 if (size.height==480) {
-                                                                     [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success3.5.png"]];
-//                                                                     UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(102.0, 435.0, 115.0, 38.0)];
-                                                                     UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(126.0, 227.0, 115.0, 38.0)];
                                                                      
-                                                                     [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                     [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                     btnUpload .clipsToBounds = YES;
-                                                                     [btnUpload.layer setCornerRadius:4.5];
-                                                                    [self.selectedView.layer setCornerRadius:4.0];
-                                                                     
-                                                                     
-                                                                     [view_ForSuccess_Unsuccess addSubview:self.selectedView];
-                                                                     [self.selectedView addSubview:btnUpload];
-                                                                     
-                                                                     
-                                                                     
-                                                                 }else{
-                                                                     [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
-                                                                     //UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(103.0, 435.0, 115.0, 38.0)];
-                                                                     UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(86.0, 241.0, 115.0, 38.0)];
-                                                                     [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                     [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                     btnUpload .clipsToBounds = YES;
-                                                                     [btnUpload.layer setCornerRadius:4.5];
-                                                                     
-                                                                     [self.selectedView.layer setCornerRadius:4.0];
-                                                                     [view_ForSuccess_Unsuccess addSubview:self.selectedView];
-                                                                     [self.selectedView addSubview:btnUpload];
-                                                                 }
+//         [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
+//         //UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(103.0, 435.0, 115.0, 38.0)];
+//         UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(86.0, 241.0, 115.0, 38.0)];
+//         [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
+//         [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
+//         btnUpload .clipsToBounds = YES;
+//         [btnUpload.layer setCornerRadius:4.5];
+//         
+//         [self.selectedView.layer setCornerRadius:4.0];
+//         [view_ForSuccess_Unsuccess addSubview:self.selectedView];
+//         [self.selectedView addSubview:btnUpload];
+//    
+//     [self.view addSubview:self.view_ForSuccess_Unsuccess];
+                                                                 
+                                                                 [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
+                                                                 UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake((self.selectedView.frame.size.width *15)/100, (self.selectedView.frame.size.height *84)/100, (self.selectedView.frame.size.width *25.9)/100, (self.selectedView.frame.size.height *12)/100)];
+                                                                 [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
+                                                                 [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
+                                                                 btnUpload .clipsToBounds = YES;
+                                                                 [btnUpload.layer setCornerRadius:4.5];
+                                                                 [self.selectedView.layer setCornerRadius:4.0];
+                                                                 
+                                                                 
+                                                                 self.view_ForSuccess_Unsuccess.frame = self.view.frame;
+                                                                 [view_ForSuccess_Unsuccess addSubview:self.selectedView];
+                                                                 [self.selectedView addSubview:btnUpload];
                                                                  [self.view addSubview:self.view_ForSuccess_Unsuccess];
-                                                                 
-                                                                 
+          
                                                                  
                                                              }else{
                                                                  
@@ -1585,16 +1451,18 @@
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
     
-    //timesgroupcrapi   http://timesgroupcrapi.cloudapp.net/api/UserDet
-    //NSString * urlStr=[NSString stringWithFormat:@"%@%@%@%@",@"http://toicr.cloudapp.net/api/VideoThumbnail?id=",Id_BlobFromService,@"&token=",Finaltoken];
+    
 
     
-    NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/VideoThumbnail?id=",Id_BlobFromService,@"&token=",Finaltoken];
+    
+    NSString * urlstring = [NSString stringWithFormat:@"%@%@/VideoThumbnail?id=%@&token=%@",kBaseURL,kAPI,Id_BlobFromService,Finaltoken];
+    
+                            
+                            
     DLog(@"url video 4 --%@",urlstring);
     
     
-    NSURL *url = [NSURL URLWithString:urlstring];//[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/VideoThumbnail?id=%@",Id_BlobFromService]];
-    
+    NSURL *url = [NSURL URLWithString:urlstring];    
     DLog(@"%@",url);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
@@ -1765,14 +1633,14 @@
         UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         
-        NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+       // NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
         
         
         
-        NSString *documentsDirectory;
-        for (int i=0; i<[pathArray count]; i++) {
-            documentsDirectory =[pathArray objectAtIndex:i];
-        }
+//        NSString *documentsDirectory;
+//        for (int i=0; i<[pathArray count]; i++) {
+//            documentsDirectory =[pathArray objectAtIndex:i];
+//        }
         
         //Gaurav's logic
         
@@ -1813,19 +1681,7 @@
         // Nav_valueToPhoto =YES;
         
         //  handleView = YES ;
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            
-            UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-            uploadP.transferedImageData =data;
-            uploadP.transferPhotoUniqueName = captureduniqueName;
-            //  uploadP.navigateValue = Nav_valueToPhoto;
-            uploadP.transferFileURl =localUrl;
-            [self.navigationController pushViewController:uploadP animated:NO];
-            
-        }else{
-            
             UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
             uploadP.transferedImageData =data;
             uploadP.transferPhotoUniqueName = captureduniqueName;
@@ -1833,7 +1689,7 @@
             uploadP.transferFileURl =localUrl;
             [self.navigationController pushViewController:uploadP animated:NO];
             
-        }
+        
 
     
    }
@@ -1841,75 +1697,31 @@
     else{ // for video
         
         [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
-        
-        //  [picker dismissViewControllerAnimated:YES completion:NULL];
-        
         handleView = YES ;
-        
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
-            
-        }
-        
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
-        
+     
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
         videoData = [NSData dataWithContentsOfURL:videoURL];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
+        receivedPath=tempPath;
         
+        [videoData writeToFile:tempPath atomically:NO];
+
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
-        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
-        
-        if (isBrowserTapped)
-        {
-            
-        }
-        
-     //   [self.scrollView_Video setScrollEnabled:YES];
-        // [self.scrollView_Photo setContentSize:CGSizeMake(320, 600)];
-     //   [self.scrollView_Video setContentOffset:CGPointMake(5, 5) animated:YES];
 
-        
-        
-        
     }
     [self generateThumbnailFrompath];
     
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.view setNeedsLayout];
 
-    
-    
-//    if (IS_OS_8_OR_LATER) {
-//        
-//        [picker.view removeFromSuperview] ;
-//        [picker removeFromParentViewController] ;
-//        
-//    }else{
-//        
-//        [picker dismissViewControllerAnimated:YES completion:nil];
-//        
-//    }
-
-//    [picker dismissModalViewControllerAnimated:YES];
 
 }
 
@@ -1946,147 +1758,6 @@
         
     }
 }
-/*
-#pragma mark ####################################################################
-#pragma mark ##############      TextField Delegate    ##########################
-#pragma mark ####################################################################
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    
-    return YES;
-}
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    
-    if (textField == lbl_output_category)
-    {
-        isPickerTapped= YES ;
-
-    }
-    //textField.text=@"";
-    static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
-    static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
-    static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
-    static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
-    static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
-    
-    CGRect textFieldRect;
-    CGRect viewRect;
-    
-    
-    textFieldRect =[self.view.window convertRect:textField.bounds fromView:textField];
-    viewRect =[self.view.window convertRect:self.view.bounds fromView:self.view];
-    
-    
-    CGFloat midline = textFieldRect.origin.y + 0.5 * textFieldRect.size.height;
-    CGFloat numerator = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height;
-    CGFloat denominator = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height;
-    CGFloat heightFraction = numerator / denominator;
-    
-    if (heightFraction < 0.0)
-    {
-        heightFraction = 0.0;
-    }
-    else if (heightFraction > 1.0)
-    {
-        heightFraction = 1.0;
-    }
-    
-    UIInterfaceOrientation orientation =[[UIApplication sharedApplication] statusBarOrientation];
-    if (orientation == UIInterfaceOrientationPortrait ||orientation == UIInterfaceOrientationPortraitUpsideDown)
-    {
-        animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
-    }
-    else
-    {
-        animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
-    }
-    
-    CGRect viewFrame;
-    
-    viewFrame= self.view.frame;
-    viewFrame.origin.y -= animatedDistance;
-    
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
-    
-    [self.view setFrame:viewFrame];
-    
-    [UIView commitAnimations];
-}
-
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    if(textField.tag==0)
-    {
-        static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
-        CGRect viewFrame;
-        
-        viewFrame= self.view.frame;
-        viewFrame.origin.y += animatedDistance;
-        
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
-        
-        
-        [self.view setFrame:viewFrame];
-        [UIView commitAnimations];
-        
-    }
-    
-}
-
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return TRUE;
-}
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-   [self.view  endEditing:YES]; //may be not required
-    [super touchesBegan:touches withEvent:event]; //may be not required
-    [self  dismissControls];
-}
-- (void)dismissControls
-{
-    
-    [self.view  endEditing:YES]; //may be not required
-}
-
-*/
-#pragma mark -
-#pragma mark ---------------               RESIGN KEYBOARD on touch Method                ---------------
-#pragma mark -
-
-
-#pragma mark -
-#pragma mark ---------------               Text View on touch Method                ---------------
-#pragma mark -
-
-
-/*
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    
-    if([text isEqualToString:@"\n"]) {
-        [textView resignFirstResponder];
-        if(txt_View.text.length == 0){
-            txt_View.textColor = [UIColor lightGrayColor];
-           // txt_View.text = @"Enter Comment Here";
-            [txt_View resignFirstResponder];
-        }
-        return NO;
-    }
-    
-    return YES;
-}
-*/
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)string{
     
@@ -2118,96 +1789,10 @@
     
     return YES;
 }
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView
-{
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
     [textView resignFirstResponder];
 	return TRUE;
 }
-
-//- (void)textViewDidBeginEditing:(UITextView *)textView
-//{
-//    //textField.text=@"";
-//	static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
-//	static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
-//	static const CGFloat MAXIMUM_SCROLL_FRACTION = 1.0;
-//	static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
-//	static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
-//	
-//	CGRect textFieldRect;
-//	CGRect viewRect;
-//	
-//	
-//	textFieldRect =[self.view.window convertRect:textView.bounds fromView:textView];
-//	viewRect =[self.view.window convertRect:self.view  .bounds fromView:self.view  ];
-//	
-//	
-//	CGFloat midline = textFieldRect.origin.y + 1.0 * textFieldRect.size.height;
-//	CGFloat numerator = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height;
-//	CGFloat denominator = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height;
-//	CGFloat heightFraction = numerator / denominator;
-//	
-//	if (heightFraction < 0.0)
-//	{
-//		heightFraction = 0.0;
-//	}
-//	else if (heightFraction > 1.0)
-//	{
-//		heightFraction = 1.0;
-//	}
-//	
-//	UIInterfaceOrientation orientation =[[UIApplication sharedApplication] statusBarOrientation];
-//	if (orientation == UIInterfaceOrientationPortrait ||orientation == UIInterfaceOrientationPortraitUpsideDown)
-//	{
-//		animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
-//	}
-//	else
-//	{
-//		animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
-//	}
-//	
-//	CGRect viewFrame;
-//	
-//	viewFrame= self.view  .frame;
-//	viewFrame.origin.y -= animatedDistance;
-//	
-//	
-//	[UIView beginAnimations:nil context:NULL];
-//	[UIView setAnimationBeginsFromCurrentState:YES];
-//	[UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
-//	
-//	[self.view   setFrame:viewFrame];
-//	
-//	[UIView commitAnimations];
-//}
-//- (void)textViewDidEndEditing:(UITextView *)textView
-//{
-//    [textView resignFirstResponder];
-//	if(textView.tag==0)
-//	{
-//		static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
-//		CGRect viewFrame;
-//		
-//		viewFrame= self.view  .frame;
-//		viewFrame.origin.y += animatedDistance;
-//		
-//		[UIView beginAnimations:nil context:NULL];
-//		[UIView setAnimationBeginsFromCurrentState:YES];
-//		[UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
-//		
-//		
-//		[self.view   setFrame:viewFrame];
-//		[UIView commitAnimations];
-//        
-//    }
-//    
-//}
-
-
-/////// text view delegate ends here!!!!!!
-
-#pragma mark @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-//                          this for browse video this video
-#pragma mark @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 
@@ -2232,8 +1817,6 @@
     
     mediaUI.delegate = delegate;
     
-    
-    
     [controller presentViewController:mediaUI animated:YES completion:nil];//: mediaUI animated: YES];
     return YES;
     
@@ -2247,19 +1830,8 @@
     DLog(@"tapped cancel!");
     [self dismissViewControllerAnimated:YES completion:nil];
     segment_Outlet.selectedSegmentIndex=-1;
-    
-//    if (IS_OS_8_OR_LATER) {   // code for ios 8 or above !!!!!!!!!
-//        
-//        [picker.view removeFromSuperview] ;
-//        [picker removeFromParentViewController] ;
-//        
-//    }else {
-//        [picker dismissViewControllerAnimated:YES completion:NULL];
-//    }
 
 }
-
-
 
 - (IBAction)segmentController_Handler:(id)sender {
     
@@ -2282,20 +1854,13 @@
                 
             }
             
-            
-            
         }else if ([sender selectedSegmentIndex]==1){
             
             [self.view endEditing:YES];
             DLog(@"Browose Tapped");
             isBrowserTapped=NO;
             [self startMediaBrowserFromViewController: self usingDelegate: self];
-            
-            
-            
         }
-
-        
     }
     else{
         
@@ -2362,7 +1927,7 @@
     
     [toolbar setItems:[NSArray arrayWithObjects:buttonflexible,buttonDone, nil]];
     lbl_output_category .inputAccessoryView = toolbar;
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     [lbl_output_category setItemList:[NSArray arrayWithArray:[app.categoryNameArray objectAtIndex:0]]];
     
@@ -2378,52 +1943,6 @@
 
 
 #pragma mark unused code ios 7.
-
-/*
-- (IBAction)btn_Selected_new_Category_Tapped:(id)sender{
-    
-    [self.view endEditing:YES];
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
-        
-        // DLog(@"quite empty!!!!");
-        // [app getCategory];
-        
-        DLog(@"coming!");
-    }else{
-
-    isPickerTapped=YES;
-    IQActionSheetPickerView *picker = [[IQActionSheetPickerView alloc] initWithTitle:@"Choose Category" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-    [picker setTag:9];
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    [picker setTitlesForComponenets:[NSArray arrayWithArray:app.categoryNameArray]];
-    [picker showInView:self.view];
-        
-        
-    }
-
-    
-}
-
-
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles
-{
-    switch (pickerView.tag)
-    {
-            
-        case 9: lbl_output_category.text=[titles componentsJoinedByString:@" - "];
-            break;
-            
-        default:
-            break;
-    }
-}
- 
- */
-
-/// these are the button which is using on the current location view
 
 
 
@@ -2521,19 +2040,6 @@
 
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    
-//    if (range.length==1) {
-//        return YES;
-//    }
-//    
-//    if (textField ==txt_Title) {
-//        
-//        if ([txt_Title.text length]>=50) {
-//            return NO;
-//        }
-//        
-//    }
-//    return YES;
     
     
     if (textField == txt_Title)
@@ -2636,35 +2142,16 @@
         }else if (type ==3){
           
           
-         /* CGSize size = [[UIScreen mainScreen]bounds].size;
-          
-          if (size.height==480) {
-          
-          UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView3.5" bundle:nil];
-          [self.navigationController pushViewController:uploadP animated:NO];
-          
-          }else{
-          
-          UploadAudioView *uploadP = [[UploadAudioView alloc]initWithNibName:@"UploadAudioView" bundle:nil];
-          [self.navigationController pushViewController:uploadP animated:NO];
-          
-          }*/
+   
             RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
             [self.navigationController pushViewController:recordview  animated:YES];
           
           }else if (type==4){
               
-              CGSize size = [[UIScreen mainScreen]bounds].size;
+                                UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
+                  [self.navigationController pushViewController:text animated:NO];
+                  
               
-              if (size.height==480) {
-                  UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-                  [self.navigationController pushViewController:text animated:NO];
-                  
-              }else{
-                  UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
-                  [self.navigationController pushViewController:text animated:NO];
-                  
-              }
           }
 }
 
@@ -2733,45 +2220,95 @@
 }
 #pragma mark -- Adding custom labels, textfield and buttons
 
--(void)createCustomUiField {
+-(void)createCustomUiField :(int)locationStatusLocal {
     
     // creting a custom view which will be like a alertview....
     
-    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(8.0, 129.0, 304.0, 322.0)];
+    float customAlertwidth = (sizeOfSubview.width * 95)/100;
+    float customAlertheight = (sizeOfSubview.height * 56.6)/100;
+    
+    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -customAlertwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -customAlertheight/2), customAlertwidth, customAlertheight)];
+    
+    //self.view.center = customAlertView.center;
     [customAlertView setBackgroundColor: [UIColor whiteColor]];
     customAlertView.clipsToBounds = YES;
     [customAlertView.layer setCornerRadius:4.5];
     
+    
+    
+
     // creating a custom label ....
-    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 17.0, 196.0, 21.0)];
-    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Light" size:18.0]];
+//    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake(43.0, 30.0, 210, 22.0)];
+    
+    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*14)/100, (customAlertView.frame.size.height*9.3)/100, (customAlertView.frame.size.width*69)/100, (customAlertView.frame.size.height*6.8)/100)];
+
+    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:20.0]];
     confirmLocationlabel.text = @"Confirm your location";
     [confirmLocationlabel setTextAlignment:NSTextAlignmentCenter];
+    [confirmLocationlabel setTextColor:[UIColor grayColor]];
     
     // for location logo..
-    UIImageView * locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    UIImageView * locationImage;// = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    
+    UILabel * enteredLocation = [[UILabel alloc] init];
+    
+    
+    enteredLocation.numberOfLines =3;
+    
+    
+    if (locationStatusLocal ==1) {
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*19.8)/100, 30.0, 30.0)];
+        //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*24.9)/100)];
+        
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = checkStr;
+    }else{
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*26.8)/100, 30.0, 30.0)];
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*25.9)/100)];
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = @"Location auto capturing is off.";
+        
+    }
+
+    
     [locationImage setContentMode:UIViewContentModeScaleAspectFill];
     [locationImage setImage:[UIImage imageNamed:@"location01@2x.jpg"]];
     
     
-    
-    UILabel * enteredLocation = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)];
-    [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-    
-    enteredLocation.numberOfLines =3;
-    enteredLocation.adjustsFontSizeToFitWidth = YES;
-    enteredLocation.lineBreakMode = NSLineBreakByWordWrapping;
-    
-    enteredLocation.text = checkStr;
-    [enteredLocation setTextAlignment:NSTextAlignmentLeft];
+    [enteredLocation setTextAlignment:NSTextAlignmentCenter];
     
     // custom label
     
-    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 138.0, 288.0, 23.0)];
-    [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
-    incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
-    incorrectLocationLabel.adjustsFontSizeToFitWidth = YES;
-    [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+//    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 115, 288.0, 60)];
+    
+    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*37.8)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*14)/100)];
+
+    incorrectLocationLabel.numberOfLines=2;
+    
+    
+    if (locationStatusLocal == 1) {
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
+        incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+        
+    }else{
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+        incorrectLocationLabel.text  =  @"Please enter the location details of your news/story.";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentLeft];
+        [incorrectLocationLabel setTextColor:[UIColor grayColor]];
+        incorrectLocationLabel.numberOfLines=2;
+        
+        
+    }
+    
+    
+    // incorrectLocationLabel.adjustsFontSizeToFitWidth = YES;
+    
     
     
     
@@ -2779,61 +2316,67 @@
     
     //custom textfield for Streets
     
-    UITextField * StreetTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 179.0, 279.0, 30.0)];
+//    StreetTxt = [[MYTextField alloc] initWithFrame:CGRectMake(8.0, 179.0, 279.0, 30.0)];
+    StreetTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*55.7)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*9.3)/100)];
+
     [StreetTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StreetTxt setTextAlignment:NSTextAlignmentLeft];
-    StreetTxt.placeholder = @" Street";
+    StreetTxt.placeholder = @"Street";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StreetTxt.layer.borderWidth =1.0;
     StreetTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StreetTxt.delegate =self;
-    
+    //StreetTxt.delegate =self;
     
     
     //custom textfield for city....
     
-    UITextField * cityTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 222.0, 97.0, 30.0)];
+//    cityTxt = [[MYTextField alloc] initWithFrame:CGRectMake(8.0, 222.0, 97.0, 30.0)];
+    cityTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
     [cityTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [cityTxt setTextAlignment:NSTextAlignmentLeft];
-    cityTxt.placeholder = @" City";
+    cityTxt.placeholder = @"City";
     [cityTxt setBorderStyle:UITextBorderStyleNone];
     cityTxt.layer.borderWidth =1.0;
     cityTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    cityTxt.delegate =self;
-    
-    
+   // cityTxt.delegate =self;
     
     //custom textfield for state
     
-    UITextField * StateTxt = [[UITextField alloc] initWithFrame:CGRectMake(115.0, 222.0, 83.0, 30.0)];
+//    StateTxt = [[MYTextField alloc] initWithFrame:CGRectMake(115.0, 222.0, 83.0, 30.0)];
+    
+    StateTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*34)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
     [StateTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StateTxt setTextAlignment:NSTextAlignmentLeft];
-    StateTxt.placeholder = @" State";
+    StateTxt.placeholder = @"State";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StateTxt.layer.borderWidth =1.0;
     StateTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StateTxt.delegate =self;
-    
+    //StateTxt.delegate =self;
     //custom textfield for Pincode
     
-    UITextField * PincodeTxt = [[UITextField alloc] initWithFrame:CGRectMake(205.0, 222.0, 83.0, 30.0)];
+//    PincodeTxt = [[MYTextField alloc] initWithFrame:CGRectMake(205.0, 222.0, 83.0, 30.0)];
+    PincodeTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*65.8)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
+
     [PincodeTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [PincodeTxt setTextAlignment:NSTextAlignmentLeft];
     PincodeTxt.placeholder = @"Pincode";
     [PincodeTxt setBorderStyle:UITextBorderStyleNone];
     PincodeTxt.layer.borderWidth =1.0;
     PincodeTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    PincodeTxt.delegate =self;
+  //  PincodeTxt.delegate= self;
     
     
     //custom button with action..
     
-    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake(92.0, 272.0, 120.0, 40.0)];
+//    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake(92.0, 272.0, 120.0, 40.0)];
+    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*30.2)/100, (customAlertView.frame.size.height*84.7)/100, (customAlertView.frame.size.width*39.4)/100, (customAlertView.frame.size.height*12.4)/100)];
+
     [submitButton setBackgroundImage:[UIImage imageNamed:@"Submit btn 640X1136.png"] forState:UIControlStateNormal];
     [submitButton addTarget:self action:@selector(submitButtonTap) forControlEvents:UIControlEventTouchUpInside];
     submitButton.clipsToBounds = YES;
     [submitButton.layer setCornerRadius:4.0];
-
     
     
     //Adding all custom labels and tetxfield to subview...
@@ -2874,25 +2417,44 @@
 #pragma mark -- Custom Button called...
 -(void)submitButtonTap {
     DLog(@"submit tapped");
-    [visualEffectView removeFromSuperview];
-    [customAlertView removeFromSuperview];
     
     // NSString *server = [[NSUserDefaults standardUserDefaults]stringForKey:@"connection_Internet"];
     
-    if ([Utility connected] == YES) {
-
-    [self  sendVideo_ToServer];
     
+    
+    if (locationStatus==1) {
+        
+        [visualEffectView removeFromSuperview];
+        [customAlertView removeFromSuperview];
+
+         [self  sendVideo_ToServer];
+        
+        
     }else{
         
-        UIAlertController *DoNothing_alrt = [UIAlertController alertControllerWithTitle:@"Alert!" message:@"Internet connection is not available.\n Please try again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction * doNothingAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert ){
-            // action.,.........
+        if([StreetTxt.text length]==0 || [cityTxt.text length]==0 || [StateTxt.text length]==0 ||[PincodeTxt.text length]==0){
             
-        }];
-        [DoNothing_alrt addAction:doNothingAction];
-        [self presentViewController:DoNothing_alrt  animated:YES completion:nil];
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Location cannot be empty,all fields are mandatory." message:@"Please enter a valid location." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction * actionAlert = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction* alert){
+                
+                
+            }];
+            [alert addAction:actionAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }else{
+            
+            
+            myLocationAddress=[NSString stringWithFormat:@"%@, %@, %@, %@",StreetTxt.text,cityTxt.text, StateTxt.text, PincodeTxt.text];
+            [visualEffectView removeFromSuperview];
+            [customAlertView removeFromSuperview];
+
+            [self  sendVideo_ToServer];
+            
+            
+        }
     }
+    
     
 }
 
@@ -3113,31 +2675,31 @@
         
         
         
+        categoryId_String=[self sendCategoryId:lbl_output_category.text];
         
         
-        
-       // __block  NSString *categoryId_String;
-        
-        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            
-            NSString *campareStr = [NSString stringWithFormat:@"%@",[[app.categoryNameArray objectAtIndex:0]objectAtIndex:idx]];
-            if ([campareStr isEqualToString:lbl_output_category.text]) {
-                
-                categoryId_String = [NSString stringWithFormat:@"%@",[[app.id_CategoryArray objectAtIndex:0]objectAtIndex:idx]];
-                
-            }
-            
-        }];
+//       // __block  NSString *categoryId_String;
+//        
+//        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//        [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            
+//            
+//            NSString *campareStr = [NSString stringWithFormat:@"%@",[[app.categoryNameArray objectAtIndex:0]objectAtIndex:idx]];
+//            if ([campareStr isEqualToString:lbl_output_category.text]) {
+//                
+//                categoryId_String = [NSString stringWithFormat:@"%@",[[app.id_CategoryArray objectAtIndex:0]objectAtIndex:idx]];
+//                
+//            }
+//            
+//        }];
         
         
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
         NSString *date=[dateFormatter stringFromDate:[NSDate date]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"hh:mm a"];
+        [formatter setDateFormat:@"hh:mm:ss"];
         NSString *time=[formatter stringFromDate:[NSDate date]];
         
         if ([objectDataClass.globalSubmitArray count]==0) {
@@ -3154,10 +2716,12 @@
         [VideocollectedDict setValue:txt_Title.text forKey:@"Title"];
         [VideocollectedDict setValue:txt_View.text forKey:@"FullStory"];
         [VideocollectedDict setValue:categoryId_String forKey:@"Id_Category"];    // picker view 's category.....
-        [VideocollectedDict setValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"] forKey:@"SubmittedBy"];         // user id need to get set here .
+        [VideocollectedDict setValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]forKey:@"SubmittedBy"];         // user id need to get set here .
+        
+        
+        [VideocollectedDict setValue:lbl_output_category.text forKey:@"categoryName"];
         [VideocollectedDict setValue:@"Submitted" forKey:@"JournalStatus"];
         [VideocollectedDict setValue:@"2" forKey:@"Id_MainCategory"];
-        //  [collectedDict setValue:Id_BlobFromService forKey:@"Id_Blob"];
         [VideocollectedDict setValue:date forKey:@"Date"];
         [VideocollectedDict setValue:time forKey:@"Time"];
         [VideocollectedDict setValue:@"VIDEO" forKey:@"Type"];
@@ -3193,15 +2757,15 @@
             
             if (tempArray == nil) {
                 
-                [LocalDataHandleArray addObject:VideocollectedDict];
-                
+                //[LocalDataHandleArray addObject:VideocollectedDict];
+                 [LocalDataHandleArray insertObject:VideocollectedDict atIndex:0];
                 
             }else{
                 
                 
                 [LocalDataHandleArray removeObjectAtIndex:objectDataClass.globalIndexSelection];
-                [LocalDataHandleArray addObject:VideocollectedDict];
-                
+                //[LocalDataHandleArray addObject:VideocollectedDict];
+                 [LocalDataHandleArray insertObject:VideocollectedDict atIndex:0];
             }
             
             
@@ -3250,7 +2814,8 @@
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Message" message:@"Your information has been saved for later submission." preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * alertAction = [UIAlertAction  actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             
-            [self.navigationController popViewControllerAnimated:YES];
+            NSArray *array = [self.navigationController viewControllers];
+            [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
             
         }];
         
@@ -3534,8 +3099,10 @@
 {
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    {
+        [locationManager requestAlwaysAuthorization];
+    }
     [locationManager startUpdatingLocation];
 }
 
@@ -3552,7 +3119,7 @@
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
-            without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            /*without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
             without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
             UITextField *txtLocation = [without_Address textFieldAtIndex:0];
             txtLocation.delegate     = self;
@@ -3560,7 +3127,10 @@
             txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
             [txtLocation setPlaceholder:@"Location"];
             [self.view endEditing:YES];
-            [without_Address show];
+            [without_Address show];*/
+            locationStatus=0;
+            [self createCustomUiField:locationStatus];
+
             
             
         }
@@ -3569,7 +3139,7 @@
     else {
         
         
-        without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+      /*  without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
         without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
         UITextField *txtLocation = [without_Address textFieldAtIndex:0];
         txtLocation.delegate     = self;
@@ -3577,7 +3147,10 @@
         txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
         [txtLocation setPlaceholder:@"Location"];
         [self.view endEditing:YES];
-        [without_Address show];
+        [without_Address show];*/
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+
         
         
     }
@@ -3641,7 +3214,31 @@
     
     checkStr = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
     
-    [self createCustomUiField];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"LocationCheck"] isEqualToString:@"LocationOn"]) {
+        
+        locationStatus=1;
+        [self createCustomUiField:locationStatus];
+        
+        
+    }else{
+
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+        
+        
+        
+//        without_Address = [[UIAlertView alloc]initWithTitle:@"Unable to get current Location." message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+//        without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
+//        UITextField *txtLocation = [without_Address textFieldAtIndex:0];
+//        txtLocation.delegate     = self;
+//        txtLocation.text         = @"";
+//        txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
+//        [txtLocation setPlaceholder:@"Location"];
+//        [self.view endEditing:YES];
+//        [without_Address show];
+        
+        
+    }
 }
 
 -(void)syncFailure:(NSError*) error
@@ -3665,13 +3262,33 @@
     }else{
         
         
-        [self createCustomUiField];
+        //[self createCustomUiField];
         
     }
     
 }
 
-
+-(NSString*)sendCategoryId :(NSString*)textFieldText{
+    
+    
+    NSString *tempCategoryId;
+    for (int index=0; index <app.final_Id_Array.count; index++) {
+        
+        NSString *tempString=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Name"];
+        
+        if ([tempString isEqualToString:textFieldText]) {
+            
+            tempCategoryId=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Id_Category"];
+            return tempCategoryId;
+            
+        }else{
+            
+            // nothing...
+        }
+    }
+    
+    return NULL;
+}
 
 
 @end

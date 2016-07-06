@@ -13,10 +13,11 @@
 
 
 
-@interface PlayRecordedAudio (){
+@interface PlayRecordedAudio ()
+{
+    
      NSURL *yourFileURL;
     AppDelegate *app;
-    NSArray *reverseArray;
     NSString *finalTime;
     NSTimer *timerCheck;
     YMCAudioPlayer *obj;
@@ -43,8 +44,8 @@
     
     // Do any additional setup after loading the view from its nib.
     app=(AppDelegate *)[[UIApplication sharedApplication]delegate];
-    reverseArray=[[NSArray alloc]init];
-    reverseArray = [[app.myFinalArray reverseObjectEnumerator] allObjects];
+//    reverseArray=[[NSArray alloc]init];
+//    reverseArray = [[app.myFinalArray reverseObjectEnumerator] allObjects];
     
     self.audioPlayer = [[YMCAudioPlayer alloc] init];
     [self setupAudioPlayer];
@@ -82,17 +83,10 @@
     
 }
 
-
-
--(void)checkCategoryData{
-    
-}
-
-
-
-
 -(void)viewWillAppear:(BOOL)animated {
 
+    [super viewWillAppear:animated];
+    
    // self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
     
     

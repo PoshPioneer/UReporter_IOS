@@ -49,12 +49,23 @@
 @property(strong,nonatomic)NSString * globalFeedID;
 @property(strong,nonatomic)NSString * globalFeedType;
 @property(strong,nonatomic)NSString * globalstaticLink;
+@property(strong,nonatomic)NSString * globalSubCategory;
 
 @property BOOL globalStaticCheck; // only for static view.
 
 @property(assign) NSUInteger globalCounter;
 
 @property(strong,nonatomic) NSDictionary *jsonDict;
+
+
+@property(strong,nonatomic)NSString * globalCategory;
+
+
+@property(nonatomic,strong)NSMutableArray *audioDetailsMutableArray;
+@property BOOL checkForAudioCurrentCaptureOrNot;
+
+
+@property (nonatomic,strong)NSMutableArray *feedsArrayDC;
 
 
 

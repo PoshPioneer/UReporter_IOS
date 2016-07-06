@@ -31,7 +31,8 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    
+    [super viewWillAppear:animated];
+
     [self.view setUserInteractionEnabled:NO];
     spinner=[SpinnerView loadSpinnerIntoView:self.view];
     
@@ -42,6 +43,13 @@
 
 
 -(void)load_webView_Url {
+    
+    
+    
+//    NSString *urlString = @"http://www.goskagit.com/weather/?weather_zip=98274&amp;f=rss&amp;altf=doapp2";
+//     url = [NSURL URLWithString:urlString];
+//     urlRequest = [NSURLRequest requestWithURL:url];
+//    [self.Temperature_webView loadRequest:urlRequest];
     
     NSError *error = nil;
     
@@ -57,6 +65,8 @@
     
     
     url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?zip=98274,us&appid=025fd416c44e35caa638609d50f6c056&units=metric"];
+    
+   // NSLog(@"DICT IS===%@",getData);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];

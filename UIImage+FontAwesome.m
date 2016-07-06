@@ -44,7 +44,7 @@ int fa_constraintLabelToSize(UILabel *label, CGSize size, int maxFontSize, int m
 
 
 @implementation UIImage (UIImage_FontAwesome)
-
+/*
 +(UIImage*)imageWithIcon:(NSString*)identifier backgroundColor:(UIColor*)bgColor iconColor:(UIColor*)iconColor andSize:(CGSize)size{
     if (!bgColor) {
         bgColor = [UIColor clearColor];
@@ -94,6 +94,7 @@ int fa_constraintLabelToSize(UILabel *label, CGSize size, int maxFontSize, int m
     UIGraphicsEndImageContext();
     return image;
 }
+*/
 
 +(UIImage*)imageWithIcon:(NSString*)identifier backgroundColor:(UIColor*)bgColor iconColor:(UIColor*)iconColor  fontSize:(int)fontSize
 {

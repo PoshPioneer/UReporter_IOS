@@ -131,10 +131,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *ok_For_Success_Outlet;
 
-
 @property(nonatomic,assign)BOOL handleView ;
 @property(nonatomic,assign)BOOL cutboolValue ;
-
 
 // TAB BAR OUTLETS
 @property (weak, nonatomic) IBOutlet UITabBar *tabBarController;
@@ -152,11 +150,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *submitForReview;
 @property (strong,nonatomic)NSMutableArray * tempArray;
 
-
 - (IBAction)submitForReview:(id)sender;
-
-
-
 
 @property (nonatomic,strong)UIImage *thumbImageForView;
 

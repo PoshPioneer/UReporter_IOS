@@ -112,7 +112,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     
     self.pageController.dataSource = self;
    // [[self.pageController view] setFrame:[[self view] bounds]];
-    [[self.pageController view] setFrame:CGRectMake(0.0, 64.0, 320.0, 450.0)]; //0.0, 64.0, 320.0, 450.0
+    [[self.pageController view] setFrame:CGRectMake(0.0, 65.0, 320.0, 450.0)]; //0.0, 64.0, 320.0, 450.0
     
     
     
@@ -205,7 +205,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
         objectDataClass.globalIndex = *(enlarge.pageIndex);
         
-       // DLog(@"%lu",(unsigned long)indexx);
+       // NSLog(@"%lu",(unsigned long)indexx);
      
     }
 }
@@ -244,7 +244,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     kNumberOfPages = allKeys.count;
     
     
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64,320,180)];//(0,0,320,460)
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 65,320,180)];//(0,0,320,460)
    // [self.view addSubview:scrollView];
   //  scrollView.backgroundColor=[UIColor redColor];
     // a page is the width of the scroll view
@@ -269,7 +269,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             
     
             NSString *ImageURL = [self.getImageURls_Dict valueForKey:[NSString stringWithFormat:@"url%d",i+1]]; //self.getimageURl;
-            DLog(@"image url -- %@",ImageURL);
+            NSLog(@"image url -- %@",ImageURL);
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageURL]];
             UIImage *tempImage = [UIImage imageWithData:imageData];
        
@@ -367,12 +367,11 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 -(void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
+
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
     
-    
-    
-   
 
     DLog(@"all image url--%@",self.getImageURls_Dict);
     
@@ -393,7 +392,7 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 -(void)likesData : (NSString *)_id
 {
-    NSArray *arrDB=[DBController getAllLike_Info];
+    NSArray *arrDB=[DBController getAllLike_Info : objectDataClass.globalSubCategory];
     
     DLog(@"%@",arrDB);
     DLog(@"%@ arrDB count  = %lu",_id,arrDB.count);
@@ -404,6 +403,8 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         LikeDetail * likeObj = [LikeDetail new];
         likeObj.feedID = _id;
         likeObj.status = @"0";
+        likeObj.subCategory = objectDataClass.globalSubCategory;
+        
         [DBController insertIntoLike_Info:likeObj];
     }
     else
@@ -429,6 +430,8 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
             LikeDetail * likeObj = [LikeDetail new];
             likeObj.feedID = _id;
             likeObj.status = @"0";
+            likeObj.subCategory = objectDataClass.globalSubCategory;
+
             [DBController insertIntoLike_Info:likeObj];
             
         }
@@ -442,14 +445,19 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 -(void) removeLikeData
 {
-    NSArray *arrDB=[DBController getAllLike_Info];
+    NSArray *arrDB=[DBController getAllLike_Info : objectDataClass.globalSubCategory];
     
+    NSLog(@"%ld",arrDB.count);
+    NSLog(@"%@",objectDataClass.globalSubCategory);
+
     for (LikeDetail *obj in arrDB)
     {
         BOOL flag =NO;
         for (NSDictionary *testObj in allDataArray)
         {
             NSString *strGuid = [testObj valueForKey:@"guid"];
+            
+            
             
             if ([strGuid isEqualToString:obj.feedID])
             {
@@ -494,22 +502,13 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 
 - (IBAction)shareButtonClicked:(id)sender {
 
-   // DLog(@"global index--%ld",(long)objectDataClass.globalIndex);
-//        DLog(@"shareButton pressed");
-//        
-//        NSString *texttoshare = @"Hello Testing"; //this is your text string to share
-//    //  UIImage *imagetoshare = @""; //this is your image to share
-//        NSArray *activityItems = @[texttoshare];
-//        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-//        activityVC.excludedActivityTypes = @[UIActivityTypePrint];
-//        [self presentViewController:activityVC animated:TRUE completion:nil];
-
-   
-    DLog(@"arr--%@",[allDataArray objectAtIndex:4]);
-   self.shareLink = [[allDataArray objectAtIndex:LocalIndex] valueForKey:@"Link"];
+  
     
-//    NSArray * activityItems = @[[NSString stringWithFormat:@"Some initial text."], [NSURL URLWithString:@"www.google.com"]];
-    NSArray * activityItems = @[[NSString stringWithFormat:self.shareLink]];
+    self.shareLink =[NSString stringWithFormat:@"%@",[[allDataArray objectAtIndex:LocalIndex] valueForKey:@"Link"]];
+    
+    NSArray * activityItems = @[self.shareLink];
+
+    
     NSArray * applicationActivities = nil;
     NSArray * excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeMessage];
     
@@ -615,17 +614,12 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
     }else if (type==4){
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-            [self.navigationController pushViewController:text animated:NO];
-            
-        }else{
+        
+       
             UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
             [self.navigationController pushViewController:text animated:NO];
             
-        }
         
         
         
@@ -750,59 +744,33 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         
         //  handleView = YES ;
         
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
-            
-        }
-        
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
-        
+               
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
         videoData = [NSData dataWithContentsOfURL:videoURL];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName =[NSString stringWithFormat:@"%lu.png",(NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
-        
+        [videoData writeToFile:tempPath atomically:NO];
+
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
         DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
-            
-        }else{
-            
             UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
             uploadV.receivedPath = tempPath;
             uploadV.ReceivedURl =videoURL;
             uploadV.fileNameforVideo = [self generateUniqueNameVideo];
             [self.navigationController pushViewController:uploadV animated:NO];
             
-        }
+        
         
         
         [picker dismissViewControllerAnimated:YES completion:nil];
@@ -816,105 +784,47 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
         UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        DLog(@"converted data--%@",data);
-        
-        //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
-        //    DLog(@"imagepath==================== %@",localUrl);
-        
+    
         if(isCameraClicked)
         {
             UIImageWriteToSavedPhotosAlbum(mainImage,  nil,  nil, nil);
-            
-            
         }
-        
-        //DLog(@"image is ========%@",mainImage);
-        
-        DLog(@"info==============%@",info);
-        
-        //New chamges
         
         UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
-        //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//        NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+//        NSString *documentsDirectory;
+//        for (int i=0; i<[pathArray count]; i++) {
+//            documentsDirectory =[pathArray objectAtIndex:i];
+//        }
         
-        NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
-        
-        
-        
-        NSString *documentsDirectory;
-        for (int i=0; i<[pathArray count]; i++) {
-            documentsDirectory =[pathArray objectAtIndex:i];
-        }
-        
-        //Gaurav's logic
-        
-        DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
-        
-        
-        
-        // NSString *myUniqueName = [NSString stringWithFormat:@"%@-%u", name, (NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
         
         //mohit logic
-        
         fileName = [NSString stringWithFormat:@"%lu.png",(NSUInteger)([[NSDate date] timeIntervalSince1970]*10.0)];
-        
-        
-        
-        //
-        
-        
-        // NSString *documentsDirectory = [pathArray objectAtIndex:0];
-        
-        localUrl =  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:fileName];//[documentsDirectory stringByAppendingPathComponent:fileName];
+        localUrl =  [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:fileName];
         NSLog (@"File Path = %@", localUrl);
         
         // Get PNG data from following method
-        NSData *myData =     UIImagePNGRepresentation(editedImage);
+        NSData *myData = UIImagePNGRepresentation(editedImage);
+        
         // It is better to get JPEG data because jpeg data will store the location and other related information of image.
         [myData writeToFile:localUrl atomically:YES];
         
         // Now you can use filePath as path of your image. For retrieving the image back from the path
-        //UIImage *imageFromFile = [UIImage imageWithContentsOfFile:localUrl];
-        
-        
         [[NSUserDefaults standardUserDefaults]setValue:@"DonePhoto" forKey:@"Photo_Check"];
         [[NSUserDefaults standardUserDefaults]synchronize];
-        //[picker dismissViewControllerAnimated:YES completion:NULL];
+        
         DLog(@"photo done--%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"Photo_Check"]);
         
         captureduniqueName = [self generateUniqueName];
-        
         Nav_valueToPhoto =YES;
         
-        //  handleView = YES ;
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-            uploadP.transferedImageData =data;
-            uploadP.transferPhotoUniqueName = captureduniqueName;
-            uploadP.navigateValue = Nav_valueToPhoto;
-            uploadP.transferFileURl =localUrl;
-            [self.navigationController pushViewController:uploadP animated:NO];
-            
-        }else{
-            
-            UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
-            uploadP.transferedImageData =data;
-            uploadP.transferPhotoUniqueName = captureduniqueName;
-            uploadP.navigateValue = Nav_valueToPhoto;
-            uploadP.transferFileURl =localUrl;
-            [self.navigationController pushViewController:uploadP animated:NO];
-            
-        }
-        
-        
-        
-        
-        //  [self.scrollView_Photo setScrollEnabled:YES];
-        // [self.scrollView_Photo setContentSize:CGSizeMake(320, 600)];
-        // [self.scrollView_Photo setContentOffset:CGPointMake(5, 5) animated:YES];
+        UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
+        uploadP.transferedImageData =data;
+        uploadP.transferPhotoUniqueName = captureduniqueName;
+        uploadP.navigateValue = Nav_valueToPhoto;
+        uploadP.transferFileURl =localUrl;
+        [self.navigationController pushViewController:uploadP animated:NO];
+ 
         [picker dismissViewControllerAnimated:YES completion:nil];
         [self.view setNeedsLayout];
         

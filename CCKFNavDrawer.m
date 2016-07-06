@@ -20,6 +20,7 @@
 #import "FAImageView.h"
 #import "UIImage+FontAwesome.h"
 #import "LoginView.h"
+#import <UIImageView+WebCache.h>
 
 
 
@@ -91,15 +92,21 @@
 {
     [super viewDidLoad];
     
+    //[self.drawerView.drawerTableView setBackgroundView:nil];
+   // [self.drawerView.drawerTableView setBackgroundColor:[UIColor clearColor]];
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     objectDataClass = [DataClass getInstance];
     sectionTitleArray = [[NSMutableArray alloc] init];
     
+    
+    
 }
-
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    [super viewWillAppear:animated];
+
    // [self.drawerView.drawerTableView deselectRowAtIndexPath:[self.drawerView.drawerTableView indexPathForSelectedRow] animated:YES];
     [self setUpDrawer];
 }
@@ -139,8 +146,10 @@
     // load drawer view
     self.drawerView = [[[NSBundle mainBundle] loadNibNamed:@"DrawerView" owner:self options:nil] objectAtIndex:0];
     
-    self.meunHeight = self.drawerView.frame.size.height;
-    self.menuWidth =  self.drawerView.frame.size.width;
+    
+    
+    self.meunHeight = self.view.frame.size.height;
+    self.menuWidth =  self.view.frame.size.width / 1.3;
     
     
     
@@ -160,20 +169,29 @@
     // add drawer view
     [self.drawerView setFrame:self.outFrame];
     [self.view addSubview:self.drawerView];
-
+    [self.drawerView.drawerTableView setBackgroundView:nil];
+    [self.drawerView.drawerTableView setBackgroundColor:[UIColor clearColor]];
+    
+    [self.drawerView setBackgroundColor:[UIColor whiteColor]];
+    
+    
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"userName"] == nil)
     {
         self.drawerView.lblUserName.text = @"";
         [self.drawerView.lblUserBelowLine setHidden:YES];
-
+        
     }
     else
     {
         self.drawerView.lblUserName.text = [[NSUserDefaults standardUserDefaults] valueForKey:@"userName"];
         [self.drawerView.lblUserBelowLine setHidden:NO];
-
+        
     }
-
+    
+    // drawer list
+    // [self.drawerView.drawerTableView setContentInset:UIEdgeInsetsMake(64, 0, 0, 0)]; // statuesBarHeight+navBarHeight
+    
+    // [self.drawerView.drawerTableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)]; // statuesBarHeight+navBarHeight
     self.drawerView.drawerTableView.contentInset = UIEdgeInsetsMake(-1.0f, 0.0f, 0.0f, 0.0);
     self.drawerView.drawerTableView.dataSource = self;
     self.drawerView.drawerTableView.delegate = self;
@@ -188,13 +206,15 @@
     self.pan_gr.minimumNumberOfTouches = 0 ;      // 1;
     
     // 15 may changed to prevent root view control presentation......;/
-
+    
     
     //self.pan_gr.delegate = self;
     [self.view addGestureRecognizer:self.pan_gr];
     [self.view bringSubviewToFront:self.navigationBar];
     
-
+    //    for (id x in self.view.subviews){
+    //        NSLog(@"%@",NSStringFromClass([x class]));
+    //    }
 }
 
 - (void)drawerToggle:(int)myCheck
@@ -442,29 +462,32 @@
         /********** If the section supposed to be closed *******************/
         if(!manyCells)
         {
-            cell.backgroundColor=[UIColor clearColor];
+            cell.backgroundColor=[UIColor whiteColor];
             
             cell.textLabel.text=@"";
         }
         /********** If the section supposed to be Opened *******************/
         else
         {
-          
-          subCategoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 0.0, 100.0, 35.0)]; // 30
-            subCategoryLabel.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
+            
+            
+            
+   
+            
+            subCategoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 0.0, 100.0, 35.0)]; // 30
+            subCategoryLabel.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
             subCategoryLabel.text=[NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Name"]];
            
             subCategoryLabel.font=[UIFont systemFontOfSize:13.0f];//15
-         
             
-            subCategoryLabel.textColor=[UIColor grayColor];
+            subCategoryLabel.textColor=[UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
 
             [cell addSubview: subCategoryLabel];
             if (objectDataClass.flag ) {
            
                 if (indexPath.row == objectDataClass.rowIndex  && indexPath.section == objectDataClass.sectionIndex)
                 {
-                    subCategoryLabel.textColor = [UIColor whiteColor];
+                    subCategoryLabel.textColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:objectDataClass.rowIndex inSection:objectDataClass.sectionIndex];
                     
                     [tableView selectRowAtIndexPath:indexPath
@@ -476,10 +499,10 @@
                 }
             }
         }
-         cell.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
+         cell.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
 
          UIView *bgColorView = [[UIView alloc] init];
-         bgColorView.backgroundColor = [UIColor colorWithRed:(76.0/255.0) green:(161.0/255.0) blue:(255.0/255.0) alpha:1.0]; // perfect color suggested by @mohamadHafez
+         bgColorView.backgroundColor = [UIColor colorWithRed:(209.0/255.0) green:(209.0/255.0) blue:(211.0/255.0) alpha:1.0]; // perfect color suggested by @mohamadHafez
          bgColorView.layer.masksToBounds = YES;
          cell.selectedBackgroundView = bgColorView;
     }
@@ -497,6 +520,7 @@
     DLog(@"selected sub sub menu");
     
     objectDataClass.rowIndex = indexPath.row;
+    objectDataClass.globalSubCategory = [NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Name"]];
 
     feedType = [sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][indexPath.row][@"Type"];
     DLog(@"feed type--%@",feedType);
@@ -508,6 +532,7 @@
     
     objectDataClass.globalFeedID = feedID;
     objectDataClass.globalFeedType = feedType;
+    objectDataClass.globalCategory = [NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"Menu"][@"MainCategory"]];
     DLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
     
     // PAYMETER API
@@ -526,6 +551,10 @@
     [self.CCKFNavDrawerDelegate CCKFNavDrawerSelection:[indexPath section]];
     [self closeNavigationDrawer];
 
+   // [self.drawerView.drawerTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    // [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
 }
 
 
@@ -547,13 +576,15 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     
-    UIView *sectionView=[[UIView alloc]initWithFrame:CGRectMake(0,0, 150,35)];
+    UIView *sectionView=[[UIView alloc]initWithFrame:CGRectMake(0,0, 150,50)];
     sectionView.tag=section;
     
     imageViewIcon =[[UIImageView alloc]init];
-     UILabel *viewLabel=[[UILabel alloc]initWithFrame:CGRectMake(40, 0, self.drawerView.drawerTableView.frame.size.width, 35)];// change 40 to 30 in height .
+    [imageViewIcon setBackgroundColor:[UIColor whiteColor]];
+
+     UILabel *viewLabel=[[UILabel alloc]initWithFrame:CGRectMake(70, 0, 300, 50)];// change 40 to 30 in height .
     viewLabel.backgroundColor=[UIColor clearColor];
-    viewLabel.textColor=[UIColor whiteColor];
+    viewLabel.textColor=[UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
    
     viewLabel.font=[UIFont systemFontOfSize:15];
     if (sectionTitleArray.count >=section+1) {
@@ -568,26 +599,41 @@
         FAValue  =[[[sectionTitleArray objectAtIndex:section] valueForKey:@"Menu"] valueForKey:@"FAValue"];
         sideFAType = [[[sectionTitleArray objectAtIndex:section] valueForKey:@"Menu"] valueForKey:@"FAClass"];
        // UILabel * iconLabel = [[UILabel alloc] initWithFrame:CGRectMake(6.0, 7.0, 20.0, 20.0)];
-        UIImageView * iconImage = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, 7.0, 20.0, 20.0)];
-
+        UIImageView * iconImage = [[UIImageView alloc] initWithFrame:CGRectMake(30.0, 15.0, 20.0, 20.0)];
             
-        if ([sideIconType isEqualToString:@"Image"]) {
             
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:iconImageUrl]];
-             
-             [iconImage setImage:[UIImage imageWithData:data]];
+            
+            /*let label = UILabel(frame: CGRectMake(0, 0, 100, 100))
+             label.font = UIFont(name: "FontAwesome", size: 40)
+             let myChar: UniChar = 0xF180
+             label.text = String(format: "%C", myChar)
+             self.view.addSubview(label)*/
+           
+        DLog(@"image url--%@",iconImageUrl);
+            
+            
+            UIImage *icon;
+            if ([sideIconType isEqualToString:@"Image"]) {
+                
+                //http://prngstorage.blob.core.windows.net/menucategory/Icons-01.png
+                
+                [iconImage sd_setImageWithURL:[NSURL URLWithString:iconImageUrl] placeholderImage:[UIImage imageNamed:@""]];
+                
+                
+            }else{
+                
+                
+                icon = [UIImage imageWithIcon:sideFAType backgroundColor:[UIColor clearColor] iconColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:255] fontSize:20];
+                DLog(@"imageis......%@",icon);
+                [iconImage setImage:icon];
+                
+            }
+            
+            
+            
             [sectionView addSubview:iconImage];
             
-        }//else if ([sideFAType isEqualToString:@"fa-archive"]){
-            
-            UIImage *icon = [UIImage imageWithIcon:sideFAType backgroundColor:[UIColor clearColor] iconColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:255] fontSize:20];
-            DLog(@"imageis......%@",icon);
-
-            [iconImage setImage:icon];
-            [sectionView addSubview:iconImage];
-            
-           });
-        
+        });
     }
     else {
         
@@ -596,23 +642,25 @@
             
             if (-1 == objectDataClass.rowIndex  && section == objectDataClass.sectionIndex && section != (sectionTitleArray.count + self.staticMenuItems.count)-1)
             {
-                sectionView.backgroundColor = [UIColor colorWithRed:(76.0/255.0) green:(161.0/255.0) blue:(255.0/255.0) alpha:1.0];
+                sectionView.backgroundColor = [UIColor colorWithRed:(209.0/255.0) green:(209.0/255.0) blue:(211.0/255.0) alpha:1.0];
             }
             else
             {
-                sectionView.backgroundColor = [UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
+                sectionView.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:20.0/255.0 green:20.0/255.0 blue:20.0/255.0 alpha:1.0];
             }
         }
-        imageViewIcon.frame = CGRectMake(8.0, 8.0, 18, 18);
-        viewLabel.frame = CGRectMake(45.0, 0.0, self.drawerView.drawerTableView.frame.size.width, 35); // 40
+        imageViewIcon.frame = CGRectMake(32, 16, 18, 18);
+        viewLabel.frame = CGRectMake(70.0, 0.0, 300, 50); // 40
         
         viewLabel.text=self.staticMenuItems[section-sectionTitleArray.count];
         if ([viewLabel.text isEqualToString:@"Profile"]) {
             imageViewIcon.image=[UIImage imageNamed:@"ProfileImg@2x.png"];
             viewLabel.font = [UIFont systemFontOfSize:15.0];
-            viewLabel.textColor = [UIColor whiteColor];
+            viewLabel.textColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
                 UIView* separatorLineView = [[UIView alloc] initWithFrame:CGRectMake(0,0, self.drawerView.drawerTableView.frame.size.width, 1)];
-                separatorLineView.backgroundColor = [UIColor whiteColor];
+               // separatorLineView.backgroundColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];;;
+            
+            separatorLineView.backgroundColor=[UIColor lightGrayColor];
                 [sectionView addSubview:separatorLineView];
 
             
@@ -624,6 +672,14 @@
 
             
             }
+            else if ([viewLabel.text isEqualToString:@"Terms and Conditions"]){
+                
+                imageViewIcon.image=[UIImage imageNamed:@"terms-conditions@2x.png"];
+            
+            
+            }
+            
+            
             else if ([viewLabel.text isEqualToString:@"Saved Articles"]){
             
                 imageViewIcon.image=[UIImage imageNamed:@"SavedArticleImg@2x.png"];
@@ -637,17 +693,22 @@
                 
             }
             
+            else if ([viewLabel.text isEqualToString:@"Logout"]){
+                
+                imageViewIcon.image=[UIImage imageNamed:@"logout@2x.png"];
+                
+            }
             
             
             viewLabel.font =[UIFont systemFontOfSize:15.0];
-            viewLabel.textColor = [UIColor whiteColor];
+            viewLabel.textColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
+            
             if ([viewLabel.text isEqualToString:@"My Submissions"]) {
                 imageViewIcon.image=[UIImage imageNamed:@"MySubmissionImg@2x.png"];
-
-
-                
                 UIView* separatorLineView = [[UIView alloc] initWithFrame:CGRectMake(0,0.0, self.drawerView.drawerTableView.frame.size.width, 1)];
-                separatorLineView.backgroundColor = [UIColor whiteColor];
+                //separatorLineView.backgroundColor = [UIColor colorWithRed:69.0/255.0 green:69.0/255.0 blue:69.0/255.0 alpha:1.0];
+                separatorLineView.backgroundColor=[UIColor lightGrayColor];
+
                 [sectionView addSubview:separatorLineView];
                 
             }
@@ -656,6 +717,12 @@
     [sectionView addSubview:viewLabel];
     [sectionView addSubview:imageViewIcon];
 
+    /********** Add a custom Separator with Section view *******************/
+    
+   
+    
+    /********** Add UITapGestureRecognizer to SectionView   **************/
+    
     UITapGestureRecognizer  *headerTapped   = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sectionHeaderTapped:)];
     [sectionView addGestureRecognizer:headerTapped];
     
@@ -756,8 +823,12 @@
     }
     else {
       
+        
+        
      objectDataClass.sectionIndex = indexPath.section;
   
+        
+        
     if (indexPath.row == 0) {
         BOOL collapsed  = [[arrayForBool objectAtIndex:indexPath.section] boolValue];
         objectDataClass.flag = !collapsed;
@@ -767,10 +838,13 @@
 
         }
         
+        
+        
+        
         for (int i=0; i<[sectionTitleArray count]; i++) {
             
             if (indexPath.section==i) {
-                DLog(@"%@", collapsed ? @"Yes" : @"No");
+                DLog(collapsed ? @"Yes" : @"No");
                
                 [arrayForBool replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:!collapsed]];
             }
@@ -795,6 +869,10 @@
             
             objectDataClass.globalFeedID = feedID;
             objectDataClass.globalFeedType = feedType;
+            objectDataClass.globalSubCategory = [NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"FeedsItem"][0][@"Name"]];
+            objectDataClass.globalCategory = [NSString stringWithFormat:@"%@",[sectionTitleArray objectAtIndex:indexPath.section][@"Menu"][@"MainCategory"]];
+
+
             DLog(@"global feed id--%@ and type--%@",objectDataClass.globalFeedID,objectDataClass.globalFeedType);
             
             // PAYMETER API
@@ -829,25 +907,12 @@
     
 }
 
+
 -(CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 35.0;
+    return 40.0;
     
 }
-
-
-
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    DLog(@"%ld",(long)indexPath.row);
-    return YES;
-}
-
-
-
-
-
 
 
 @end

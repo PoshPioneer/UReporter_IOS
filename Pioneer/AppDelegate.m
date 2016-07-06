@@ -26,6 +26,8 @@
 @synthesize soundFilePathData,Title,Description,indexpath;
 @synthesize FinalKeyChainValue,submitDict,textDictionarySubmit,FinalSubmitForReview;
 
+@synthesize final_Id_Array;
+
 
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -47,7 +49,7 @@
     
     
     [DBController copyDatabaseIfNeeded]; // TODO: //>     Initialize DBController
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    //[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
     [NSURLProtocol registerClass:[PHCachingURLProtocol class]];
     
@@ -61,9 +63,10 @@
 
     myFinalArray=[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"]mutableCopy];
 
-    FinalSubmitForReview = [[NSMutableArray alloc] init];
-
-    FinalSubmitForReview = [[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy];
+//    FinalSubmitForReview = [[NSMutableArray alloc] init];
+//
+//    FinalSubmitForReview = [[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy];
+    
 
     putValueToKeyChain=@"Times_Of_India_Newspaper12346789Maharashtra619ss1apkTestingqwetyxmf12223";
     AppDelegate *app1 = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -151,20 +154,8 @@
     
     UIStoryboard *mainStoryboard = nil;
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-    {  // for iphone ....
-        
-        if (size.height==568)
-        {
+    
             mainStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
-        }
-        else
-        {
-            mainStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone3.5" bundle:nil];
-        }
-        
-        
-    } // end for iphone .....
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [mainStoryboard instantiateInitialViewController];
@@ -204,29 +195,12 @@
                 
                 
                 
-                if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"0"])
-                {
+                if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"0"]){
                     
-                    DLog(@"keychain is not null");
-                    CGSize size = [[UIScreen mainScreen]bounds].size;
                     
-                    if (size.height==480)
-                    {
-                        
-                        UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView3.5" bundle:nil];
-                        [self.navigationController pushViewController:up animated:NO];
-                        
-                        
-                    }
-                    else
-                    {
-                        
                         UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView" bundle:nil];
                         [self.navigationController pushViewController:up animated:NO];
                         
-                    }
-                    
-                    
                 }
                 else
                 {
@@ -607,13 +581,12 @@
     
 // http://timesgroupcrapi.cloudapp.net   <---->  http://78dbfe55d0844370aacb49be8d573db3 <---> http://toicj -->toicj.cloudapp.net
     
+   
     
-    
-    NSString * urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/Category?token=",[GlobalStuff generateToken]];
-    
-    DLog(@"get category app url --%@",urlString);
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/%@?token=%@",kBaseURL,kAPI,kCategory,[GlobalStuff generateToken]];
+    NSLog(@"get category app url --%@",urlString);
 
-    NSURL *url= [NSURL URLWithString:urlString]; //@"http://prngapi.cloudapp.net/api/Category"];
+    NSURL *url= [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
@@ -655,49 +628,52 @@
                                    
                                    }
                                    else {
-                                       // No joy...
+                                       
+                                       
+                                       final_Id_Array=[[NSMutableArray alloc]init];
+                                       final_Id_Array=[[json valueForKey:@"data"] valueForKey:@"Categories"];
+                                       
 
+                                       
+                                       
                                 [ id_CategoryArray addObject: [[[json valueForKey:@"data"]valueForKey:@"Categories"]valueForKey:@"Id_Category"]];
                                 [ categoryNameArray addObject: [[[json valueForKey:@"data"]valueForKey:@"Categories"]valueForKey:@"Name"]];
                                      
+                                   
+                                
+                                       
+                                       
                                    }
 
                                    
                                    /*
                                     
-                                    json is  {
-                                    Message = "DeviceId is invalid";
-                                    }
-                                    
-                                    //////
-                                    
-                                    json is  {
+                                    /p of getCategory  is =   {
                                     data =     {
                                     Categories =         (
                                     {
-                                    "Id_Category" = 1;
-                                    Name = "Road Accident";
+                                    Description = "<null>";
+                                    "Id_Category" = 6;
+                                    Name = Fun;
                                     },
                                     {
-                                    "Id_Category" = 2;
-                                    Name = Politics;
-                                    },
-                                    {
+                                    Description = "<null>";
                                     "Id_Category" = 3;
-                                    Name = Business;
+                                    Name = Games;
                                     },
                                     {
+                                    Description = "<null>";
                                     "Id_Category" = 4;
-                                    Name = Technology;
-                                    }
-                                    );
-                                    };
-                                    header =     {
-                                    DeviceId = "a@gmail.com";
-                                    UserId = 50397;
-                                    };
-                                    }
-                                    */
+                                    Name = Movies;
+                                    },
+                                    {
+                                    Description = "<null>";
+                                    "Id_Category" = 1;
+                                    Name = News;
+                                    },                                    */
+                                   
+                                   
+                                   
                                    
                                    // PickerViewForCategory.delegate=self;
                                    //return to main thread
@@ -722,13 +698,37 @@
                                  AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                  NSString *  KEY_PASSWORD = @"com.toi.app.password";
                                  NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-                                 DLog(@"idfv is =====%@",idfv);
-
+                                 NSLog(@"idfv is =====%@",idfv);
+                                 // getting ...
+                                 
+                                 
+                                 ///// for settting ....
+//                                 NSMutableDictionary *usernamepasswordKVPairs = [NSMutableDictionary dictionary];
+//                                 [usernamepasswordKVPairs setObject:@"Amit_Parameter_argument" forKey:KEY_PASSWORD];
+//                                 [KeyChainValteck keyChainSaveKey:app.putValueToKeyChain data:usernamepasswordKVPairs];
+//                                 
+//                                 /// for setting ......
+//                                 
+//                                 NSString *    idfvAfter = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
+//                                 
+//                                 NSLog(@"idfv is =====%@",idfvAfter);
+                                // [[NSNotificationCenter defaultCenter]postNotificationName:@"goBackToHome" object:nil];
+                               
+                                 // amit joshi commented  5 august ...
+// */
+                                   
                                }else{
                                    
+                                   
+
+                               ///////
                                
                                }
 
+                               //////
+                               
+                               
+                               
                                
                            }];
     
@@ -763,12 +763,12 @@
                         
                                                        options:kNilOptions
                                                          error:&error];
-//timesgroupcrapi   SkagitTimes
+
     
-    NSString * urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/registerdevice?token=",[GlobalStuff generateToken]];
-    DLog(@"push url--%@",urlString);
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/registerdevice?token=%@",kBaseURL,kAPI,[GlobalStuff generateToken]];
+    NSLog(@"push url--%@",urlString);
     
-    NSURL *url = [NSURL URLWithString:urlString];       //@"http://prngapi.cloudapp.net/api/registerdevice"];
+    NSURL *url = [NSURL URLWithString:urlString];       
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SubscribeVC">
@@ -15,6 +15,17 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1df-6A-C8n">
+                    <rect key="frame" x="0.0" y="64" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="600" id="2ai-tH-aUU"/>
+                        <constraint firstAttribute="height" constant="1" id="Pcw-PR-f6s"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7V6-bW-1wL">
                     <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                     <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
@@ -54,7 +65,7 @@
                             </variation>
                         </imageView>
                     </subviews>
-                    <color key="backgroundColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="hg6-yh-6rm" firstAttribute="centerX" secondItem="GJ8-6c-d7u" secondAttribute="centerX" id="MUJ-JE-PCu"/>
                         <constraint firstItem="hg6-yh-6rm" firstAttribute="top" secondItem="GJ8-6c-d7u" secondAttribute="top" constant="12" id="aFa-D6-Om5"/>
@@ -69,12 +80,15 @@
             <constraints>
                 <constraint firstItem="GJ8-6c-d7u" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0Xt-Ms-2hk"/>
                 <constraint firstAttribute="bottom" secondItem="7V6-bW-1wL" secondAttribute="bottom" id="4o6-K1-qx7"/>
+                <constraint firstAttribute="trailing" secondItem="1df-6A-C8n" secondAttribute="trailing" id="DQf-aO-bpQ"/>
                 <constraint firstAttribute="trailing" secondItem="7V6-bW-1wL" secondAttribute="trailing" id="HKw-Zg-37a"/>
+                <constraint firstItem="1df-6A-C8n" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JRS-h4-SEz"/>
                 <constraint firstItem="GJ8-6c-d7u" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="PJm-wj-Rdh"/>
                 <constraint firstItem="7V6-bW-1wL" firstAttribute="top" secondItem="GJ8-6c-d7u" secondAttribute="bottom" id="RKV-2n-GtQ"/>
                 <constraint firstAttribute="trailing" secondItem="GJ8-6c-d7u" secondAttribute="trailing" id="boU-RC-383"/>
                 <constraint firstItem="7V6-bW-1wL" firstAttribute="top" secondItem="GJ8-6c-d7u" secondAttribute="bottom" id="c5B-IA-qvP"/>
                 <constraint firstItem="7V6-bW-1wL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mxA-De-qkr"/>
+                <constraint firstItem="1df-6A-C8n" firstAttribute="top" secondItem="GJ8-6c-d7u" secondAttribute="bottom" id="wWG-cR-elN"/>
             </constraints>
             <point key="canvasLocation" x="556" y="300"/>
         </view>

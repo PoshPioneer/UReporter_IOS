@@ -40,10 +40,10 @@
     
     
     NSString *htmlFile = [[NSBundle mainBundle] pathForResource:@"Privacy" ofType:@"html"] ;
-    DLog(@"htmlFile = %@",htmlFile);
+    NSLog(@"htmlFile = %@",htmlFile);
     NSString* htmlString = [[NSString stringWithContentsOfFile:htmlFile encoding:NSUTF8StringEncoding error:nil] copy];
     
-    DLog(@"htmlString = %@",htmlString);
+    NSLog(@"htmlString = %@",htmlString);
 
     [web_View loadHTMLString:htmlString baseURL:nil];
     web_View.layer.cornerRadius=2.0;
@@ -64,23 +64,6 @@
 }
 
 
--(void)viewWillAppear:(BOOL)animated{
-    
-  //  self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
-    
-    
-    //self.scroll_View.frame=CGRectMake(0, 0, 320, 568);
-//    self.scroll_View.contentSize = CGSizeMake(320, 6559);
-//    [scroll_View setBackgroundColor:[UIColor clearColor]];
-//    scroll_View.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-//    scroll_View.clipsToBounds = YES;
-//    scroll_View.scrollEnabled = YES;
-//    [self.view addSubview:self.scroll_View];
-//    
-//    [scroll_View addSubview:bck_View];
-
-    
-}
 
 - (void)didReceiveMemoryWarning
 {

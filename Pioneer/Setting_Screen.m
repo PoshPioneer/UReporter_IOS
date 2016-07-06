@@ -52,9 +52,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
- //   self.showTemperature.text = [NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
-    
-    
+     [super viewWillAppear:animated];
     [self.setting_Table_View setBackgroundView:nil];
     [self.setting_Table_View setBackgroundColor:[UIColor clearColor]];
     
@@ -150,16 +148,7 @@
     
     if(indexPath.row==0){
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        if (size.height==480) {
-            
-            
-            Submission *submission=[[Submission alloc]initWithNibName:@"Submission3.5" bundle:nil];
-            
-            [self.navigationController pushViewController:submission animated:YES];
-            
-        }
-        else{
+        
             
             
             Submission *submission=[[Submission alloc]initWithNibName:@"Submission" bundle:nil];
@@ -167,7 +156,7 @@
             [self.navigationController pushViewController:submission animated:YES];
             
             
-        }
+        
     }
   
    else if (indexPath.row==1) {
@@ -202,41 +191,25 @@
    }
    else if (indexPath.row==2){
        DLog(@"this is about...");
-       
-       CGSize size = [[UIScreen mainScreen]bounds].size;
-       
-       if (size.height==480) {
-
-           About *abt = [[About alloc]initWithNibName:@"About3.5" bundle:nil];
-           [self.navigationController pushViewController:abt animated:YES];
-
-       }else{
            
            About *abt = [[About alloc]initWithNibName:@"About" bundle:nil];
            [self.navigationController pushViewController:abt animated:YES];
  
            
-       }
+      
 
    }
    else if (indexPath.row==3){
        DLog(@"this privacy policy");
        
-       CGSize size = [[UIScreen mainScreen]bounds].size;
-       
-       if (size.height==480) {
-           PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy3.5" bundle:nil];
-           [self.navigationController pushViewController:termsOfUse animated:YES];
-           
-           
-       }else{
+      
            
            
            PrivacyPolicy *termsOfUse = [[PrivacyPolicy alloc]initWithNibName:@"PrivacyPolicy" bundle:nil];
            [self.navigationController pushViewController:termsOfUse animated:YES];
            
            
-       }
+       
        
    }
     

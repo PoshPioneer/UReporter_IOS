@@ -11,8 +11,8 @@
 #import "UploadView.h"
 #import "SpinnerView.h"
 #import "SubscribeVC.h"
-@interface LoginView ()
-{
+@interface LoginView () {
+    
     SyncManager *sync;
     NSMutableData *responseDataLogin;
     
@@ -21,6 +21,7 @@
 @end
 
 @implementation LoginView
+
 @synthesize usernameTxt,passwordTxt;
 
 
@@ -32,9 +33,14 @@
     
     
     UIView *statusBarView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 20)];
-    statusBarView.backgroundColor  =  [UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
+    statusBarView.backgroundColor  =  [UIColor whiteColor]; //[UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
     [self.view addSubview:statusBarView];
-   
+    
+    //UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    //[vc.view addSubview:statusBarView];
+
+    
+    
 }
 
 
@@ -66,9 +72,14 @@
 
 
 - (void)didReceiveMemoryWarning {
+    
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
+
 
 - (IBAction)loginButtonTapped:(id)sender {
     
@@ -152,14 +163,25 @@
                  [self.view setUserInteractionEnabled:YES];
                  [spinner removeSpinner];
                  
-                 UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Please enter valid credentials." preferredStyle:UIAlertControllerStyleAlert];
+                 NSString * message ;
+                 
+                 if ([error.localizedDescription isEqualToString:@"Request failed: unauthorized (401)"]) {
+                     
+                    message = @"Please enter valid credentials";
+                     
+                 }
+                 else{
+                     
+                     message =error.localizedDescription;
+                 
+                 }
+                 
+                 UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
                  UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
                  }];
                  
                  [errorAlert addAction:errorAction];
                  [self presentViewController:errorAlert animated:YES completion:nil];
-                 
-                 
                  
              }];
         }
@@ -192,6 +214,7 @@
 }
 
 + (NSString*)base64forData:(NSData*)theData {
+    
     const uint8_t* input = (const uint8_t*)[theData bytes];
     NSInteger length = [theData length];
     
@@ -213,7 +236,8 @@
         output[theIndex + 3] = (i + 2) < length ? table[(value >> 0) & 0x3F] : '=';
     }
     
-    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]; }
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+}
 
 
 
@@ -224,10 +248,11 @@
    // [self dismissViewControllerAnimated:YES completion:nil];
     
 }
+
+
 - (IBAction)RegisterButtonTapped:(id)sender {
     
     if ([Utility connected] == YES){
-        
         
         SubscribeVC *object=[[SubscribeVC alloc]initWithNibName:@"SubscribeVC" bundle:nil];
         object.web_Url=@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/account/register";
@@ -249,6 +274,8 @@
     }
     
 }
+
+
 - (IBAction)forgotPasswordButtonTapped:(id)sender {
     
     if ([Utility connected] == YES){
@@ -267,14 +294,10 @@
         
         [errorAlert addAction:errorAction];
         [self presentViewController:errorAlert animated:YES completion:nil];
-
-        
     }
-
-    
-    
-    
 }
+
+
 - (IBAction)closeButtonTapped:(id)sender {
     
     passwordTxt.text=nil;

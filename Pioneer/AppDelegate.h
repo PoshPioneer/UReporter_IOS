@@ -42,6 +42,12 @@
 @property(nonatomic,strong) NSString *userAddress;
 @property(nonatomic,strong)UINavigationController *navigationController;
 
+
+@property(strong,nonatomic)NSMutableArray * final_Id_Array;
+
+
+
+
 -(void)registerPushNotification_Method;
 -(void)getCategory;
 

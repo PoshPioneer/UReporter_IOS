@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 
-@interface SubmitForReview : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface SubmitForReview : UIViewController <UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UITabBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 
 
@@ -20,11 +20,12 @@
 @property(strong,nonatomic) NSMutableDictionary  * collectedDict;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
+@property(nonatomic,strong)UIImage *mainImage;
 
 
 
 
-
+@property (weak, nonatomic) IBOutlet UITabBar *tabBarController;
 
 #pragma mark --IBAction.
 

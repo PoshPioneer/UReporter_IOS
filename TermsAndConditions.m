@@ -47,7 +47,7 @@
     
     NSArray *array = [self.navigationController viewControllers];
     
-    DLog(@" Text content from array is :  %@",array);
+    NSLog(@" Text content from array is :  %@",array);
     
     [self.navigationController popToViewController:[array  objectAtIndex:1] animated:NO];
     

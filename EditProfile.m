@@ -82,21 +82,29 @@
     [super viewDidLoad];
     [self CallMethodForPicker];
     objectDataClass =[DataClass getInstance];
-       // [show_temperature setHidden:YES];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
-   /* [Outlet_PoliticalGroupYes setBackgroundImage:[UIImage imageNamed:@"uncheck_radial.png"] forState:UIControlStateNormal];
-    [Outlet_PoliticalGroupNO setBackgroundImage:[UIImage imageNamed:@"uncheck_radial.png"] forState:UIControlStateNormal];*/
+
     [Outlet_ProsecutionYes setBackgroundImage:[UIImage imageNamed:@"uncheck_radial.png"] forState:UIControlStateNormal];
     [Outlet_ProsecutionNO setBackgroundImage:[UIImage imageNamed:@"uncheck_radial.png"] forState:UIControlStateNormal];
 
     
-    self.scrollView.frame=CGRectMake(0, 86, 320, 700);
-    self.scrollView.contentSize = CGSizeMake(320,710);//1300, 706
+//    self.scrollView.frame=CGRectMake(0, 86, 320, 700);
+   // [self settingBorderOfTextFields];// for setting the border color.
+    
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width,715);//1300, 706
+    
+
     [scrollView setBackgroundColor:[UIColor clearColor]];
     scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     scrollView.clipsToBounds = YES;
     scrollView.scrollEnabled = YES;
-    [self.view addSubview:self.scrollView];
+    addViewOnScrollView.frame = scrollView.frame;
     [scrollView addSubview:addViewOnScrollView];
     
     scrollView.userInteractionEnabled=YES;
@@ -106,8 +114,7 @@
     [txt_Phone setUserInteractionEnabled:YES];
     
     [self getAllDetails];
-   // [self settingBorderOfTextFields];// for setting the border color.
-    
+
     
 }
 /*
@@ -143,7 +150,9 @@
 }
 */
 -(void)viewWillAppear:(BOOL)animated{
-    
+ 
+    [super viewWillAppear:animated];
+
     checkReset=0;
     
    // self.showTemperature.text =[NSString stringWithFormat:@"%0.0f", objectDataClass.temperature];
@@ -155,83 +164,6 @@
 
 }
 
--(void)viewDidAppear:(BOOL)animated {
-    
-/*
-    [self addingPaddingTofirstname];
-    [self addingPaddingTophone];
-    [self addingPaddingTooccupation];
-    [self addingPaddingTomarital];
-    [self addingPaddingTolangugae];
-    [self addingPaddingTointerest];
-    [self addingPaddingTogender];
-    [self addingPaddingToemail];
-    [self addingPaddingToeducation];
-    [self addingPaddingTocity];
-    [self addingPaddingToage];
-    
- */
-}
-
-/*
--(void)addingPaddingTofirstname {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_First_Name.leftView = paddingView;
-    txt_First_Name.leftViewMode = UITextFieldViewModeAlways;
-}
-
--(void)addingPaddingToage {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Age.leftView = paddingView;
-    txt_Age.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTogender {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Gender.leftView = paddingView;
-    txt_Gender.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingToemail {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Email.leftView = paddingView;
-    txt_Email.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTophone {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Phone.leftView = paddingView;
-    txt_Phone.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTocity {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_adderss.leftView = paddingView;
-    txt_adderss.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTomarital {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_MaritalStatus.leftView = paddingView;
-    txt_MaritalStatus.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTooccupation  {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Occupation.leftView = paddingView;
-    txt_Occupation.leftViewMode = UITextFieldViewModeAlways;
-}
-
--(void)addingPaddingTolangugae {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_LanguageSpoken.leftView = paddingView;
-    txt_LanguageSpoken.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingTointerest {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Special_Interests.leftView = paddingView;
-    txt_Special_Interests.leftViewMode = UITextFieldViewModeAlways;
-}
--(void)addingPaddingToeducation {
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 20)];
-    txt_Education.leftView = paddingView;
-    txt_Education.leftViewMode = UITextFieldViewModeAlways;
-}
-*/
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView{
     
     return YES;
@@ -405,7 +337,7 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    DLog(@"idfv is =====%@",idfv);
+    NSLog(@"idfv is =====%@",idfv);
     // getting ...
     
    // NSString *toi = @"TOI";
@@ -414,7 +346,10 @@
     
     // http://timesgroupcrapi.cloudapp.net   http://timesgroupcrapi.cloudapp.net/api/UserDet
     
-    NSString* urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/userdetails?deviceId=&Source=&token=",[GlobalStuff generateToken]];
+   
+    
+    
+    NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?deviceId=&Source=&token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken] ];
    
     DLog(@"get alldetails url --%@",urlString);
     
@@ -436,8 +371,13 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     [self.addViewOnScrollView setUserInteractionEnabled:YES];
     
-   alert_Internet = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert_Internet show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        // do NOT use alert.textfields or otherwise reference the alert in the block. Will cause retain cycle
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 
     
 }
@@ -592,6 +532,7 @@
         
     }else{
         
+        
         checkServiceType=0;
         
         DLog(@"o/p of data is =======%@",json);
@@ -600,6 +541,18 @@
         NSString *error_Message = [NSString stringWithFormat:@"%@",[[json valueForKey:@"data"] valueForKey:@"ErrorMessage"]];
 
         if ([error_Id isEqualToString:@"111"]) {
+            
+            if (check_Uncheck_Bool) {
+                
+                [[NSUserDefaults standardUserDefaults] setValue:@"LocationOn" forKey:@"LocationCheck"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+                
+            }else{
+                
+                [[NSUserDefaults standardUserDefaults] setValue:@"LocationOff" forKey:@"LocationCheck"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+
+            }
             
             [self alertMessage:error_Message];
             
@@ -858,7 +811,10 @@
         
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+        {
+            [locationManager requestAlwaysAuthorization];
+        }
         [locationManager startUpdatingLocation];
         
         if(IS_OS_8_OR_LATER) {
@@ -899,7 +855,6 @@
         if ([txt_Phone.text length]>=10) {
             return NO;
         }
-        NSUInteger newLength = [textField.text length] + [string length] - range.length;
         NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:NUMBERS_ONLY] invertedSet];
         NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
         return ([string isEqualToString:filtered]);
@@ -1188,12 +1143,14 @@
                                                          error:&error];
     
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
+   
     
     
-    NSString * urlString= [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/UserDetails?token=",[GlobalStuff generateToken]];
+    NSString * urlString= [NSString stringWithFormat:@"%@%@/%@?token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
+    
     
     DLog(@"method for submission url--%@",urlString);
-    NSURL *url = [NSURL URLWithString: urlString]; //@"http://prngapi.cloudapp.net/api/UserDetails"];
+    NSURL *url = [NSURL URLWithString: urlString];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
@@ -1222,8 +1179,12 @@
     
    // NSString * urlString = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/OTP/GetOTP?MobileNo=&Source=&token=",MobNo,Finaltoken];
     
+   
     
-    NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/OTP/GetOTP?MobileNo=%@&Source=&token=%@",MobNo,[GlobalStuff generateToken]];
+    
+    NSString* urlString = [NSString stringWithFormat:@"%@%@/OTP/GetOTP?MobileNo=%@&Source=&token=%@",kBaseURL,kAPI,MobNo,[GlobalStuff generateToken]];
+    
+    
     DLog(@"url string service otp--%@",urlString);
 
     //NSString* urlString = [NSString stringWithFormat:@"http://toicj.cloudapp.net/api/OTP/GetOTP?MobileNo=%@",MobNo];
@@ -1381,6 +1342,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated {
     
+    [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
 }

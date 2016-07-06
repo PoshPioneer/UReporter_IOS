@@ -36,7 +36,6 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     NSURLSessionUploadTask *task;
     NSMutableData *responseData;
-   RecordAudioView *recordAudio;
     
     UIVisualEffectView *visualEffectView;
     UIView * customAlertView;
@@ -77,6 +76,22 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     NSString *tempPath ;
     UIImage *imageThumbnail;
     NSString*finalUniqueVideo;
+    CGSize size;
+    
+    
+    UITextField * StreetTxt;
+    UITextField * cityTxt;
+    UITextField * StateTxt;
+    UITextField * PincodeTxt;
+    int locationStatus;
+    NSString *myLocationAddress;
+    
+    
+    
+    CGSize sizeOfSubview;
+
+    
+    
 
 
 }
@@ -108,29 +123,15 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     return self;
 }
 
--(void)checkCategoryData {
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
-        
-        DLog(@"quite empty!!!!");
-        // [app getCategory];
-        
-        DLog(@"coming!");
-    }else{
-        
-        lbl_output_category.userInteractionEnabled=YES ;
-        [self CallMethodForPicker];
-        [timerCheck invalidate];
-        
-    }
-    
-}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    sizeOfSubview=[[UIScreen mainScreen]bounds].size;
+
+    size = [[UIScreen mainScreen]bounds].size;
     sync = [[SyncManager alloc] init];
     sync.delegate = self;
 
@@ -140,15 +141,12 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     img_ForSuccess_Unsuccess.userInteractionEnabled = YES;
     
-AudiocollectedDict = [NSMutableDictionary dictionary];
+    AudiocollectedDict = [NSMutableDictionary dictionary];
     
     
-    objectDataClass=[DataClass getInstance];
     
-  recordAudio=[[RecordAudioView alloc]init];
     audioDataDictionary=[NSMutableDictionary dictionary];
-    [lbl_output_category setUserInteractionEnabled:NO];
-    timerCheck = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(checkCategoryData) userInfo:nil repeats:YES];
+    //[lbl_output_category setUserInteractionEnabled:NO];
 
     
     lbl_finalPicker_Selected.textColor=[UIColor grayColor];
@@ -164,17 +162,25 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     textTabBar.tag  = 4;
     [self.scrollView setScrollEnabled:YES];
     //[img_View_Selected_File_Outlet setHidden:YES];
-    [self.scrollView setContentSize:CGSizeMake(320, 700)];
     
+    [self CallMethodForPicker];
     
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    [super viewWillAppear:animated];
+
+    objectDataClass=[DataClass getInstance];
+    app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+
+    tempArray=objectDataClass.audioDetailsMutableArray;
+    
     
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:2]];
 
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
 
     // working .....
     LocalDataHandleArray=[[NSMutableArray alloc]init];
@@ -217,7 +223,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     else{
         
         
-        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
        // handleView =YES;
         
        // DLog(@"collected data from review view --%@",tempArray);
@@ -225,44 +231,25 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         txt_Title.text = [[tempArray  objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Title"] ;
         txt_View.text =  [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"FullStory"];
-        id categoryID =  [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"Id_Category"];
-//        lbl_finalPicker_Selected.text =[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
         lbl_finalPicker_Selected.text =[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
+        
         audiotransferData = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"AudioData"];
         app.recordedData =audiotransferData;
         app.uniqueNameForLableAudio= [[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"uniqueName"];
-       // NSString * localUrltesting = [[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"fileURl"];
-       // DLog(@"local url--%@",localUrltesting);
+        lbl_output_category.text=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"categoryName"];
         
-        
-        //    NSData *datatest = [NSData dataWithContentsOfFile:localUrltesting];
-        //        DLog(@"converted data--%@",datatest);
-        
-        
-        
-        DLog(@"category value--%@",categoryID);
-        if ([categoryID isEqualToString: @"1"]) {
-            lbl_output_category.text = @"Politics";
-            categoryId_String=categoryID;
-        }else if ([categoryID isEqualToString:@"2"]) {
-            lbl_output_category.text =@"Sports";
-            categoryId_String=categoryID;
+        if (objectDataClass.checkForAudioCurrentCaptureOrNot==YES) {
             
-        }else if ([categoryID isEqualToString:@"3"]){
-            lbl_output_category.text =@"Games";
-            categoryId_String=categoryID;
-        }else if ([categoryID isEqualToString:@"4"]){
-            lbl_output_category.text =@"Movie";
-        categoryId_String=categoryID;
-        
+            
+        }else{
+            
+            app.soundFilePathData=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection] valueForKey:@"FileUrlPath"];
+            app.recordedData=[[tempArray objectAtIndex:objectDataClass.globalIndexSelection]valueForKey:@"AudioData"];
+
+            
         }
-     
         
     }
-
-    
-
-    
 }
 -(void)changeFieldName:(NSNotificationCenter*)notification{
     
@@ -273,7 +260,9 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 -(void)viewDidLayoutSubviews{
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [self.scrollView setContentSize:CGSizeMake(size.width, 540)];
+    
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     if (app.recordedData==nil ) {
         
@@ -365,85 +354,30 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 
 
--(void)doItResize:(NSString *)hideAndShow{
-     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+-(void) doItResize: (NSString *) hideAndShow
+{
     
     lbl_finalPicker_Selected.text = app.uniqueNameForLableAudio;
     
-    int  increment_Decrement=0;
-    
     NSString *hide_Show = hideAndShow;
     
-    if ([hide_Show isEqualToString:@"show"]) {
+    if ( [hide_Show isEqualToString:@"show"] )
+    {
         
-        increment_Decrement=+56;
-        DLog(@"it is second time ....");
         [lbl_selected_File_Outlet setHidden:NO];
         [img_View_Selected_File_Outlet setHidden:NO];
         [lbl_finalPicker_Selected setHidden:NO];
         [cut_Sec setHidden:NO];
         
-    }else{
-        increment_Decrement=+56;
-        DLog(@"it is second time ....");
-        [lbl_selected_File_Outlet setHidden:NO];
-        [img_View_Selected_File_Outlet setHidden:NO];
-        [lbl_finalPicker_Selected setHidden:NO];
-        [cut_Sec setHidden:NO];
-        
-        
-/*
-        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        app.recordedData=nil;
-        app.uniqueNameForLableAudio=nil;
-        lbl_finalPicker_Selected.text=nil;
-        
-        increment_Decrement=-56;
-        [lbl_selected_File_Outlet setHidden:YES];
-        [img_View_Selected_File_Outlet setHidden:YES];
-        [lbl_finalPicker_Selected setHidden:YES];
-        [cut_Sec setHidden:YES];
-       */
     }
-    /*
-    [image_Select_NewCategory setFrame: CGRectMake(image_Select_NewCategory.frame.origin.x, image_Select_NewCategory.frame.origin.y+increment_Decrement, image_Select_NewCategory.frame.size.width, image_Select_NewCategory.frame.size.height)];
-    
-    [image_Title_Outlet setFrame:CGRectMake(image_Title_Outlet.frame.origin.x, image_Title_Outlet.frame.origin.y+increment_Decrement, image_Title_Outlet.frame.size.width, image_Title_Outlet.frame.size.height)];
-    
-    [image_AddStory_Outlet setFrame:CGRectMake(image_AddStory_Outlet.frame.origin.x, image_AddStory_Outlet.frame.origin.y+increment_Decrement, image_AddStory_Outlet.frame.size.width, image_AddStory_Outlet.frame.size.height)];
-    
-    [btn_Reset_Outlet setFrame:CGRectMake(btn_Reset_Outlet.frame.origin.x, btn_Reset_Outlet.frame.origin.y+increment_Decrement, btn_Reset_Outlet.frame.size.width, btn_Reset_Outlet.frame.size.height)];
-    
-    //Added on 14 March 2016---------------
-    
-    [submitForreview_outlet setFrame:CGRectMake(submitForreview_outlet.frame.origin.x, submitForreview_outlet.frame.origin.y+increment_Decrement, submitForreview_outlet.frame.size.width, submitForreview_outlet.frame.size.height)];
-    
-    // Added on 14 March 2016----------------
-    
-    [btn_Upload_Outlet setFrame:CGRectMake(btn_Upload_Outlet.frame.origin.x, btn_Upload_Outlet.frame.origin.y+increment_Decrement, btn_Upload_Outlet.frame.size.width, btn_Upload_Outlet.frame.size.height)];
-    
-    [lbl_AddStory_Outlet setFrame:CGRectMake(lbl_AddStory_Outlet.frame.origin.x, lbl_AddStory_Outlet.frame.origin.y+increment_Decrement, lbl_AddStory_Outlet.frame.size.width, lbl_AddStory_Outlet.frame.size.height)];
-    
-    [lbl_Title setFrame:CGRectMake(lbl_Title.frame.origin.x, lbl_Title.frame.origin.y+increment_Decrement, lbl_Title.frame.size.width, lbl_Title.frame.size.height)];
-    
-    [lbl_output_category setFrame:CGRectMake(lbl_output_category.frame.origin.x, lbl_output_category.frame.origin.y+increment_Decrement, lbl_output_category.frame.size.width, lbl_output_category.frame.size.height)];
-    
-    [btn_Selected_new_Category_Outlet setFrame:CGRectMake(btn_Selected_new_Category_Outlet.frame.origin.x, btn_Selected_new_Category_Outlet.frame.origin.y+increment_Decrement, btn_Selected_new_Category_Outlet.frame.size.width, btn_Selected_new_Category_Outlet.frame.size.height)];
-    
-    [lbl_Select_new_Category setFrame:CGRectMake(lbl_Select_new_Category.frame.origin.x, lbl_Select_new_Category.frame.origin.y+increment_Decrement, lbl_Select_new_Category.frame.size.width, lbl_Select_new_Category.frame.size.height)];
-    
-    [txt_View setFrame:CGRectMake(txt_View.frame.origin.x, txt_View.frame.origin.y+increment_Decrement, txt_View.frame.size.width, txt_View.frame.size.height)];
-    
-    
-    [txt_Title setFrame:CGRectMake(txt_Title.frame.origin.x, txt_Title.frame.origin.y+increment_Decrement, txt_Title.frame.size.width, txt_Title.frame.size.height)];
-    
-    /////
-    [cut_Sec setFrame:CGRectMake(cut_Sec.frame.origin.x, cut_Sec.frame.origin.y+increment_Decrement, cut_Sec.frame.size.width, cut_Sec.frame.size.height)];
-    [img_View_Selected_File_Outlet setFrame:CGRectMake(img_View_Selected_File_Outlet.frame.origin.x, img_View_Selected_File_Outlet.frame.origin.y+increment_Decrement, img_View_Selected_File_Outlet.frame.size.width, img_View_Selected_File_Outlet.frame.size.height)];
-    
-    [lbl_selected_File_Outlet setFrame:CGRectMake(lbl_selected_File_Outlet.frame.origin.x, lbl_selected_File_Outlet.frame.origin.y+increment_Decrement, lbl_selected_File_Outlet.frame.size.width, lbl_selected_File_Outlet.frame.size.height)];
-    [lbl_finalPicker_Selected setFrame:CGRectMake(lbl_finalPicker_Selected.frame.origin.x, lbl_finalPicker_Selected.frame.origin.y+increment_Decrement, lbl_finalPicker_Selected.frame.size.width, lbl_finalPicker_Selected.frame.size.height)];
-*/
+    else
+    {
+        [lbl_selected_File_Outlet setHidden:NO];
+        [img_View_Selected_File_Outlet setHidden:NO];
+        [lbl_finalPicker_Selected setHidden:NO];
+        [cut_Sec setHidden:NO];
+        
+    }
     
 }
 
@@ -460,7 +394,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     DLog(@"Audio content from array is :  %@",array);
 
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     if ([lbl_output_category.text length]>0 ||  app.recordedData !=nil  || [txt_Title.text length]>0 || [txt_View.text length]>0) {
         
@@ -469,7 +403,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
     }else{
         
-        AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+       // AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
         txt_View.text=nil;
         txt_Title.text=nil;
         lbl_finalPicker_Selected.text=nil;
@@ -487,19 +421,37 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (IBAction)capture_audio_tapped:(id)sender{
     
-    //isBrowserTapped=YES;
-    AppDelegate *app =(AppDelegate *)[UIApplication sharedApplication].delegate;
-    app.recordedData=nil;
-     [self doItResize:@"hide"];
-  /*  RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
     
-    [self presentViewController:recordview animated:NO completion:nil];
-    */
-    NSArray *array = [self.navigationController viewControllers];
     
-    DLog(@" Text content from array is :  %@",array);
+    if (objectDataClass.audioDetailsMutableArray==nil) {
+        
+      //  AppDelegate *app =(AppDelegate *)[UIApplication sharedApplication].delegate;
+        app.recordedData=nil;
+        [self doItResize:@"hide"];
+        /*  RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
+         
+         [self presentViewController:recordview animated:NO completion:nil];
+         */
+        NSArray *array = [self.navigationController viewControllers];
+        
+        DLog(@" Text content from array is :  %@",array);
+        
+        [self.navigationController popToViewController:[array objectAtIndex:2] animated:YES];
 
-    [self.navigationController popToViewController:[array objectAtIndex:2] animated:YES];
+        
+    }else{
+        
+        
+        RecordAudioView *recordObject=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:nil];
+        [self.navigationController pushViewController:recordObject animated:YES];
+        
+        
+        
+    }
+    
+    
+    
+    //isBrowserTapped=YES;
     
     
     
@@ -512,7 +464,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     
     
-    AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+  //  AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     txt_View.text=nil;
     txt_Title.text=nil;
@@ -538,7 +490,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     //;
     [self.view endEditing:YES];
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     
     
@@ -703,7 +655,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             
         }else if (buttonIndex==1){
             
-            AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+           // AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
             txt_View.text=nil;
             txt_Title.text=nil;
             lbl_finalPicker_Selected.text=nil;
@@ -831,17 +783,22 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
     
     //////for gradient.......
+    float circular_Progress_Viewwidth = (sizeOfSubview.width * 54)/100;
+    float circular_Progress_Viewheight = (sizeOfSubview.height * 23.7)/100;
+    
     [self.view setAlpha:0.4];
     [self.view setUserInteractionEnabled:NO];
-    self.circular_Progress_View.frame = CGRectMake(71, 197, 175, 135);
+    self.circular_Progress_View.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -circular_Progress_Viewwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -circular_Progress_Viewheight/2), circular_Progress_Viewwidth, circular_Progress_Viewheight);
     [self.view addSubview:self.circular_Progress_View];
+    
+    
     self.circular_Progress_View.thicknessRatio = 0.111111;
     self.circular_Progress_View.outerBackgroundColor=[UIColor lightGrayColor];
     self.circular_Progress_View.innerBackgroundColor=[UIColor lightGrayColor];
 
     self.circular_Progress_View.progressFillColor=[UIColor redColor];
 
-    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
+    UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake((circular_Progress_View.frame.size.width *63.9)/100, (circular_Progress_View.frame.size.height*41)/100, (circular_Progress_View.frame.size.width *14.5)/100, (circular_Progress_View.frame.size.width *14.5)/100)];
     [self.circular_Progress_View addSubview:percentSignLabel];
     percentSignLabel.text = @"%";
     percentSignLabel.textColor = [UIColor whiteColor];
@@ -853,11 +810,15 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
    
-    NSString * urlString = [NSString stringWithFormat:@"%@%@%@%@",@"http://prngapi.cloudapp.net/api/blobs?id=",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"], @"&token=",[GlobalStuff generateToken]];
-    DLog(@"url fro audio--%@",urlString);
+   
+    
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/blobs?id=%@&token=%@",kBaseURL,kAPI,[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"],[GlobalStuff generateToken]];
+    
+    NSLog(@"url fro audio--%@",urlString);
     
     NSURL * url =[NSURL URLWithString:urlString];
- //   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/blobs?id=%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"userID_Default"]]];
+ 
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:300];
@@ -885,7 +846,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     //
     // add image data
    // audioData = [[NSData alloc] initWithContentsOfFile:[_audioRecorder.url path]];
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+  //  AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if (app.recordedData) {
         [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=%@; filename=%@\r\n", @"imageFormKey",lbl_finalPicker_Selected.text] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -937,7 +898,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 
         self.circular_Progress_View.progress = progress;
-        UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 55, 25, 25)];
+        UILabel *percentSignLabel = [[UILabel alloc] initWithFrame:CGRectMake((circular_Progress_View.frame.size.width *63.9)/100, (circular_Progress_View.frame.size.height*41)/100, (circular_Progress_View.frame.size.width *14.5)/100, (circular_Progress_View.frame.size.width *14.5)/100)];
         [self.circular_Progress_View addSubview:percentSignLabel];
         percentSignLabel.text = @"%";
         percentSignLabel.textColor = [UIColor whiteColor];
@@ -1025,7 +986,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
    // __block  NSString *categoryId_String;
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         
@@ -1045,10 +1006,13 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     //timesgroupcrapi   http://timesgroupcrapi.cloudapp.net/api/UserDet
 
-    NSString * urlStringTest = [NSString stringWithFormat:@"%@%@",@"http://prngapi.cloudapp.net/api/CJDetails?token=",[GlobalStuff generateToken]];
+   
     
     
-    //NSURL * url = [NSURL URLWithString:@"http://prngapi.cloudapp.net/api/CJDetails?token=%@",Finaltoken];
+    NSString * urlStringTest = [NSString stringWithFormat:@"%@%@/CJDetails?token=%@", kBaseURL,kAPI, [GlobalStuff generateToken]];
+    
+    
+    
     //  NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     
     DLog(@"url foraudio rest --%@",urlStringTest);
@@ -1088,28 +1052,38 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
       checkStr =    [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
   
-    if (!checkStr) {
-        // when it's empty!!!!!
-        
-        
-        [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
-        
-    }else{
-        
-        // when it's not empty  (address is not empty!!!!)
-
-        NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
-        NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
-        if ([trimmedString isEqualToString:@""]) {
+    if (locationStatus==1) {
+    
+        if (!checkStr) {
+            // when it's empty!!!!!
             
-            // it's empty or contains only white spaces
-            [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
+            
+            [dictionaryTemp setValue:written_Address forKeyPath:@"LocationDetails"];
             
         }else{
             
-            [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
-        }
+            // when it's not empty  (address is not empty!!!!)
+            
+            NSCharacterSet *charSet = [NSCharacterSet whitespaceCharacterSet];
+            NSString *trimmedString = [with_Address_Optional_Written stringByTrimmingCharactersInSet:charSet];
+            if ([trimmedString isEqualToString:@""]) {
+                
+                // it's empty or contains only white spaces
+                [dictionaryTemp setValue:checkStr forKey:@"LocationDetails"];
+                
+            }else{
+                
+                [dictionaryTemp setValue:with_Address_Optional_Written forKey:@"LocationDetails"];
+            }
+
+    
+    }
+    }else{
         
+        
+        [dictionaryTemp setValue:myLocationAddress forKey:@"LocationDetails"];
+
+    
     }
     
     DLog(@" value of addres is ======%@",[dictionaryTemp valueForKey:@"LocationDetails"]);
@@ -1139,11 +1113,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
     NSURLSessionDataTask * dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                           DLog(@"Response:%@ %@\n", response, error);
+                                                           NSLog(@"Response:%@ %@\n", response, error);
                                                            if(error == nil)
                                                            {
 //                                                               NSString * text = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-//                                                               DLog(@"final audio o/p is  ==== %@",text);
+//                                                               NSLog(@"final audio o/p is  ==== %@",text);
                                                                
                                                                NSError *jsonError;
                                                                NSArray *array = [NSJSONSerialization JSONObjectWithData:data
@@ -1151,7 +1125,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                                                                   error:&jsonError];
                                                                
                                                                
-                                                               DLog(@"array is ====%@",array);
+                                                               NSLog(@"array is ====%@",array);
                                                                
                                                                
                                                                /*
@@ -1168,7 +1142,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                 */
                                                                
                                                                NSString *strId = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorId"]];
-                                                               NSString *strMessage = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorMessage"]];
+                                                            //   NSString *strMessage = [NSString stringWithFormat:@"%@",[[array valueForKey:@"data"]valueForKey:@"ErrorMessage"]];
                                                                
                                                                
                                                                if ([strId isEqualToString:@"114"]) {
@@ -1190,15 +1164,15 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    
                                                                    
                                                                    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-                                                                   [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+                                                                   [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
                                                                    NSString *date=[dateFormatter stringFromDate:[NSDate date]];
                                                                    
                                                                    
                                                                    
                                                                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                                                                   [formatter setDateFormat:@"hh:mm a"];
+                                                                   [formatter setDateFormat:@"hh:mm:ss"];
                                                                    NSString *time=[formatter stringFromDate:[NSDate date]];
-                                                                   DLog(@"Time is ======%@",time);
+                                                                   NSLog(@"Time is ======%@",time);
                                                                    
                                                                    
                                                                    
@@ -1222,11 +1196,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    [audioDataDictionary setValue:date forKey:@"Date"];
                                                                    [audioDataDictionary setValue:time forKey:@"Time"];
                                                                    [audioDataDictionary setValue:app.soundFilePathData forKey:@"AudioPath"];
-                                                                   DLog(@"audioDataDictionary=====%@",audioDataDictionary);
-                                                                   DLog(@"audioUrl is=========%@",app.soundFilePathData);
+                                                                   NSLog(@"audioDataDictionary=====%@",audioDataDictionary);
+                                                                   NSLog(@"audioUrl is=========%@",app.soundFilePathData);
                                                                    
                                                                    
-                                                                   DLog(@"AudiodataDictionary======%@",audioDataDictionary);
+                                                                   NSLog(@"AudiodataDictionary======%@",audioDataDictionary);
                                                                 
                                                                    if([app.myFinalArray count]<15){
                                                                        
@@ -1252,68 +1226,29 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                    
                                                                    ok_For_Success_Outlet.tag=1;
                                                                    
-                                                                   CGSize size = [[UIScreen mainScreen]bounds].size;
                                                                    
-                                                                   if (size.height==480) {
                                                                        
-                                                                       [self.view setBackgroundColor:[UIColor whiteColor]];
-                                                                       [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success3.5.png"]];
-                                                                    //   UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(102.0, 435.0, 115.0, 38.0)];
-                                                                       UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(126.0, 227.0, 115.0, 38.0)];
-//                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
-//                                                                       [[NSUserDefaults standardUserDefaults]synchronize];
-//                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
-                                                                       
-                                                                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                       [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                       btnUpload .clipsToBounds = YES;
-                                                                       [btnUpload.layer setCornerRadius:4.5];
-//                                                                       [view_ForSuccess_Unsuccess addSubview:btnUpload];
-                                                                       
-                                                                       [self.selectedView.layer setCornerRadius:4.0];
-                                                                      
-                                                                          // Add effect to an effect view
-//                                                                       UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-//                                                                       
-//                                                                    
-//                                                                       visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-//                                                                       visualEffectView.frame = self.view.frame;
-                                                                    [self.view_ForSuccess_Unsuccess addSubview:visualEffectView];
-                                                                    // end of blur effect
-                                                                       
-                                                                       [self.view_ForSuccess_Unsuccess addSubview:self.selectedView];
-
-                                                                       [self.selectedView addSubview:btnUpload];
-                                                                       
-                                                                   }else{
-                                                                       [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
-                                                                      // UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(103.0, 435.0, 115.0, 38.0)];
-                                                                       UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake(86.0, 241.0, 115.0, 38.0)];
-//                                                                       [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"SubmitArray"];
-//                                                                       [[NSUserDefaults standardUserDefaults]synchronize];
-//                                                                       DLog(@"removed from nsuserdefault--%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"SubmitArray"]);
-                                                                       
-                                                                       
-                                                                       [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
-                                                                       [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
-                                                                       btnUpload .clipsToBounds = YES;
-                                                                       [btnUpload.layer setCornerRadius:4.5];
-                                                                       
-//                                                                       [view_ForSuccess_Unsuccess addSubview:btnUpload];
+                                                                   [img_ForSuccess_Unsuccess setImage:[UIImage imageNamed:@"success.png"]];
+                                                                   UIButton *btnUpload=[[UIButton alloc]initWithFrame:CGRectMake((self.selectedView.frame.size.width *15)/100, (self.selectedView.frame.size.height *84)/100, (self.selectedView.frame.size.width *25.9)/100, (self.selectedView.frame.size.height *12)/100)];
+                                                                   [btnUpload setImage:[UIImage imageNamed:@"Sounds Good Btn.png"] forState:UIControlStateNormal];
+                                                                   [btnUpload addTarget:self action:@selector(btn_Success_Tapped:) forControlEvents:UIControlEventTouchUpInside];
+                                                                   btnUpload .clipsToBounds = YES;
+                                                                   [btnUpload.layer setCornerRadius:4.5];
                                                                    [self.selectedView.layer setCornerRadius:4.0];
 
-                                                                       // Add effect to an effect view
-                                                                       UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-                                                                       visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-                                                                       visualEffectView.frame = self.view.frame;
-                                                                       [self.view_ForSuccess_Unsuccess addSubview:visualEffectView];
-                                                                       // end of blur effect
-                                                                       
-                                                                       [self.view_ForSuccess_Unsuccess addSubview:self.selectedView];
-                                                                       [self.selectedView addSubview:btnUpload];
-                                                                       
-                                                                   }
+                                                                   // Add effect to an effect view
+                                                                   UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                                                                   visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+                                                                   visualEffectView.frame = self.view.frame;
+                                                                   [self.view_ForSuccess_Unsuccess addSubview:visualEffectView];
+                                                                   // end of blur effect
+   
+                                                                   
+                                                                   self.view_ForSuccess_Unsuccess.frame = self.view.frame;
+                                                                   [view_ForSuccess_Unsuccess addSubview:self.selectedView];
+                                                                   [self.selectedView addSubview:btnUpload];
                                                                    [self.view addSubview:self.view_ForSuccess_Unsuccess];
+
                                                                    
 
                                                                    
@@ -1338,7 +1273,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
                                                                     */
                                                                    
                                                                    isItFirstService=2;
-                                                                   try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:strMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                                   try_AgainInternet_Check = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Error while uploading audio file." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                                                                    [try_AgainInternet_Check show];
                                                               
                                                                    
@@ -1554,8 +1489,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     return YES;
 }
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView
-{
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
     [textView resignFirstResponder];
 	return TRUE;
 }
@@ -1643,7 +1577,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 
 - (IBAction)cut_Selected_FileTapped:(id)sender {
     
-     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [self doItResize:@"hide"];
      app.recordedData=nil;
     lbl_finalPicker_Selected.text=nil;
@@ -1662,7 +1596,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     [toolbar setItems:[NSArray arrayWithObjects:buttonflexible,buttonDone, nil]];
     lbl_output_category .inputAccessoryView = toolbar;
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     [lbl_output_category setItemList:[NSArray arrayWithArray:[app.categoryNameArray objectAtIndex:0]]];
     
@@ -1698,10 +1632,10 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
         if ([app.categoryNameArray count]==0 || [app.id_CategoryArray count]==0) {
     
-           // DLog(@"quite empty!!!!");
+           // NSLog(@"quite empty!!!!");
             // [app getCategory];
             
-            DLog(@"coming!");
+            NSLog(@"coming!");
         }else{
     
     
@@ -1730,26 +1664,12 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 #pragma mark --playing recording audio button
 
 - (IBAction)PlayAudioButton:(id)sender {
-
-//PlayRecordedAudio
     
-    CGSize size = [[UIScreen mainScreen]bounds].size;
-    
-    if (size.height==480) {
-        
-        PlayRecordedAudio * playaudio = [[PlayRecordedAudio alloc] initWithNibName:@"PlayRecordedAudio3.5" bundle:nil];
-        app.yourFileURL =[NSURL fileURLWithPath:app.soundFilePathData];
-
-        [self.navigationController pushViewController:playaudio animated:YES];
-        
-        
-    }else{
-        
         PlayRecordedAudio * playaudio = [[PlayRecordedAudio alloc] initWithNibName:@"PlayRecordedAudio" bundle:nil];
-         app.yourFileURL =[NSURL fileURLWithPath:app.soundFilePathData];
+        app.yourFileURL =[NSURL fileURLWithPath:app.soundFilePathData];
         [self.navigationController pushViewController:playaudio animated:YES];
 
-    }
+    
     
 
 }
@@ -1760,7 +1680,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     if (ok_For_Success_Outlet.tag==1) {
         
         // on successfull completion....
-        AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+       // AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
         txt_View.text=nil;
         txt_Title.text=nil;
         lbl_finalPicker_Selected.text=nil;
@@ -1782,7 +1702,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     }else{
         // when failed!!!
         
-        AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+       // AppDelegate *app =  (AppDelegate *)[UIApplication sharedApplication].delegate;
         txt_View.text=nil;
         txt_Title.text=nil;
         lbl_finalPicker_Selected.text=nil;
@@ -1941,121 +1861,165 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             
         }else if (type==4){
             
-            CGSize size = [[UIScreen mainScreen]bounds].size;
-            
-            if (size.height==480) {
-                UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-                [self.navigationController pushViewController:text animated:NO];
-                
-            }else{
+           
                 UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
                 [self.navigationController pushViewController:text animated:NO];
                 
-            }
+            
         }
 }
 
 #pragma mark -- Adding custom labels, textfield and buttons
 
--(void)createCustomUiField {
+-(void)createCustomUiField :(int)locationStatusLocal  {
     
     // creting a custom view which will be like a alertview....
+    float customAlertwidth = (sizeOfSubview.width * 95)/100;
+    float customAlertheight = (sizeOfSubview.height * 56.6)/100;
     
-    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(8.0, 129.0, 304.0, 322.0)];
+    customAlertView = [[UIView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width / 2 -customAlertwidth/2), ([UIScreen mainScreen].bounds.size.height / 2 -customAlertheight/2), customAlertwidth, customAlertheight)];
+    
+    //self.view.center = customAlertView.center;
     [customAlertView setBackgroundColor: [UIColor whiteColor]];
     customAlertView.clipsToBounds = YES;
     [customAlertView.layer setCornerRadius:4.5];
     
+    
     // creating a custom label ....
-    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 17.0, 196.0, 21.0)];
-    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Light" size:18.0]];
+    UILabel * confirmLocationlabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*14)/100, (customAlertView.frame.size.height*9.3)/100, (customAlertView.frame.size.width*69)/100, (customAlertView.frame.size.height*6.8)/100)];
+    [confirmLocationlabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:20.0]];
     confirmLocationlabel.text = @"Confirm your location";
     [confirmLocationlabel setTextAlignment:NSTextAlignmentCenter];
+    [confirmLocationlabel setTextColor:[UIColor grayColor]];
     
     // for location logo..
-    UIImageView * locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    UIImageView * locationImage;// = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+    
+    UILabel * enteredLocation = [[UILabel alloc] init];
+    
+    
+    enteredLocation.numberOfLines =3;
+    //enteredLocation.adjustsFontSizeToFitWidth = YES;
+    //enteredLocation.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    
+//    if (locationStatusLocal ==1) {
+//        
+//        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70.0, 24.0, 24.0)];
+//        //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
+//        [enteredLocation setFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)];
+//        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
+//        enteredLocation.text = checkStr;
+//    }else{
+//        
+//        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 70, 30.0, 30.0)];
+//        [enteredLocation setFrame:CGRectMake(25.0, 45, 250.0, 80.0)];
+//        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+//        enteredLocation.text = @"Location auto capturing is off.";
+//        
+//    }
+    
+    if (locationStatusLocal ==1) {
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*19.8)/100, 30.0, 30.0)];
+        //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*24.9)/100)];
+        
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = checkStr;
+    }else{
+        
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*26.8)/100, 30.0, 30.0)];
+        [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*25.9)/100)];
+        [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
+        enteredLocation.text = @"Location auto capturing is off.";
+        
+    }
+
     [locationImage setContentMode:UIViewContentModeScaleAspectFill];
     [locationImage setImage:[UIImage imageNamed:@"location01@2x.jpg"]];
     
     
-    
-    
-    UILabel * enteredLocation = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)];//17,57,270,80
-    [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:14.0]];
-    
-    enteredLocation.numberOfLines =3;
-    enteredLocation.adjustsFontSizeToFitWidth = YES;
-    enteredLocation.lineBreakMode = NSLineBreakByWordWrapping;
-    
-    enteredLocation.text = checkStr;
-    [enteredLocation setTextAlignment:NSTextAlignmentLeft];
+    [enteredLocation setTextAlignment:NSTextAlignmentCenter];
     
     // custom label
     
-    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 138.0, 288.0, 23.0)];
-    [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
-    incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
-    incorrectLocationLabel.adjustsFontSizeToFitWidth = YES;
-    [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+    UILabel * incorrectLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*37.8)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*14)/100)];
+    incorrectLocationLabel.numberOfLines=2;
     
     
+    if (locationStatusLocal == 1) {
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Light" size:13.0]];
+        incorrectLocationLabel.text  =  @"If incorrect, please enter the location for your story";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentCenter];
+        
+    }else{
+        
+        [incorrectLocationLabel setFont:[UIFont fontWithName:@"Roboto-Regular" size:18.0]];
+        incorrectLocationLabel.text  =  @"Please enter the location details of your news/story.";
+        [incorrectLocationLabel setTextAlignment:NSTextAlignmentLeft];
+        [incorrectLocationLabel setTextColor:[UIColor grayColor]];
+        incorrectLocationLabel.numberOfLines=2;
+        
+        
+    }
     
     
     
     //custom textfield for Streets
     
-    UITextField * StreetTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 179.0, 279.0, 30.0)];
+    StreetTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*55.7)/100, (customAlertView.frame.size.width*94.7)/100, (customAlertView.frame.size.height*9.3)/100)];
     [StreetTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StreetTxt setTextAlignment:NSTextAlignmentLeft];
-    StreetTxt.placeholder = @" Street";
+    StreetTxt.placeholder = @"Street";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StreetTxt.layer.borderWidth =1.0;
     StreetTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StreetTxt.delegate =self;
+   // StreetTxt.delegate =self;
     
     
     //custom textfield for city....
     
-    UITextField * cityTxt = [[UITextField alloc] initWithFrame:CGRectMake(8.0, 222.0, 97.0, 30.0)];
+    cityTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*2.6)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
     [cityTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [cityTxt setTextAlignment:NSTextAlignmentLeft];
-    cityTxt.placeholder = @" City";
+    cityTxt.placeholder = @"City";
     [cityTxt setBorderStyle:UITextBorderStyleNone];
     cityTxt.layer.borderWidth =1.0;
     cityTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    cityTxt.delegate =self;
+   // cityTxt.delegate =self;
     
     //custom textfield for state
     
-    UITextField * StateTxt = [[UITextField alloc] initWithFrame:CGRectMake(115.0, 222.0, 83.0, 30.0)];
+    StateTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*34)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
     [StateTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [StateTxt setTextAlignment:NSTextAlignmentLeft];
-    StateTxt.placeholder = @" State";
+    StateTxt.placeholder = @"State";
     [StreetTxt setBorderStyle:UITextBorderStyleNone];
     StateTxt.layer.borderWidth =1.0;
     StateTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    StateTxt.delegate =self;
-    
+   // StateTxt.delegate =self;
     //custom textfield for Pincode
     
-    UITextField * PincodeTxt = [[UITextField alloc] initWithFrame:CGRectMake(205.0, 222.0, 83.0, 30.0)];
+    PincodeTxt = [[MYTextField alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*65.8)/100, (customAlertView.frame.size.height*70.7)/100, (customAlertView.frame.size.width*31.9)/100, (customAlertView.frame.size.height*9.3)/100)];
     [PincodeTxt setFont:[UIFont fontWithName:@"Roboto-Thin" size:14.0]];
     [PincodeTxt setTextAlignment:NSTextAlignmentLeft];
     PincodeTxt.placeholder = @"Pincode";
     [PincodeTxt setBorderStyle:UITextBorderStyleNone];
     PincodeTxt.layer.borderWidth =1.0;
     PincodeTxt.layer.borderColor = [[UIColor colorWithRed:215.0f/255.0f green:215.0f/255.0f blue:215.0f/255.0f alpha:1.0f] CGColor];
-    PincodeTxt.delegate =self;
-    
+    //PincodeTxt.delegate= self;
     
     
     //custom button with action..
     
-    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake(92.0, 272.0, 120.0, 40.0)];
+    UIButton * submitButton = [[UIButton alloc] initWithFrame:CGRectMake((customAlertView.frame.size.width*30.2)/100, (customAlertView.frame.size.height*84.7)/100, (customAlertView.frame.size.width*39.4)/100, (customAlertView.frame.size.height*12.4)/100)];
     [submitButton setBackgroundImage:[UIImage imageNamed:@"Submit btn 640X1136.png"] forState:UIControlStateNormal];
     [submitButton addTarget:self action:@selector(submitButtonTap) forControlEvents:UIControlEventTouchUpInside];
     submitButton.clipsToBounds = YES;
     [submitButton.layer setCornerRadius:4.0];
+    
     
     //Adding all custom labels and tetxfield to subview...
     [self.view addSubview:customAlertView];
@@ -2097,16 +2061,37 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 -(void)submitButtonTap {
     DLog(@"submit tapped");
     
-    [visualEffectView removeFromSuperview];
-    [customAlertView removeFromSuperview];
     
-    
-    
-    
-    
-   [self  sendAudio_ToServer];
-    
-    
+    if (locationStatus==1) {
+        
+        [visualEffectView removeFromSuperview];
+        [customAlertView removeFromSuperview];
+
+        [self  sendAudio_ToServer];
+        
+    }else{
+        
+        if([StreetTxt.text length]==0 || [cityTxt.text length]==0 || [StateTxt.text length]==0 ||[PincodeTxt.text length]==0){
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Location cannot be empty,all fields are mandatory." message:@"Please enter a valid location." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction * actionAlert = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction* alert){
+                
+                
+            }];
+            [alert addAction:actionAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }else{
+            
+            myLocationAddress=[NSString stringWithFormat:@"%@, %@, %@, %@",StreetTxt.text,cityTxt.text, StateTxt.text, PincodeTxt.text];
+            [visualEffectView removeFromSuperview];
+            [customAlertView removeFromSuperview];
+
+            [self  sendAudio_ToServer];
+            
+            
+        }
+    }
 }
 
 #pragma mark  generating the token-----
@@ -2123,10 +2108,6 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     
     firstDate = [dateFormatter1 stringFromDate:now2];
-    
-    
-    
-    
     
     
     //programmatically get user agent
@@ -2164,9 +2145,9 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     //    NSString *myStringValue = @"hello";
     //    NSString *mySecretKey = @"some";
     //    NSString *result1 = [ViewController hashedString:myStringValue withKey:mySecretKey];
-    //    DLog(@"result-- %@", result1);
+    //    NSLog(@"result-- %@", result1);
     
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+   // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password";
     NSString *    idfv = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
     DLog(@"idfv is audio view  =====%@",idfv);
@@ -2336,31 +2317,31 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         
         
+        NSString *categoryId_String=[self sendCategoryId:lbl_output_category.text];
         
-        
-        __block  NSString *categoryId_String;
-        
-       // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            
-            NSString *campareStr = [NSString stringWithFormat:@"%@",[[app.categoryNameArray objectAtIndex:0]objectAtIndex:idx]];
-            if ([campareStr isEqualToString:lbl_output_category.text]) {
-                
-                categoryId_String = [NSString stringWithFormat:@"%@",[[app.id_CategoryArray objectAtIndex:0]objectAtIndex:idx]];
-                
-            }
-            
-        }];
+//        __block  NSString *categoryId_String;
+//        
+//       // AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//        [ [app.categoryNameArray objectAtIndex:0] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            
+//            
+//            NSString *campareStr = [NSString stringWithFormat:@"%@",[[app.categoryNameArray objectAtIndex:0]objectAtIndex:idx]];
+//            if ([campareStr isEqualToString:lbl_output_category.text]) {
+//                
+//                categoryId_String = [NSString stringWithFormat:@"%@",[[app.id_CategoryArray objectAtIndex:0]objectAtIndex:idx]];
+//                
+//            }
+//            
+//        }];
 
         
         
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"dd/MM/yyyy"];
+        [dateFormatter setDateFormat:@"dd-MM-yyyy  hh:mm a"];
         NSString *date=[dateFormatter stringFromDate:[NSDate date]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"hh:mm a"];
+        [formatter setDateFormat:@"hh:mm:ss"];
         NSString *time=[formatter stringFromDate:[NSDate date]];
         
         
@@ -2384,6 +2365,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         [AudiocollectedDict setValue:@"Submitted" forKey:@"JournalStatus"];
         [AudiocollectedDict setValue:@"2" forKey:@"Id_MainCategory"];
         //  [collectedDict setValue:Id_BlobFromService forKey:@"Id_Blob"];
+        [AudiocollectedDict setValue:lbl_output_category.text forKey:@"categoryName"];
         [AudiocollectedDict setValue:date forKey:@"Date"];
         [AudiocollectedDict setValue:time forKey:@"Time"];
         [AudiocollectedDict setValue:@"AUDIO" forKey:@"Type"];
@@ -2392,6 +2374,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         [AudiocollectedDict setValue:app.uniqueNameForLableAudio forKey:@"uniqueName"];
         [AudiocollectedDict setValue:lbl_output_category.text forKey:@"localCategoryName"];
+        
+        [AudiocollectedDict setValue:app.soundFilePathData forKey:@"FileUrlPath"];
+        
+        
+        
         
         // app.submitDict = [collectedDict copy];
     //    DLog(@"collected data in app--%@",AudiocollectedDict);
@@ -2422,14 +2409,15 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             
             if (tempArray == nil) {
                 
-                [LocalDataHandleArray addObject:AudiocollectedDict];
-                
+               // [LocalDataHandleArray addObject:AudiocollectedDict];
+                 [LocalDataHandleArray insertObject:AudiocollectedDict atIndex:0];
                 
             }else{
                 
                 
                 [LocalDataHandleArray removeObjectAtIndex:objectDataClass.globalIndexSelection];
-                [LocalDataHandleArray addObject:AudiocollectedDict];
+              //  [LocalDataHandleArray addObject:AudiocollectedDict];
+                 [LocalDataHandleArray insertObject:AudiocollectedDict atIndex:0];
                 
             }
             
@@ -2451,8 +2439,6 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         UIAlertAction * alertAction = [UIAlertAction  actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             
             NSArray *array = [self.navigationController viewControllers];
-            
-            DLog(@" Text content from array is :  %@",array);
             [self.navigationController popToViewController:[array objectAtIndex:1] animated:YES];
         }];
         
@@ -2469,24 +2455,15 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     
-    if (info[UIImagePickerControllerMediaType]) {
+//    if (!info[UIImagePickerControllerMediaType]) {
+    
+        if (!info[UIImagePickerControllerEditedImage]) {
+            
         [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
         
         
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
             
-        }
-        
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
+     
         
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
@@ -2494,29 +2471,18 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
-        
+        [videoData writeToFile:tempPath atomically:NO];
+
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
-        DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+    
+        NSLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
-            
-        }else{
             
             UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
             uploadV.receivedPath = tempPath;
@@ -2524,7 +2490,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             uploadV.fileNameforVideo = [self generateUniqueNameVideo];
             [self.navigationController pushViewController:uploadV animated:NO];
             
-        }
+       
         
     }else{
     
@@ -2552,14 +2518,11 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
     //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
-    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
-    
-    
-    
-    NSString *documentsDirectory;
-    for (int i=0; i<[pathArray count]; i++) {
-        documentsDirectory =[pathArray objectAtIndex:i];
-    }
+//    NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+//    NSString *documentsDirectory;
+//    for (int i=0; i<[pathArray count]; i++) {
+//        documentsDirectory =[pathArray objectAtIndex:i];
+//    }
     
     //Gaurav's logic
     
@@ -2600,18 +2563,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
    // Nav_valueToPhoto =YES;
     
     //  handleView = YES ;
-    CGSize size = [[UIScreen mainScreen]bounds].size;
     
-    if (size.height==480) {
-        
-        UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-        uploadP.transferedImageData =data;
-        uploadP.transferPhotoUniqueName = captureduniqueName;
-     //   uploadP.navigateValue = Nav_valueToPhoto;
-        uploadP.transferFileURl =localUrl;
-        [self.navigationController pushViewController:uploadP animated:NO];
-        
-    }else{
         
         UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
         uploadP.transferedImageData =data;
@@ -2620,7 +2572,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         uploadP.transferFileURl =localUrl;
         [self.navigationController pushViewController:uploadP animated:NO];
         
-    }
+    
     
     }
     
@@ -2642,17 +2594,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:2]];
 
     isPickerTapped = YES;
-    //   segment_Outlet.selectedSegmentIndex=-1;
-    
-    
-    
-    //    if (IS_OS_8_OR_LATER) {   // code for ios 8 or above !!!!!!!!!
-    //
-    //        [picker.view removeFromSuperview] ;
-    //        [picker removeFromParentViewController] ;
-    //
-    //    }else {
-    //  [self.scrollView_Photo setScrollEnabled:NO];
+  
     [picker dismissViewControllerAnimated:YES completion:NULL];
     [self.view setNeedsLayout];
     
@@ -2811,9 +2753,12 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
 -(void)StartUpdating
 {
     locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    locationManager.delegate=self;
+    
+    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    {
+        [locationManager requestAlwaysAuthorization];
+    }
     [locationManager startUpdatingLocation];
 }
 
@@ -2830,7 +2775,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         
         if ([CLLocationManager  authorizationStatus] == kCLAuthorizationStatusDenied) {
             
-            without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+            /*without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
             without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
             UITextField *txtLocation = [without_Address textFieldAtIndex:0];
             txtLocation.delegate     = self;
@@ -2838,7 +2783,10 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
             txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
             [txtLocation setPlaceholder:@"Location"];
             [self.view endEditing:YES];
-            [without_Address show];
+            [without_Address show];*/
+            locationStatus=0;
+            [self createCustomUiField:locationStatus];
+
             
             
         }
@@ -2847,7 +2795,7 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     else {
         
         
-        without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+       /* without_Address = [[UIAlertView alloc]initWithTitle:@"Location auto capturing is off" message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
         without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
         UITextField *txtLocation = [without_Address textFieldAtIndex:0];
         txtLocation.delegate     = self;
@@ -2855,7 +2803,10 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
         txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
         [txtLocation setPlaceholder:@"Location"];
         [self.view endEditing:YES];
-        [without_Address show];
+        [without_Address show];*/
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+
         
         
     }
@@ -2919,7 +2870,32 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     
     checkStr = [[NSUserDefaults standardUserDefaults]stringForKey:@"address_Default"];
     
-    [self createCustomUiField];
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"LocationCheck"] isEqualToString:@"LocationOn"]) {
+        
+        // false means off..
+        locationStatus=1;
+        [self createCustomUiField:locationStatus];
+        
+    }else{
+        
+        
+        locationStatus=0;
+        [self createCustomUiField:locationStatus];
+        
+        
+        
+//        without_Address = [[UIAlertView alloc]initWithTitle:@"Unable to get current Location." message:@"Please enter the location for your story" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+//        without_Address.alertViewStyle=UIAlertViewStylePlainTextInput;
+//        UITextField *txtLocation = [without_Address textFieldAtIndex:0];
+//        txtLocation.delegate     = self;
+//        txtLocation.text         = @"";
+//        txtLocation.clearButtonMode = UITextFieldViewModeWhileEditing;
+//        [txtLocation setPlaceholder:@"Location"];
+//        [self.view endEditing:YES];
+//        [without_Address show];
+        
+    }
 }
 
 -(void)syncFailure:(NSError*) error
@@ -2943,10 +2919,31 @@ AudiocollectedDict = [NSMutableDictionary dictionary];
     }else{
         
         
-        [self createCustomUiField];
+        //[self createCustomUiField];
         
     }
     
+}
+-(NSString*)sendCategoryId :(NSString*)textFieldText{
+    
+    
+    NSString *tempCategoryId;
+    for (int index=0; index <app.final_Id_Array.count; index++) {
+        
+        NSString *tempString=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Name"];
+        
+        if ([tempString isEqualToString:textFieldText]) {
+            
+            tempCategoryId=[[app.final_Id_Array objectAtIndex:index] valueForKey:@"Id_Category"];
+            return tempCategoryId;
+            
+        }else{
+            
+            // nothing...
+        }
+    }
+    
+    return NULL;
 }
 
 

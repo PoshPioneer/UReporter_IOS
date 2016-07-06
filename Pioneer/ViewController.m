@@ -62,7 +62,7 @@
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
 
     UIView *statusBarView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 20)];
-    statusBarView.backgroundColor  =  [UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
+    statusBarView.backgroundColor  = [UIColor whiteColor]; //[UIColor colorWithRed:20.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0];
     UIViewController *vc = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [vc.view addSubview:statusBarView];
     
@@ -92,6 +92,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     
+    [super viewWillAppear:animated];
+
     ///// Dismiss KeyBord touch of View
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     [scrollView addGestureRecognizer:tapGesture];
@@ -101,27 +103,22 @@
     AppDelegate *app=(AppDelegate*)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password"; //"appleDevelopment"
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app.putValueToKeyChain] valueForKey:KEY_PASSWORD];
-    NSLog(@"saved key  is =====%@",idfv_Local);
+    DLog(@"saved key  is =====%@",idfv_Local);
     
-    if ([idfv_Local length]!=0)
+    if ([idfv_Local length]==0)
     {
-        CGSize size = [[UIScreen mainScreen]bounds].size;
+        DLog(@"keychain is nil for all.");
         
-        if (size.height==480)
-        {
-            
-            UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView3.5" bundle:nil];
-            [self.navigationController pushViewController:up animated:NO];
-            
-            
-        }
-        else
-        {
-            
+    }
+    else
+    {
+        
+        DLog(@"keychain is not null");
+        
             UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView" bundle:nil];
             [self.navigationController pushViewController:up animated:NO];
             
-        }
+        
 
         
         
@@ -131,7 +128,7 @@
         NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
         DLog(@"URL===%@",urlString);
         
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
           DLog(@"JSON: %@", responseObject);
           NSDictionary *json = [Utility cleanJsonToObject:responseObject];
@@ -198,8 +195,10 @@
 }
 
 
--(void)viewDidAppear:(BOOL)animated
-{
+-(void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
     [self addPadding];
     [self addingPaddingToEmail];
 
@@ -402,9 +401,12 @@
     [finalDictionary setObject:headerDict forKey:@"header"];
     [finalDictionary setValue:dictionaryTemp forKey:@"data"];
 
-    
-    NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?token=%@",[GlobalStuff generateToken]];
-    
+
+   
+    NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
+        
+    DLog(@"while registration data sent is = %@",finalDictionary);
+ 
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self.view setUserInteractionEnabled:NO];
@@ -422,6 +424,7 @@
 -(void)syncSuccess:(id) responseObject
 {
     
+    DLog(@"%@",responseObject);
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self.view setUserInteractionEnabled:YES];
@@ -441,6 +444,7 @@
         [[NSUserDefaults standardUserDefaults]setValue:strCompare forKeyPath:@"TimesOfIndiaRegistrationID"];
         [[NSUserDefaults standardUserDefaults]synchronize];
 
+        NSLog(@"id is = %@",[[NSUserDefaults standardUserDefaults]stringForKey:@"userID_Default"]);
         // set keychain value
 
         AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -448,20 +452,22 @@
         [usernamepasswordKVPairs setObject:app.FinalKeyChainValue forKey:@"com.toi.app.password"];
         [KeyChainValteck keyChainSaveKey:app.putValueToKeyChain data:usernamepasswordKVPairs];
     
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480)
-        {
+        if (check_Uncheck_Bool) {
+            
+            
+            [[NSUserDefaults standardUserDefaults] setValue:@"LocationOn" forKey:@"LocationCheck"];
+            [[NSUserDefaults standardUserDefaults]synchronize];
 
-            UploadView *upload = [[UploadView alloc]initWithNibName:@"UploadView3.5" bundle:nil];
-            [self.navigationController pushViewController:upload animated:YES];
+        }else{
+            
+            [[NSUserDefaults standardUserDefaults] setValue:@"LocationOff" forKey:@"LocationCheck"];
+            [[NSUserDefaults standardUserDefaults]synchronize];
+
             
         }
-        else
-        {
             UploadView *upload = [[UploadView alloc]initWithNibName:@"UploadView" bundle:nil];
             [self.navigationController pushViewController:upload animated:YES];
-        }
         
     }
     else

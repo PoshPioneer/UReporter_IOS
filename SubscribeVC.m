@@ -18,6 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     UIView *statusBarView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 20)];
     statusBarView.backgroundColor  =  [UIColor blackColor];
     [self.view addSubview:statusBarView];
@@ -58,9 +59,11 @@
         [json setObject:body forKey:@"body"];
         [json setObject:header forKey:@"header"];
         
-        DLog(@"%@",json);
+        NSLog(@"%@",json);
         
-        [sync putServiceCall:[NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails/Syncronexuser?token=%@",[GlobalStuff generateToken]] withParams:json]; // call webservice
+                
+        
+        [sync putServiceCall:[NSString stringWithFormat:@"%@%@/%@/Syncronexuser?token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]] withParams:json]; // call webservice
 
     
     }
@@ -89,14 +92,51 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     //[loadingView setHidden:NO];
+    
+    if ([Utility connected] == YES){
+
+    
     spinner=[SpinnerView loadSpinnerIntoView:self.view];
     
+        
+        
+    }else {
+        
+        
+        UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
+        }];
+        
+        [errorAlert addAction:errorAction];
+        [self presentViewController:errorAlert animated:YES completion:nil];
+
+        
+    }
     
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    if ([Utility connected] == YES){
+        
+        // Nothing......
+        
+        
+    }else {
+        
+        
+        UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Internet connection is not available. Please try again." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction * errorAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * alert){
+        }];
+        
+        [errorAlert addAction:errorAction];
+        [self presentViewController:errorAlert animated:YES completion:nil];
+        
+        
+    }
+
    
+    
     [spinner removeSpinner];
 }
 
@@ -109,7 +149,7 @@
 
 -(void)syncSuccess:(id) responseObject {
     
-    DLog(@"%@",responseObject);
+    NSLog(@"%@",responseObject);
     [[NSUserDefaults standardUserDefaults] setValue:[responseObject valueForKey:@"Status"] forKey:@"subscribeStatus"];
     
 }

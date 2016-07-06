@@ -47,7 +47,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
 
-    [super viewWillAppear:YES];
+    [super viewWillAppear:animated];
+
     
     // for registering the user's profile..... use method ""
    [self methodToRegisterUser];
@@ -79,7 +80,7 @@
     //get current time....
     NSDate *myDate = [NSDate date];
     NSTimeInterval getcurrentTime = [myDate timeIntervalSince1970];
-    DLog(@"this is current time now===%f",getcurrentTime);
+    NSLog(@"this is current time now===%f",getcurrentTime);
 
     // check time < 15 min..
     if(getcurrentTime - getTime >=900)
@@ -181,6 +182,8 @@
     NSString * MobNo=[NSString stringWithFormat:@"%@",[[getData valueForKey:@"data"]valueForKey:@"Phone"]];
    
     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
+    
+    
     NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/OTP/GetOTP?MobileNo=%@&Source=%@",MobNo,@"Maharashtra"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -206,8 +209,8 @@
                          
                                                         options:kNilOptions
                                                           error:&error];
-     //timesgroupcrapi  http://timesgroupcrapi.cloudapp.net/api/UserDet
-     NSURL *url = [NSURL URLWithString:@"http://prngapi.cloudapp.net/api/UserDetails"];
+     
+          NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@",kBaseURL,kAPI,kUserDetails]];
      
      DLog(@"DICT IS===%@",getData);
      
@@ -343,19 +346,11 @@
     
     if (alertView == successful_AlertShow ) {
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            
-             UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView3.5" bundle:nil];
-             [self.navigationController pushViewController:up animated:YES];
-            
-        }else{
-           
              UploadView *up=[[UploadView alloc]initWithNibName:@"UploadView" bundle:nil];
             [self.navigationController pushViewController:up animated:YES];
             
-        }
+        
         
     }
 }
@@ -416,36 +411,6 @@
 }
 
 
-# pragma mark For Internet check.....
-
--(void)checkForInternetConnection{
-    
-    Reachability * reach = [Reachability reachabilityWithHostname:@"www.google.com"];
-    reach.reachableBlock = ^(Reachability * reachability)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [[NSUserDefaults standardUserDefaults]setValue:@"reachable" forKeyPath:@"connection_Internet"];
-            [[NSUserDefaults standardUserDefaults]synchronize];
-            
-            // internet is available!!!!
-        });
-    };
-    
-    reach.unreachableBlock = ^(Reachability * reachability)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            //   DLog(@"inside not reachable!");
-            [[NSUserDefaults standardUserDefaults]setValue:@"not_reachable" forKeyPath:@"connection_Internet"];
-            [[NSUserDefaults standardUserDefaults]synchronize];
-            
-        });
-    };
-    
-    [reach startNotifier];
-    
-}
 
 #pragma mark -- UITabBar Delegate
 

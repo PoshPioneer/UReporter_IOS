@@ -14,13 +14,16 @@
 
 @synthesize globalTemperature,globalIndex;
 @synthesize  globalUserAgent,temperature,globaltextDict,globalSubmitArray,globalcompleteCategory,flag,sectionIndex,rowIndex;
-@synthesize globalCounter,jsonDict,isFromOtherView;
+@synthesize globalCounter,jsonDict,isFromOtherView,globalSubCategory,checkForAudioCurrentCaptureOrNot;
+@synthesize globalCategory;
+@synthesize audioDetailsMutableArray;
+@synthesize feedsArrayDC;
 
 
 
 static DataClass *instance =nil;
-+(DataClass *)getInstance
-{
++(DataClass *)getInstance {
+    
     @synchronized(self)
     {
         if(instance==nil)

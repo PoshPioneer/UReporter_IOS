@@ -7,7 +7,7 @@
 + (NSString *) getDBPath;
 
 +(BOOL)insertIntoLike_Info:(LikeDetail *)pro;
-+(NSMutableArray*)getAllLike_Info;
++(NSMutableArray*)getAllLike_Info:(NSString *) key;
 +(BOOL)updateLike_Info:(LikeDetail *)key;
 +(NSArray *)getSingleLike_Info:(NSString *)key;
 +(BOOL)deleteSingleRecordsof_Like_Info:(NSString *)key;

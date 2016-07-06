@@ -10,7 +10,7 @@
 #import "SpinnerView.h"
 
 
-@interface DetailsViewController : UIViewController <UIScrollViewDelegate,UIPageViewControllerDataSource,UIPageViewControllerDelegate,UITabBarControllerDelegate,UITabBarDelegate,UIImagePickerControllerDelegate> {
+@interface DetailsViewController : UIViewController <UIScrollViewDelegate,UIPageViewControllerDataSource,UIPageViewControllerDelegate,UITabBarControllerDelegate,UITabBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate> {
     
     SpinnerView *spinner;
     NSUInteger kNumberOfPages;

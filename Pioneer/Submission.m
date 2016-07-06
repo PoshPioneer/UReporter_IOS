@@ -111,8 +111,10 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    [super viewWillAppear:animated];
+
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
-    [tabBarController setTintColor:[UIColor whiteColor]]; // set tab bar selection color white
+    [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
     
     if ([app.myFinalArray count]==0) {
         lblMeassage.hidden=NO;
@@ -173,7 +175,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         [cell.onlyVideoIcon setHidden:YES];
         // for text setting the frame......
-        UILabel * Date = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 19.0, 90.0, 24.0)];
+        UILabel * Date = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 19.0, 120.0, 24.0)];
         [Date setTextColor:[UIColor darkGrayColor]];
 
         Date.text=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"Date"];
@@ -211,7 +213,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [cell.lblTime setHidden:YES];
         
         
-        UILabel * Date = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 19.0, 90.0, 24.0)];
+        UILabel * Date = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 19.0, 120, 24.0)];
         [Date setTextColor:[UIColor darkGrayColor]];
         Date.text=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"Date"];
         [Date setFont:[UIFont fontWithName:@"Roboto-Regular" size:12.0]];
@@ -243,16 +245,16 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         cell.lblFullStory.text=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"FullStory"];
         cell.lblDate.text=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"Date"];
         cell.lblTime.text=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"Time"];
-  //for image path showing image to imageview ,,,
-    
-    NSString * path = [[reverseArray objectAtIndex:indexPath.row] valueForKey:@"imagePath"];
-    DLog(@"path%@",path);
-  
-    DLog(@"%@",[NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent]);
-    
-    NSString *fullPath = [NSString stringWithFormat:@"%@/%@",[self applicationDocumentsDirectory],path.lastPathComponent];
-       UIImage * myImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:fullPath]];
+        
+        
+ 
+    UIImage * myImage = [UIImage imageWithData:[[reverseArray objectAtIndex:indexPath.row] valueForKey:@"transferImage"]];
+        
+        //    UIImage * myImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:fullPath]];
+
+        
        [cell.imageView setImage:myImage];
+        
         
     }else if ([[[reverseArray objectAtIndex:indexPath.row] valueForKey:@"Type"] isEqualToString:@"VIDEO"]){
         
@@ -273,15 +275,21 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
         NSURL *videoURL = [NSURL fileURLWithPath:fullPath];
         
+        
       
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
-        AVAssetImageGenerator *generateImg = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        NSError *error = NULL;
-        CMTime time = CMTimeMake(1, 65);
-        CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
-        DLog(@"error==%@, Refimage==%@", error, refImg);
+        AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        gen.appliesPreferredTrackTransform = YES;
+        CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+        NSError *error = nil;
+        CMTime actualTime;
+        CGImageRef image2 = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+        UIImage*FrameImage = [[UIImage alloc] initWithCGImage:image2];
+        CGImageRelease(image2);
         
-        UIImage *FrameImage= [[UIImage alloc] initWithCGImage:refImg];
+        
+        
+        
         [cell.imageView setImage:FrameImage];
         [cell.onlyVideoIcon setHidden:NO];
 
@@ -324,16 +332,11 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     app.Title=[[reverseArray objectAtIndex:[sender tag]]valueForKey:@"Title"];
     app.Description=[[reverseArray objectAtIndex:[sender tag]]valueForKey:@"FullStory"];
     app.indexpath=[sender tag];
-    CGSize size = [[UIScreen mainScreen]bounds].size;
     
-    if (size.height==480) {
-        
-        FullDescription *fulldes=[[FullDescription alloc]initWithNibName:@"FullDescription3.5" bundle:nil];
-        [self.navigationController pushViewController:fulldes animated:YES];
-        }else{
+    
         FullDescription *fullDescription=[[FullDescription alloc]initWithNibName:@"FullDescription" bundle:nil];
         [self.navigationController pushViewController:fullDescription animated:YES];
-        }
+    
      }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -343,18 +346,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
    // app.Title=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"Title"];
     //app.Description=[[reverseArray objectAtIndex:indexPath.row]valueForKey:@"FullStory"];
     //app.indexpath=[sender tag];
-    CGSize size = [[UIScreen mainScreen]bounds].size;
     
-    if (size.height==480) {
-        
-        
-        FullDescription *fulldes=[[FullDescription alloc]initWithNibName:@"FullDescription3.5" bundle:nil];
-        
-        fulldes.receivedArray = [[reverseArray objectAtIndex:indexPath.row] copy];
-        
-        [self.navigationController pushViewController:fulldes animated:YES];
-    
-    } else {
     
         
         FullDescription *fullDescription=[[FullDescription alloc]initWithNibName:@"FullDescription" bundle:nil];
@@ -363,11 +355,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         [self.navigationController pushViewController:fullDescription animated:YES];
     
     
-    }
-
-
     
-
 }
 
 
@@ -638,19 +626,12 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
     }else if (type==4){
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView3.5" bundle:nil];
-            [self.navigationController pushViewController:text animated:NO];
-            
-        }else{
+       
             
             UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
             [self.navigationController pushViewController:text animated:NO];
             
-        }
+        
         
         
     }else if (type ==5){
@@ -784,20 +765,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
         //  handleView = YES ;
         
-        if ([[info objectForKey:@"UIImagePickerControllerMediaType"] rangeOfString:@"movie"].location!=NSNotFound)
-        {
-            MPMoviePlayerController *theMovie = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:@"UIImagePickerControllerMediaURL"]];
-            theMovie.view.frame = self.view.bounds;
-            theMovie.controlStyle = MPMovieControlStyleNone;
-            theMovie.shouldAutoplay=NO;
-            imageThumbnail = [theMovie thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionExact];
-            
-        }
         
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
-            // UISaveVideoAtPathToSavedPhotosAlbum (moviePath,self, @selector(video:didFinishSavingWithError:contextInfo:),NULL);
-        }
         
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         
@@ -805,42 +773,26 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
         tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
         
-        
+        [videoData writeToFile:tempPath atomically:NO];
+
         [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        BOOL success = [videoData writeToFile:tempPath atomically:NO];
-        DLog(@"this is the value of sucess---%hhd",success);
+      
         DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
         
-        if (isBrowserTapped)
-        {
-            
-        }
         
         
-        CGSize size = [[UIScreen mainScreen]bounds].size;
-        
-        if (size.height==480) {
-            
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
-            
-        }else{
-            
             UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
             uploadV.receivedPath = tempPath;
             uploadV.ReceivedURl =videoURL;
             uploadV.fileNameforVideo = [self generateUniqueNameVideo];
             [self.navigationController pushViewController:uploadV animated:NO];
             
-        }
+        
         
         
         [picker dismissViewControllerAnimated:YES completion:nil];
@@ -875,15 +827,12 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
         //    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         
-        NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
-        
-        
-        
-        NSString *documentsDirectory;
-        for (int i=0; i<[pathArray count]; i++) {
-            documentsDirectory =[pathArray objectAtIndex:i];
-        }
-        
+       // NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
+//        NSString *documentsDirectory;
+//        for (int i=0; i<[pathArray count]; i++) {
+//            documentsDirectory =[pathArray objectAtIndex:i];
+//        }
+//        
         //Gaurav's logic
         
         DLog(@"%lu",(unsigned long)[[[NSUserDefaults standardUserDefaults]objectForKey:@"MyArray"] count]);
@@ -925,19 +874,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         Nav_valueToPhoto =YES;
         
         //  handleView = YES ;
-        CGSize size = [[UIScreen mainScreen]bounds].size;
         
-        if (size.height==480) {
-            
-            UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-            uploadP.transferedImageData =data;
-            uploadP.transferPhotoUniqueName = captureduniqueName;
-            uploadP.navigateValue = Nav_valueToPhoto;
-            uploadP.transferFileURl =localUrl;
-            [self.navigationController pushViewController:uploadP animated:NO];
-            
-        }else{
-            
             UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
             uploadP.transferedImageData =data;
             uploadP.transferPhotoUniqueName = captureduniqueName;
@@ -945,7 +882,7 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             uploadP.transferFileURl =localUrl;
             [self.navigationController pushViewController:uploadP animated:NO];
             
-        }
+        
         
         
         
@@ -999,6 +936,10 @@ NSString *letter6 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     return finalUnique;
     
 }
+
+
+
+
 
 
 @end
