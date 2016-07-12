@@ -11,6 +11,7 @@ pod 'SDWebImage', '~>3.7'
 pod 'IQKeyboardManager'
 pod 'AFNetworking', '~> 3.0'
 pod 'SSKeychain'
+pod 'Google/Analytics'
 
 end
 

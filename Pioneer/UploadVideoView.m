@@ -240,6 +240,10 @@
 -(void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Video Screen"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+
 
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:0]];
     [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
