@@ -159,10 +159,12 @@
 
     objectDataClass = [DataClass getInstance];
     DLog(@"all data from array--%@",self.testArray);
-    DLog(@"%lu",self.testArray.count);
+    DLog(@"%lu",(unsigned long)self.testArray.count);
   
     openGallery = [[UIButton alloc] init];
     counterOFPages = [[UILabel alloc] init];
+    
+    [self configureLikeButtons];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(configureLikeButtons)
