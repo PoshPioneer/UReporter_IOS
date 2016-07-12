@@ -13,6 +13,7 @@
 #import "SharingView.h"
 #import "ASStarRatingView.h"
 #import "DBController.h"
+#import "Reachability.h"
 
 @interface ChildView () <UITextViewDelegate,SyncDelegate>{
 
@@ -67,14 +68,9 @@
     
 }
 
-    
-
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     
    obj = [LikeDetail new];
 
@@ -150,8 +146,6 @@
     [lblTime setBackgroundColor:[UIColor clearColor]];
     [lblTime setFont:[UIFont fontWithName:@"ProximaNovaACond-Light" size:12.0]];
     lblTime.textColor = [UIColor colorWithRed:183.0/255.0 green:183.0/255.0 blue:183.0/255.0 alpha:1];
-
-    
     
     // initialize time label
     
@@ -163,14 +157,16 @@
     lblCategory.textColor = [UIColor colorWithRed:183.0/255.0 green:183.0/255.0 blue:183.0/255.0 alpha:1];
     lblCategory.textAlignment = NSTextAlignmentRight;
 
-    
     objectDataClass = [DataClass getInstance];
     DLog(@"all data from array--%@",self.testArray);
     DLog(@"%lu",self.testArray.count);
   
-    
     openGallery = [[UIButton alloc] init];
     counterOFPages = [[UILabel alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(configureLikeButtons)
+                                                 name:kReachabilityChangedNotification object:nil];
     
 }
 
@@ -179,7 +175,17 @@
     // Dispose of any resources that can be recreated.
 }
 
-
+- (void) configureLikeButtons {
+    
+    if([Utility connected]) {
+        likeButton.hidden = YES;
+        disLikeButton.hidden = YES;
+    } else {
+        likeButton.hidden = NO;
+        disLikeButton.hidden = NO;
+    }
+    
+}
 
 -(void)manageDB
 {
@@ -189,8 +195,6 @@
     NSString *feedID = [self.testArray objectAtIndex:(long)pageIndex][@"guid"];
     NSArray * arrDB = [DBController getSingleLike_Info:feedID];
     if(arrDB.count >0)  {
-        
-        
         
         obj = arrDB[0];
         
