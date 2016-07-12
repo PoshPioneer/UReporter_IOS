@@ -368,6 +368,9 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 -(void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Details Screen"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 
     [tabBarController setSelectedItem:nil]; // set tab bar unselected
     [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white

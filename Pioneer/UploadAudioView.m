@@ -171,6 +171,10 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     
     [super viewWillAppear:animated];
 
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Audio Screen"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+
     objectDataClass=[DataClass getInstance];
     app = (AppDelegate *)[UIApplication sharedApplication].delegate;
 

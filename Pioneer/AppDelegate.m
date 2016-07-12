@@ -48,6 +48,21 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     
+    #pragma mark GoogleAnalytics
+    
+    // Configure tracker from GoogleService-Info.plist.
+    NSError *configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
+    
+    // Optional: configure GAI options.
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.logger.logLevel = kGAILogLevelVerbose;  // remove before app release
+
+    // end....GoogleAnalytics..
+    
+    
     [DBController copyDatabaseIfNeeded]; // TODO: //>     Initialize DBController
     //[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 
@@ -68,7 +83,7 @@
 //    FinalSubmitForReview = [[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy];
     
 
-    putValueToKeyChain=@"Times_Of_India_Newspaper12346789Maharashtra619ss1apkTestingqwetyxmf12223";
+    putValueToKeyChain=@"Times_Of_India_Newspaper12346789Maharashtra619ss1apkTestingqwetyxmf12223234545";
     AppDelegate *app1 = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password"; //"appleDevelopment"
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app1.putValueToKeyChain] valueForKey:KEY_PASSWORD];

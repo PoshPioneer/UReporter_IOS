@@ -25,6 +25,8 @@
     #import "DataClass.h"
     #import "GlobalStuff.h"
     #import "AFNetworking.h"
+    #import <Google/Analytics.h>
+
 #import "MYTextField.h"
 
 #endif

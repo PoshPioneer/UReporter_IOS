@@ -15,6 +15,7 @@
 		283FBB141C64B0F600351FDD /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 283FBB121C64B0F600351FDD /* SWRevealViewController.m */; };
 		283FBB191C64B17700351FDD /* RearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 283FBB171C64B17700351FDD /* RearViewController.m */; };
 		283FBB1A1C64B17700351FDD /* RearViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 283FBB181C64B17700351FDD /* RearViewController.xib */; };
+		2845A8721D126A4F009A9637 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2845A8711D126A4F009A9637 /* GoogleService-Info.plist */; };
 		285D5AA71C636C5500447E68 /* save.png in Resources */ = {isa = PBXBuildFile; fileRef = 285D5AA61C636C5500447E68 /* save.png */; };
 		285D5AAB1C63807100447E68 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 285D5AAA1C63807100447E68 /* images.png */; };
 		289670AB1D0543BC0096E365 /* MYTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 289670AA1D0543BC0096E365 /* MYTextField.m */; };
@@ -293,6 +294,7 @@
 		DB69CD6619826ED0006DE6A9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB69CD6519826ED0006DE6A9 /* CoreMedia.framework */; };
 		DBA57DB51CF3279C002FC6ED /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBA57DB41CF3279C002FC6ED /* AVKit.framework */; };
 		E4DAD50B1CD76B4100437D0D /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DAD50A1CD76B4100437D0D /* CustomTextField.m */; };
+		EEEDF22442C6C8AF991242FE /* libPods-Pioneer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B2BEC15D052B0154CF97FED /* libPods-Pioneer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -306,6 +308,7 @@
 		283FBB161C64B17700351FDD /* RearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RearViewController.h; sourceTree = "<group>"; };
 		283FBB171C64B17700351FDD /* RearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RearViewController.m; sourceTree = "<group>"; };
 		283FBB181C64B17700351FDD /* RearViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RearViewController.xib; sourceTree = "<group>"; };
+		2845A8711D126A4F009A9637 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		285D5AA61C636C5500447E68 /* save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = save.png; sourceTree = "<group>"; };
 		285D5AAA1C63807100447E68 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		289670A91D0543BC0096E365 /* MYTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTextField.h; sourceTree = "<group>"; };
@@ -539,6 +542,9 @@
 		4FF7CC261CB77814005326F1 /* SubmitForReviewDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitForReviewDetails.h; sourceTree = "<group>"; };
 		4FF7CC271CB77814005326F1 /* SubmitForReviewDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitForReviewDetails.m; sourceTree = "<group>"; };
 		4FF7CC2D1CB7CD3F005326F1 /* Arrow45x45.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Arrow45x45.png; sourceTree = "<group>"; };
+		5D8C913F37176DBF98FDFB29 /* Pods-Pioneer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.release.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.release.xcconfig"; sourceTree = "<group>"; };
+		6B2BEC15D052B0154CF97FED /* libPods-Pioneer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pioneer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EFD227AEE70CA4A83C8FE48 /* Pods-Pioneer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pioneer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pioneer/Pods-Pioneer.debug.xcconfig"; sourceTree = "<group>"; };
 		AD17B0611C05B1E1003A9709 /* Submission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Submission.h; sourceTree = "<group>"; };
 		AD17B0621C05B1E1003A9709 /* Submission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Submission.m; sourceTree = "<group>"; };
 		AD17B0631C05B1E1003A9709 /* Submission.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Submission.xib; sourceTree = "<group>"; };
@@ -976,6 +982,15 @@
 			name = DBController;
 			sourceTree = "<group>";
 		};
+		62CD3C441E3A58AE6E0F66A0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9EFD227AEE70CA4A83C8FE48 /* Pods-Pioneer.debug.xcconfig */,
+				5D8C913F37176DBF98FDFB29 /* Pods-Pioneer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C074EF181C1ADB31004D03DB /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1167,6 +1182,7 @@
 		DB69CD04198250C1006DE6A9 = {
 			isa = PBXGroup;
 			children = (
+				2845A8711D126A4F009A9637 /* GoogleService-Info.plist */,
 				2803CD7D1CFD95B40031FD0E /* whiteShare@2x.png */,
 				4F22F5D11CEC329B004008F4 /* Constants.h */,
 				4F22F5D01CEC329B004008F4 /* Constants.m */,
@@ -1710,6 +1726,7 @@
 				DB257ED41988330D00C56A14 /* RecordAudioView.xib in Resources */,
 				4F35FCD81CC8D41800659DB4 /* login-ios copy.png in Resources */,
 				4F3972091C8871E000EA8E8F /* SubmitImgcur.png in Resources */,
+				2845A8721D126A4F009A9637 /* GoogleService-Info.plist in Resources */,
 				4F3972081C8871E000EA8E8F /* StartRecordingVideocur.png in Resources */,
 				4F35FCDC1CC8E8B900659DB4 /* drop_dwn.png in Resources */,
 				4FF4C01A1C929D7D00CE4E36 /* ReviewBtn01@2x.png in Resources */,

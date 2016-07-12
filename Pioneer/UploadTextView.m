@@ -192,6 +192,10 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 -(void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Text Screen"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+
 
     [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:3]];
     
