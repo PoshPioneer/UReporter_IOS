@@ -2262,7 +2262,7 @@
     
     if (locationStatusLocal ==1) {
         
-        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*19.8)/100, 30.0, 30.0)];
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*19.4)/100, 30.0, 30.0)];
         //        initWithFrame:CGRectMake(25.0, 57.0, 250.0, 80.0)]
         [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*24.9)/100)];
         
@@ -2270,7 +2270,7 @@
         enteredLocation.text = checkStr;
     }else{
         
-        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, (customAlertView.frame.size.height*26.8)/100, 30.0, 30.0)];
+        locationImage = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, (customAlertView.frame.size.height*26.4)/100, 30.0, 30.0)];
         [enteredLocation setFrame:CGRectMake((customAlertView.frame.size.width*8.2)/100, (customAlertView.frame.size.height*17.7)/100, (customAlertView.frame.size.width*82.2)/100, (customAlertView.frame.size.height*25.9)/100)];
         [enteredLocation setFont:[UIFont fontWithName:@"Roboto-Regular" size:(((customAlertView.frame.size.height*6.8)/100)*81.7)/100]];
         enteredLocation.text = @"Location auto capturing is off.";
