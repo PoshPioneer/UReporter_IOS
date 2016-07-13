@@ -918,7 +918,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="zoM-F3-Wfn"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="15"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -927,7 +927,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="YhG-iQ-B8K"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="15"/>
+                            <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="13"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -936,7 +936,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="19" id="CB6-YB-azM"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="13"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
