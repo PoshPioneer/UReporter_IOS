@@ -2093,6 +2093,7 @@
 
 #pragma  mark --
 #pragma mark -- checkNavigation.
+/*
 -(void)checkforNavigationInternetconnection:(int)type{
     
     
@@ -2159,6 +2160,76 @@
           }
 }
 
+*/
+
+
+-(void)checkforNavigationInternetconnection:(int)type{
+    
+    
+    
+    if (type==2)
+        
+    {
+        
+        
+        UIAlertController *alrController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *takeVideo=[UIAlertAction actionWithTitle:@"Capture" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            isPhotoTabSelected =YES;
+            isCameraClicked=YES;
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate = self;
+            picker.allowsEditing = YES;
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:picker animated:YES completion:NULL];
+            
+        }];
+        
+        UIAlertAction *gallery=[UIAlertAction actionWithTitle:@"Choose From Gallery" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            isCameraClicked=NO;
+            isPhotoTabSelected =YES;
+            
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate = self;
+            picker.allowsEditing = NO;
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:picker animated:YES completion:NULL];
+            
+            
+            
+        }];
+        
+        UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+            [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:0]];
+            [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
+            
+            
+            
+        }];
+        
+        
+        [alrController addAction:takeVideo];
+        [alrController addAction:gallery];
+        [alrController addAction:cancel];
+        
+        
+        [self presentViewController:alrController animated:YES completion:nil];
+        
+    }
+    
+    else if (type ==3){
+        
+        RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
+        [self.navigationController pushViewController:recordview  animated:YES];
+        
+    }else if (type==4){
+        
+        UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
+        [self.navigationController pushViewController:text animated:NO];
+    }
+}
 
 
 

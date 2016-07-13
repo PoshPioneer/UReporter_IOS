@@ -1937,45 +1937,16 @@ NSMutableData *responseData;
 
 
 #pragma mark -- checkNavigation.
+/*
 -(void)checkforNavigationInternetconnection:(int)type{
     
         if (type==1) {
             
-            /*CGSize size = [[UIScreen mainScreen]bounds].size;
-            
-            if (size.height==480) {
-                
-                UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
-                [self.navigationController pushViewController:uploadV animated:NO];
-                
-            }else{
-                
-                UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
-                [self.navigationController pushViewController:uploadV animated:NO];
-                
-            }*/
             VideoIsTapped = YES;
             [self loadVideoRecorder];
 
             
-        }/*else if (type==2) {
-            
-            CGSize size = [[UIScreen mainScreen]bounds].size;
-            
-            if (size.height==480) {
-                
-                UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto3.5" bundle:nil];
-                [self.navigationController pushViewController:uploadP animated:YES];
-                
-            }else{
-                
-                UploadPhoto *uploadP = [[UploadPhoto alloc]initWithNibName:@"UploadPhoto" bundle:nil];
-                [self.navigationController pushViewController:uploadP animated:YES];
-                
-            }
-            
-            
-        }*/else if (type ==3){
+        }else if (type ==3){
             
             
             RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
@@ -1989,6 +1960,82 @@ NSMutableData *responseData;
           [self.navigationController pushViewController:text animated:NO];
           
           
+    }
+}
+
+*/
+
+-(void)checkforNavigationInternetconnection:(int)type{
+    
+    //        if (type==1) {
+    //
+    //            /*CGSize size = [[UIScreen mainScreen]bounds].size;
+    //
+    //            if (size.height==480) {
+    //
+    //                UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView3.5" bundle:nil];
+    //                [self.navigationController pushViewController:uploadV animated:NO];
+    //
+    //            }else{
+    //
+    //                UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
+    //                [self.navigationController pushViewController:uploadV animated:NO];
+    //
+    //            }*/
+    //            VideoIsTapped = YES;
+    //            [self loadVideoRecorder];
+    //
+    //
+    //        }
+    
+    if (type==1) {
+        
+        UIAlertController *alrController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *takeVideo=[UIAlertAction actionWithTitle:@"Capture" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            VideoIsTapped = YES;
+            [self loadVideoRecorder];
+        }];
+        
+        UIAlertAction *gallery=[UIAlertAction actionWithTitle:@"Choose From Gallery" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            isBrowserTapped =YES;
+            VideoIsTapped = YES;
+            [self startMediaBrowserFromViewController: self usingDelegate: self];
+            
+        }];
+        
+        UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+            [tabBarController setSelectedItem:[tabBarController.items objectAtIndex:1]];
+            [tabBarController setTintColor:[UIColor blackColor]]; // set tab bar selection color white
+            
+        }];
+        
+        
+        [alrController addAction:takeVideo];
+        [alrController addAction:gallery];
+        [alrController addAction:cancel];
+        
+        
+        [self presentViewController:alrController animated:YES completion:nil];
+        
+        
+    }
+    
+    else if (type ==3){
+        
+        RecordAudioView *recordview=[[RecordAudioView alloc]initWithNibName:@"RecordAudioView" bundle:Nil];
+        [self.navigationController pushViewController:recordview  animated:YES];
+        
+        
+    }else if (type==4){
+        
+        
+        UploadTextView *text=[[UploadTextView alloc]initWithNibName:@"UploadTextView" bundle:nil];
+        [self.navigationController pushViewController:text animated:NO];
+        
+        
     }
 }
 
@@ -2610,6 +2657,31 @@ NSMutableData *responseData;
     return NULL;
 }
 
+- (BOOL) startMediaBrowserFromViewController: (UIViewController*) controller
+                               usingDelegate: (id <UIImagePickerControllerDelegate,
+                                               UINavigationControllerDelegate>) delegate{
+    
+    if (([UIImagePickerController isSourceTypeAvailable:
+          UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)
+        || (delegate == nil)
+        || (controller == nil))
+        return NO;
+    
+    UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
+    mediaUI.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    
+    mediaUI.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
+    
+    // Hides the controls for moving & scaling pictures, or for
+    // trimming movies. To instead show the controls, use YES.
+    mediaUI.allowsEditing = YES;
+    
+    mediaUI.delegate = delegate;
+    
+    [controller presentViewController:mediaUI animated:YES completion:nil];//: mediaUI animated: YES];
+    return YES;
+    
+}
 
 @end
 
