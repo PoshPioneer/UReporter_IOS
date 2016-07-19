@@ -784,16 +784,23 @@ NSString *letterss = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
     else{ // for photo
         
         
-        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-        mainImage = chosenImage;
-        data = UIImagePNGRepresentation(mainImage);
-    
-        if(isCameraClicked)
-        {
-            UIImageWriteToSavedPhotosAlbum(mainImage,  nil,  nil, nil);
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
+        
+        if (info[UIImagePickerControllerEditedImage ]) {
+            
+            chosenImage =info[UIImagePickerControllerEditedImage];
+            
+        }else{
+            
+            chosenImage =info[UIImagePickerControllerOriginalImage];
+            
         }
         
-        UIImage *editedImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        mainImage = chosenImage;
+        data = UIImagePNGRepresentation(mainImage);
+        // NSLog(@"converted data--%@",data);
+        
+        UIImage *editedImage = chosenImage;
 //        NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES);
 //        NSString *documentsDirectory;
 //        for (int i=0; i<[pathArray count]; i++) {

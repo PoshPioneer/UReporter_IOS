@@ -2644,7 +2644,20 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
         
     }else{
     
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        UIImage *chosenImage;
+        
+        if (info[UIImagePickerControllerEditedImage]) {
+            
+          chosenImage = info[UIImagePickerControllerEditedImage];
+
+            
+        }else{
+            
+            
+            chosenImage = info[UIImagePickerControllerOriginalImage];
+
+        }
+        
     mainImage = chosenImage;
     data = UIImagePNGRepresentation(mainImage);
     DLog(@"converted data--%@",data);
@@ -2905,7 +2918,7 @@ NSString *letter3 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate=self;
     
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
     {
         [locationManager requestAlwaysAuthorization];
     }

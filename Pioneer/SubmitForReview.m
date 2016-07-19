@@ -932,10 +932,20 @@ NSString *letter8 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
     else{ // for photo
         
         
-        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
+        
+        if (info[UIImagePickerControllerEditedImage ]) {
+            
+            chosenImage =info[UIImagePickerControllerEditedImage];
+            
+        }else{
+            
+            chosenImage =info[UIImagePickerControllerOriginalImage];
+            
+        }
+        
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        NSLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
         //    NSLog(@"imagepath==================== %@",localUrl);

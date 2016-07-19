@@ -811,23 +811,23 @@
         
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self;
-        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
         {
             [locationManager requestAlwaysAuthorization];
         }
         [locationManager startUpdatingLocation];
         
-        if(IS_OS_8_OR_LATER) {
-            
-            [locationManager requestAlwaysAuthorization];
-            [locationManager startUpdatingLocation];
-            
-            
-        }else  {
-            
-            [locationManager startUpdatingLocation];
-            
-        }
+//        if(IS_OS_8_OR_LATER) {
+//            
+//            [locationManager requestAlwaysAuthorization];
+//            [locationManager startUpdatingLocation];
+//            
+//            
+//        }else  {
+//            
+//            [locationManager startUpdatingLocation];
+//            
+//        }
 
         
         

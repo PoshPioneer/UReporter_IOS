@@ -1613,10 +1613,20 @@
     if (isPhotoTabSelected == YES) {//Photo is selected..
         
         //---------------------------------
-        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
+        
+        if (info[UIImagePickerControllerEditedImage ]) {
+            
+            chosenImage =info[UIImagePickerControllerEditedImage];
+            
+        }else{
+            
+            chosenImage =info[UIImagePickerControllerOriginalImage];
+            
+        }
+        
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
         //    DLog(@"imagepath==================== %@",localUrl);
@@ -3174,9 +3184,9 @@
 {
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
     {
-        [locationManager requestAlwaysAuthorization];
+        [locationManager requestWhenInUseAuthorization];
     }
     [locationManager startUpdatingLocation];
 }
@@ -3364,6 +3374,8 @@
     
     return NULL;
 }
+
+
 
 
 @end

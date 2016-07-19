@@ -320,9 +320,9 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [locationManager requestAlwaysAuthorization];
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         
-        [locationManager requestAlwaysAuthorization];
+        [locationManager requestWhenInUseAuthorization];
     }
     [locationManager startUpdatingLocation];
 
@@ -365,6 +365,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     [self beginRefreshingTableView];
     
     
+    
+    
     NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?deviceId=&source=&token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
     NSLog(@"URL===%@",urlString);
     
@@ -402,7 +404,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
             [app getCategory];
 
             
-            
+            //http://prngapi.cloudapp.net/api/UserDetails/Syncronexuser?token
             if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"1"])
             {
                 
@@ -911,20 +913,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     }else if ([obj.globalcompleteCategory count]+4 == indexValue){
          DLog(@"my submission");
         
-        
-            
-            
             Submission *submission=[[Submission alloc]initWithNibName:@"Submission" bundle:nil];
-            
             [self.navigationController pushViewController:submission animated:YES];
-            
-            
-        
-
-       
-        
-       
-        
        
         
     }else if ( [obj.globalcompleteCategory count]+5 == indexValue) {
@@ -946,8 +936,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }
         
     }
-    
-    
 }
 
 
@@ -1004,7 +992,11 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil)
                 {
                 // serive for global counter.....
-                [sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
+                    // Development
+                    //[sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
+                    
+                    // Production
+                    [sync serviceCall:@"https://syncaccess-png-sv.stage.syncronex.com/png/sv/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
                 }
                 
                 NSString* urlString;
@@ -1047,10 +1039,7 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
-                
                 [manager.requestSerializer setValue:@"PoshMobile" forHTTPHeaderField:@"User-Agent"];
-
-
                 [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
                     
                     NSLog(@"JSON: %@", responseObject);
@@ -1064,9 +1053,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                         
                         if ([[json valueForKey:@"items"] isKindOfClass:[NSArray class]] && [[json valueForKey:@"items"] count]>0)
                         {
-                            
-                            
-                        
                             
                             feeds= [json valueForKey:@"items"];
                             
@@ -1639,8 +1625,6 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
 
             if (json.count>0)
             {
-               
-
 
                 NSMutableDictionary *jsonDict= [[NSMutableDictionary alloc] init];
                 
@@ -1674,8 +1658,12 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
                 DLog(@"%@",obj.jsonDict);
                 if ([[NSUserDefaults standardUserDefaults] valueForKey:@"subscribeStatus"] == nil) {
 
-                [sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
+                 // Development
+                    //[sync serviceCall:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
                     
+                // Production
+                    [sync serviceCall:@"https://syncaccess-png-sv.stage.syncronex.com/png/sv/api/svcs/meter/standard?format=JSON" withParams:obj.jsonDict];
+
                 }
 
 
@@ -1769,9 +1757,8 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
         }
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
     
-    [self beginRefreshingTableView];
+        [self beginRefreshingTableView];
         [manager.requestSerializer setValue:@"PoshMobile" forHTTPHeaderField:@"User-Agent"];
-        
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
            
             DLog(@"JSON: %@", responseObject);
@@ -1894,10 +1881,21 @@ NSString *letter = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456
     else{ // for photo
         
         
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    mainImage = chosenImage;
-    data = UIImagePNGRepresentation(mainImage);
-    DLog(@"converted data--%@",data);
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
+        
+        if (info[UIImagePickerControllerEditedImage ]) {
+            
+            chosenImage =info[UIImagePickerControllerEditedImage];
+            
+        }else{
+            
+            chosenImage =info[UIImagePickerControllerOriginalImage];
+            
+        }
+        
+        mainImage = chosenImage;
+        data = UIImagePNGRepresentation(mainImage);
+        // NSLog(@"converted data--%@",data);
     
     //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
     //    DLog(@"imagepath==================== %@",localUrl);

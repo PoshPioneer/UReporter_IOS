@@ -910,9 +910,9 @@ NSMutableData *responseData;
 {
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
     {
-        [locationManager requestAlwaysAuthorization];
+        [locationManager requestWhenInUseAuthorization];
     }
     [locationManager startUpdatingLocation];
 }

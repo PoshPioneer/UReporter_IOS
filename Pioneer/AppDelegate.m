@@ -83,7 +83,7 @@
 //    FinalSubmitForReview = [[[NSUserDefaults standardUserDefaults] objectForKey:@"SubmitArray"] mutableCopy];
     
 
-    putValueToKeyChain=@"Times_Of_India_Newspaper12346789Maharashtra619ss1apkTestingqwetyxmf12223234545";
+    putValueToKeyChain=@"Times_Of_India_Newspaper12346789Maharashtra619ss1apkTestingqwetyxmf12223234545SUBOD";
     AppDelegate *app1 = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *  KEY_PASSWORD = @"com.toi.app.password"; //"appleDevelopment"
     NSString *  idfv_Local = [[KeyChainValteck keyChainLoadKey:app1.putValueToKeyChain] valueForKey:KEY_PASSWORD];
@@ -112,7 +112,7 @@
         DLog(@"this is idfv locatl---%@",idfv_Local);
         randomNumber = idfv_Local ;
         
-      //  [self showMainScreen];
+       // [self showMainScreen];
         
         // end
     }
@@ -170,7 +170,7 @@
     UIStoryboard *mainStoryboard = nil;
     
     
-            mainStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
+    mainStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [mainStoryboard instantiateInitialViewController];
@@ -197,8 +197,10 @@
     
     if ([idfv_Local length]!=0) {
         
-        NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
-        DLog(@"URL===%@",urlString);
+       // NSString* urlString = [NSString stringWithFormat:@"http://prngapi.cloudapp.net/api/UserDetails?deviceId=&source=&token=%@",[GlobalStuff generateToken]];
+        
+        NSString* urlString = [NSString stringWithFormat:@"%@api/UserDetails?deviceId=&source=&token=%@",kBaseURL,[GlobalStuff generateToken]];
+        NSLog(@"URL===%@",urlString);
         
         PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
         [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
@@ -208,7 +210,7 @@
             if (json)
             {
                 
-                
+                //http://prngapi.cloudapp.net/api/UserDetails/Syncronexuser?token=ak9peVA0WTQ2SFNibEV0a3B1bFRYY3FPRE1MZ0swUldZcEhHaHNPLzNYWT0KOmI4NDUyNzI2Zjk4NGIxZGI6NjM1OTc0MzYyMzE4MDAwMDAwOlNrYWdpdFRpbWVz
                 
                 if ([[NSString stringWithFormat:@"%@",[[json valueForKey:@"data"]valueForKey:@"RegisteredwithSyncronex"]] isEqualToString:@"0"]){
                     
@@ -229,15 +231,12 @@
                 [[NSUserDefaults standardUserDefaults]setValue:userID_Default forKeyPath:@"userID_Default"];
                 [[NSUserDefaults standardUserDefaults]synchronize];
                 
-                
-                
-                
-                
             }
             
             
         } failure:^(NSURLSessionTask *operation, NSError *error) {
-            DLog(@"Error: %@", error);
+            
+            NSLog(@"Error: %@", error);
             
             
         }];
@@ -489,11 +488,24 @@
 // start update location
 -(void)StartUpdating
 {
+    
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
+    {
+        [locationManager requestWhenInUseAuthorization];
+    }
     [locationManager startUpdatingLocation];
+
+    
+    
+    
+    
+//    locationManager = [[CLLocationManager alloc] init];
+//    locationManager.delegate = self;
+//    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+//    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+//    [locationManager startUpdatingLocation];
 }
 
 #pragma mark location delegate
@@ -825,11 +837,7 @@
                                        
                                       // DLog(@"error occured!");
                                    }
-                                   
-                                   
                                }
-                               
-                               
                            }];
     
 }

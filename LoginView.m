@@ -109,7 +109,17 @@
             NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
             NSString *authValue = [NSString stringWithFormat:@"Basic %@", [Base64 base64forData:authData]];
             DLog(@"auth value--%@",authValue);
-            NSString* urlString = [NSString stringWithFormat:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/subscribers/%@?format=JSON",trimmedUsername];
+            
+            // Development.
+//            NSString* urlString = [NSString stringWithFormat:@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/api/svcs/subscribers/%@?format=JSON",trimmedUsername];
+            
+            
+            // Production.
+            NSString* urlString = [NSString stringWithFormat:@"https://syncaccess-png-sv.stage.syncronex.com/png/sv/api/svcs/subscribers/%@?format=JSON",trimmedUsername];
+
+            
+            // https://syncaccess-png-sv.stage.syncronex.com/png/sv/api/svcs/subscribers/%@?format=JSON
+            
             
             DLog(@" url for login  --%@",urlString);
             
@@ -117,7 +127,6 @@
             
             PHHTTPSessionManager *manager = [PHHTTPSessionManager manager];
             manager.requestSerializer = [AFJSONRequestSerializer serializer];
-            
             [manager.requestSerializer setValue:authValue forHTTPHeaderField:@"Authorization"];
             
             [manager GET:urlString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject)
@@ -255,8 +264,14 @@
     if ([Utility connected] == YES){
         
         SubscribeVC *object=[[SubscribeVC alloc]initWithNibName:@"SubscribeVC" bundle:nil];
-        object.web_Url=@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/account/register";
         
+        //Development.
+       // object.web_Url=@"https://syncaccess-demo-posh.stage.syncronex.com/demo/posh/account/register";
+        
+        
+        //Production
+        object.web_Url=@"https://syncaccess-png-sv.stage.syncronex.com/png/sv/account/register";
+
         [self presentViewController:object animated:YES completion:nil];
 
         
@@ -282,7 +297,13 @@
         
         
         SubscribeVC *object=[[SubscribeVC alloc]initWithNibName:@"SubscribeVC" bundle:nil];
-        object.web_Url=@"https://syncaccess-demo-posh.stage.syncronex.com/Demo/Posh/Account/ResetPassword";
+        
+        //Development
+        //object.web_Url=@"https://syncaccess-demo-posh.stage.syncronex.com/Demo/Posh/Account/ResetPassword";
+        
+        // Production.
+        object.web_Url=@"https://syncaccess-png-sv.stage.syncronex.com/png/sv/Account/ResetPassword";
+
         [self presentViewController:object animated:YES completion:nil];
 
         

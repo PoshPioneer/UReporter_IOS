@@ -18,6 +18,7 @@
 
 
 + (NSString *)getDeviceId {
+    
     NSString *appName=[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
     NSString *strApplicationUUID = [SSKeychain passwordForService:appName account:@"DeviceId"];
     if (strApplicationUUID == nil) {

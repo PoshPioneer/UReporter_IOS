@@ -2017,48 +2017,58 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     
-    if (!info[UIImagePickerControllerEditedImage]) {
+//    if (info[UIImagePickerControllerEditedImage]) {
+//        
+//        [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
+//        
+//        
+//       
+//        
+//        
+//        NSURL *videoURL = [info objectForKey:UIImagePickerControllerEditedImage]; // changed from url 
+//        
+//        videoData = [NSData dataWithContentsOfURL:videoURL];
+//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//        NSString *documentsDirectory = [paths objectAtIndex:0];
+//        
+//        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
+//        tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
+//        
+//        [videoData writeToFile:tempPath atomically:NO];
+//
+//        [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//        
+//         DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
+//        
+//        
+//        
+//            
+//            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
+//            uploadV.receivedPath = tempPath;
+//            uploadV.ReceivedURl =videoURL;
+//            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
+//            [self.navigationController pushViewController:uploadV animated:NO];
+//            
+//        
+//        
+//    }else{
+    
         
-        [[NSUserDefaults standardUserDefaults]setValue:@"DoneVideo" forKey:@"Video_Check"];
+        UIImage *chosenImage; //= info[UIImagePickerControllerEditedImage];
         
-        
-       
-        
-        
-        NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
-        
-        videoData = [NSData dataWithContentsOfURL:videoURL];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        
-        fileName = [NSString stringWithFormat:@"%@",[self randomStringWithLength:8]];
-        tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4",fileName];
-        
-        [videoData writeToFile:tempPath atomically:NO];
-
-        [[NSUserDefaults standardUserDefaults] setObject:videoData forKey:@"VideoData"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-         DLog(@"this is the pathe of temp of the video ====>%@",tempPath);
-        
-        
-        
+        if (info[UIImagePickerControllerEditedImage ]) {
             
-            UploadVideoView *uploadV = [[UploadVideoView alloc]initWithNibName:@"UploadVideoView" bundle:nil];
-            uploadV.receivedPath = tempPath;
-            uploadV.ReceivedURl =videoURL;
-            uploadV.fileNameforVideo = [self generateUniqueNameVideo];
-            [self.navigationController pushViewController:uploadV animated:NO];
+            chosenImage =info[UIImagePickerControllerEditedImage];
             
+        }else{
+            
+            chosenImage =info[UIImagePickerControllerOriginalImage];
+            
+        }
         
-        
-    }else{
-        
-        
-        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
         mainImage = chosenImage;
         data = UIImagePNGRepresentation(mainImage);
-        DLog(@"converted data--%@",data);
         
         //   localUrl = (NSURL *)[info valueForKey:UIImagePickerControllerReferenceURL];
         //    DLog(@"imagepath==================== %@",localUrl);
@@ -2136,7 +2146,7 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
             [self.navigationController pushViewController:uploadP animated:NO];
             
         
-    }
+   // }
     
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self.view setNeedsLayout];
@@ -2192,9 +2202,9 @@ NSString *letter2 = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 {
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
     {
-        [locationManager requestAlwaysAuthorization];
+        [locationManager requestWhenInUseAuthorization];
     }
     [locationManager startUpdatingLocation];
 }

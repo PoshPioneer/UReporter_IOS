@@ -119,9 +119,6 @@
             [self.navigationController pushViewController:up animated:NO];
             
         
-
-        
-        
         /*
         
         
@@ -385,6 +382,8 @@
     [dictionaryTemp setValue:@"" forKey:@"SpecialInterests"];
     [dictionaryTemp setValue:@"" forKey:@"LanguagesSpoken"];
     [dictionaryTemp setValue:@"" forKey:@"Occupation"];
+    [dictionaryTemp setValue:@"0" forKey:@"RegisterwithSyncronex"];
+
     // END..
     
     if (check_Uncheck_Bool)
@@ -405,7 +404,7 @@
    
     NSString* urlString = [NSString stringWithFormat:@"%@%@/%@?token=%@",kBaseURL,kAPI,kUserDetails,[GlobalStuff generateToken]];
         
-    DLog(@"while registration data sent is = %@",finalDictionary);
+    NSLog(@"while registration data sent is = %@",finalDictionary);
  
     dispatch_async(dispatch_get_main_queue(), ^{
         
